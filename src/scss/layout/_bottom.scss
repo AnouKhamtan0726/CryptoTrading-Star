@@ -33,4 +33,19 @@
             }
         }
     }
+    .footer-sentence {
+        border-top: 1px solid rgba(139,141,150,.28);
+        padding-top: 50px;
+        margin-top: 50px;
+    }
+}
+
+@media only screen and (max-width: 425px) {
+    .bottom {
+        padding-left: 30px;
+        padding-right: 30px;
+        .footer-content {
+            margin-top: 20px;
+        }
+    }
 }

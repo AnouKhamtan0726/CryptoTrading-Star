@@ -110,127 +110,184 @@
     }
 }
 
-// Promo
-.promo {
-    // background-color: #fff;
-    // border-bottom: 1px solid $border-color;
-    .promo-content {
-        text-align: center;
-
-        .promo-content-img {
-            background: $primary;
-            height: 150px;
-            width: 150px;
-            border-radius: 15px;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 30px;
-
-            // box-shadow: rgba(218, 225, 233, 0.557) 0px 8px 16px;
-            img {
-                max-width: 70px;
+// Trader-tools
+.trader-tools {
+    position: relative;
+    padding: 150px 0;
+    .section-title {
+        text-align: left;
+        h2 {
+            font-size: 48px;
+            line-height: 57px;
+            font-weight: 700;
+            color: #34d1d6;
+            margin-bottom: 40px;
+            text-align: left;
+        }
+        p {
+            font-size: 16px;
+            line-height: 19px;
+            margin-bottom: 40px;
+        }
+        .tools-button {
+            .tools-btn {
+                background: #34d1d6 !important;
+                padding: 15px 40px;
+                border-radius: 30px;
+                font-weight: 600;
+                font-size: 16px;
             }
         }
-
-        h3 {
-            margin-bottom: 15px;
-        }
-
-        p {
-            line-height: 30px;
+    }
+    .img-box {
+        img {
+            width: 560px;
+            position: absolute;
+            bottom: 0;
+            right: 0;
         }
     }
 }
 
-// portfolio
-.portfolio_list {
-    // max-width: 500px;
-    .d-flex {
-        margin-bottom: 30px;
-        // align-items  : center;
-
-        h4 {
-            font-size: 22px;
-        }
-
-        .port-icon {
-            height: 65px;
-            width: 140px;
-            background: $dark;
-            box-shadow: rgba(0, 0, 0, 0.1) 0px 8px 16px;
-            border-radius: 50%;
-            // border      : 1px solid $border-color;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 32px;
-            margin-right: 20px;
-            color: $primary;
-        }
-
-        p {
-            margin-bottom: 0px;
-
-            a {
-                color: $primary;
+@media only screen and (max-width: 1024px) {
+    .title-body {
+        .section-title {
+            h2 {
+                font-size: 38px;
             }
         }
     }
 }
 
-.portfolio_img {
-    img {
-        border-radius: 5px;
-        box-shadow: 25px 60px 125px -25px rgba(0, 0, 0, 0.2), 16px 40px 75px -40px rgba(0, 0, 0, 0.2);
+@media only screen and (max-width: 768px) {
+    .trader-tools {
+        padding: 70px 0 500px 0;
+        .tools-body {
+            flex-direction: column !important;
+            .title-body {
+                width: 100% !important;
+                .section-title {
+                    padding: 0 50px;
+                    h2 {
+                        font-size: 40px;
+                    }
+                    p {
+                        font-size: 14px;
+                    }
+                    .tools-button {
+                        .tools-btn {
+                            padding: 10px 30px;
+                            font-weight: 500;
+                            font-size: 14px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 425px) {
+    .trader-tools {
+        padding: 70px 0 360px 0;
+        .tools-body {
+            .title-body {
+                .section-title {
+                    padding: 0 20px;
+                    h2 {
+                        font-size: 24px;
+                        line-height: 28px;
+                        margin-bottom: 30px;
+                        font-weight: 600;
+                    }
+                    p {
+                        font-size: 14px;
+                        margin-bottom: 30px;
+                    }
+                    .tools-button {
+                        .tools-btn {
+                            padding: 10px 20px;
+                            font-weight: 500;
+                            font-size: 10px;
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
 // Trade app
-.trade-app-content {
-    border: 0px;
-    background: $dark;
-    box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.1);
 
-    .card-body {
-        padding: 20px 30px;
-
-        span {
-            font-size: 48px;
-            margin-bottom: 15px;
-            display: inline-block;
-            color: $primary;
-        }
-
-        h4 {
-            font-size: 20px;
-            margin-bottom: 15px;
+.trade-app {
+    background-image: url("./../images/main_assets/cryptocurrencies-BG.png");
+    background-position: 50%;
+    background-size: cover;
+    .section-title {
+        margin-bottom: 50px;
+        h2 {
+            font-size: 40px;
+            line-height: 47px;
+            margin-bottom: 20px;
+            text-align: center;
         }
 
         p {
-            min-height: 115px;
+            color: #8b8d96;
+            font-size: 18px;
+            line-height: 21px;
+            text-align: center;
+        }
+    }
+    .trade-images {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .img-box {
+            margin: 0 10px;
+        }
+    }
+    .carousel {
+        display: none !important;
+    }
+}
 
-            @include respond("tab-land") {
-                min-height: 165px;
+@media only screen and (max-width: 768px) {
+    .trade-app {
+        .section-title {
+            h2 {
+                font-size: 35px;
+                line-height: 30px;
             }
 
-            @include respond("tab-port") {
-                min-height: auto;
+            p {
+                font-size: 16px;
+                line-height: 18px;
             }
         }
+    }
+}
 
-        a {
-            color: $primary;
-            display: flex;
-            font-weight: 500;
-            align-items: center;
-
-            i {
-                margin-left: 15px;
-                font-size: 18px;
-                font-weight: bold;
+@media only screen and (max-width: 425px) {
+    .trade-app {
+        .section-title {
+            h2 {
+                font-size: 24px;
+                line-height: 28px;
             }
+
+            p {
+                font-size: 14px;
+                line-height: 18px;
+            }
+        }
+        .trade-images {
+            display: none !important;
+        }
+        .carousel {
+            display: block !important;
+            background: none !important;
+            padding: 0 !important;
         }
     }
 }

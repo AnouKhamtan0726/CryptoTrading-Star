@@ -9,7 +9,7 @@ function ControlledCarousel() {
     };
 
     return (
-        <Carousel activeIndex={index} onSelect={handleSelect} interval={3000}>
+        <Carousel activeIndex={index} onSelect={handleSelect} interval={2000}>
             <Carousel.Item>
                 <p>
                     <img

@@ -8960,81 +8960,120 @@ label.error {
       font-weight: 500;
       font-size: 14px; } }
 
-.promo .promo-content {
-  text-align: center; }
-  .promo .promo-content .promo-content-img {
-    background: #5d78ff;
-    height: 150px;
-    width: 150px;
-    border-radius: 15px;
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 30px; }
-    .promo .promo-content .promo-content-img img {
-      max-width: 70px; }
-  .promo .promo-content h3, .promo .promo-content .h3 {
-    margin-bottom: 15px; }
-  .promo .promo-content p {
-    line-height: 30px; }
-
-.portfolio_list .d-flex {
-  margin-bottom: 30px; }
-  .portfolio_list .d-flex h4, .portfolio_list .d-flex .h4 {
-    font-size: 22px; }
-  .portfolio_list .d-flex .port-icon {
-    height: 65px;
-    width: 140px;
-    background: #131722;
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 8px 16px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 32px;
-    margin-right: 20px;
-    color: #5d78ff; }
-  .portfolio_list .d-flex p {
-    margin-bottom: 0px; }
-    .portfolio_list .d-flex p a {
-      color: #5d78ff; }
-
-.portfolio_img img {
-  border-radius: 5px;
-  box-shadow: 25px 60px 125px -25px rgba(0, 0, 0, 0.2), 16px 40px 75px -40px rgba(0, 0, 0, 0.2); }
-
-.trade-app-content {
-  border: 0px;
-  background: #131722;
-  box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.1); }
-  .trade-app-content .card-body {
-    padding: 20px 30px; }
-    .trade-app-content .card-body span {
+.trader-tools {
+  position: relative;
+  padding: 150px 0; }
+  .trader-tools .section-title {
+    text-align: left; }
+    .trader-tools .section-title h2, .trader-tools .section-title .h2 {
       font-size: 48px;
-      margin-bottom: 15px;
-      display: inline-block;
-      color: #5d78ff; }
-    .trade-app-content .card-body h4, .trade-app-content .card-body .h4 {
-      font-size: 20px;
-      margin-bottom: 15px; }
-    .trade-app-content .card-body p {
-      min-height: 115px; }
-      @media only screen and (max-width: 1199px) {
-        .trade-app-content .card-body p {
-          min-height: 165px; } }
-      @media only screen and (max-width: 991px) {
-        .trade-app-content .card-body p {
-          min-height: auto; } }
-    .trade-app-content .card-body a {
-      color: #5d78ff;
-      display: flex;
-      font-weight: 500;
-      align-items: center; }
-      .trade-app-content .card-body a i {
-        margin-left: 15px;
-        font-size: 18px;
-        font-weight: bold; }
+      line-height: 57px;
+      font-weight: 700;
+      color: #34d1d6;
+      margin-bottom: 40px;
+      text-align: left; }
+    .trader-tools .section-title p {
+      font-size: 16px;
+      line-height: 19px;
+      margin-bottom: 40px; }
+    .trader-tools .section-title .tools-button .tools-btn {
+      background: #34d1d6 !important;
+      padding: 15px 40px;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 16px; }
+  .trader-tools .img-box img {
+    width: 560px;
+    position: absolute;
+    bottom: 0;
+    right: 0; }
+
+@media only screen and (max-width: 1024px) {
+  .title-body .section-title h2, .title-body .section-title .h2 {
+    font-size: 38px; } }
+
+@media only screen and (max-width: 768px) {
+  .trader-tools {
+    padding: 70px 0 500px 0; }
+    .trader-tools .tools-body {
+      flex-direction: column !important; }
+      .trader-tools .tools-body .title-body {
+        width: 100% !important; }
+        .trader-tools .tools-body .title-body .section-title {
+          padding: 0 50px; }
+          .trader-tools .tools-body .title-body .section-title h2, .trader-tools .tools-body .title-body .section-title .h2 {
+            font-size: 40px; }
+          .trader-tools .tools-body .title-body .section-title p {
+            font-size: 14px; }
+          .trader-tools .tools-body .title-body .section-title .tools-button .tools-btn {
+            padding: 10px 30px;
+            font-weight: 500;
+            font-size: 14px; } }
+
+@media only screen and (max-width: 425px) {
+  .trader-tools {
+    padding: 70px 0 360px 0; }
+    .trader-tools .tools-body .title-body .section-title {
+      padding: 0 20px; }
+      .trader-tools .tools-body .title-body .section-title h2, .trader-tools .tools-body .title-body .section-title .h2 {
+        font-size: 24px;
+        line-height: 28px;
+        margin-bottom: 30px;
+        font-weight: 600; }
+      .trader-tools .tools-body .title-body .section-title p {
+        font-size: 14px;
+        margin-bottom: 30px; }
+      .trader-tools .tools-body .title-body .section-title .tools-button .tools-btn {
+        padding: 10px 20px;
+        font-weight: 500;
+        font-size: 10px; } }
+
+.trade-app {
+  background-image: url("./../images/main_assets/cryptocurrencies-BG.png");
+  background-position: 50%;
+  background-size: cover; }
+  .trade-app .section-title {
+    margin-bottom: 50px; }
+    .trade-app .section-title h2, .trade-app .section-title .h2 {
+      font-size: 40px;
+      line-height: 47px;
+      margin-bottom: 20px;
+      text-align: center; }
+    .trade-app .section-title p {
+      color: #8b8d96;
+      font-size: 18px;
+      line-height: 21px;
+      text-align: center; }
+  .trade-app .trade-images {
+    display: flex;
+    justify-content: center;
+    align-items: center; }
+    .trade-app .trade-images .img-box {
+      margin: 0 10px; }
+  .trade-app .carousel {
+    display: none !important; }
+
+@media only screen and (max-width: 768px) {
+  .trade-app .section-title h2, .trade-app .section-title .h2 {
+    font-size: 35px;
+    line-height: 30px; }
+  .trade-app .section-title p {
+    font-size: 16px;
+    line-height: 18px; } }
+
+@media only screen and (max-width: 425px) {
+  .trade-app .section-title h2, .trade-app .section-title .h2 {
+    font-size: 24px;
+    line-height: 28px; }
+  .trade-app .section-title p {
+    font-size: 14px;
+    line-height: 18px; }
+  .trade-app .trade-images {
+    display: none !important; }
+  .trade-app .carousel {
+    display: block !important;
+    background: none !important;
+    padding: 0 !important; } }
 
 .our_vision h3, .our_vision .h3 {
   font-size: 24px;
@@ -10316,6 +10355,17 @@ label.error {
     font-weight: 400;
     margin-bottom: 10px;
     display: inline-block; }
+  .bottom .footer-sentence {
+    border-top: 1px solid rgba(139, 141, 150, 0.28);
+    padding-top: 50px;
+    margin-top: 50px; }
+
+@media only screen and (max-width: 425px) {
+  .bottom {
+    padding-left: 30px;
+    padding-right: 30px; }
+    .bottom .footer-content {
+      margin-top: 20px; } }
 
 .footer {
   border-top: 1px solid #14203b;

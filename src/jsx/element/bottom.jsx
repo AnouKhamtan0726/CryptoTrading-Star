@@ -1,6 +1,25 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Dropdown } from 'react-bootstrap';
 
+const LanguageToggle = React.forwardRef(({ children, onClick }, ref) => (
+    <div
+        ref={ref}
+        onClick={e => {
+            e.preventDefault();
+            onClick(e);
+        }}
+
+    >
+        {children}
+        <div className="language">
+            <div className="icon">
+                <i className="flag-icon flag-icon-us"></i>
+                <span>English</span>
+            </div>
+        </div>
+    </div>
+));
 
 
 function Bottom() {
@@ -12,12 +31,12 @@ function Bottom() {
                     <div className="row">
                         <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6">
                             <div className="bottom-logo">
-                                <img className="pb-3" src={require("../../images/logo.png")} alt="" />
-
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                                <img className="pb-3" src={require('./../../images/main_assets/main_logo.svg')} alt="" />
+                                <p className='copywriter'> &copy; {new Date().getFullYear()} - Didi All rights reserved.</p>
+                                <p className='text-white'> Email: <a href='mailto:contact@didi.biz' target="blank" >contact@didi.biz</a> </p>
                             </div>
                         </div>
-                        <div className="col-xl-2 col-lg-2 col-md-6 col-sm-6">
+                        <div className="col-xl-3 col-lg-3 col-md-6 col-sm-6 footer-content">
                             <div className="bottom-widget">
                                 <h4 className="widget-title">Company</h4>
                                 <ul>
@@ -28,7 +47,7 @@ function Bottom() {
                                 </ul>
                             </div>
                         </div>
-                        <div className="col-xl-2 col-lg-2 col-md-6 col-sm-6">
+                        <div className="col-xl-3 col-lg-3 col-md-6 col-sm-6">
                             <div className="bottom-widget">
                                 <h4 className="widget-title">Support</h4>
                                 <ul>
@@ -39,29 +58,35 @@ function Bottom() {
                                 </ul>
                             </div>
                         </div>
-                        <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6">
+                        <div className="col-xl-2 col-lg-2 col-md-6 col-sm-6">
                             <div className="bottom-widget">
-                                <h4 className="widget-title">Exchange Pair</h4>
+                                <h4 className="widget-title">Languages</h4>
                                 <div className="row">
-                                    <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6">
-                                        <ul>
-                                            <li><Link to={"#"}>ETH to BTC</Link></li>
-                                            <li><Link to={"#"}>BTC to ETH</Link></li>
-                                            <li><Link to={"#"}>LTC to ETH</Link></li>
-                                            <li><Link to={"#"}>USDT to BTC</Link></li>
-                                        </ul>
-                                    </div>
-                                    <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6">
-                                        <ul>
-                                            <li><Link to={"#"}>BTC to USDT</Link></li>
-                                            <li><Link to={"#"}>LTC to BTC</Link></li>
-                                            <li><Link to={"#"}>XMR to BTC</Link></li>
-                                            <li><Link to={"#"}>ETC to DASH</Link></li>
-                                        </ul>
+                                    <div className="language">
+                                        <Dropdown>
+                                            <Dropdown.Toggle as={LanguageToggle} />
+                                            <Dropdown.Menu size="sm" title="">
+                                                <Link to={'#'} className="dropdown-item">
+                                                    <i className="flag-icon flag-icon-bd"></i> Bengali
+                                                </Link>
+                                                <Link to={'#'} className="dropdown-item">
+                                                    <i className="flag-icon flag-icon-fr"></i> French
+                                                </Link>
+                                                <Link to={'#'} className="dropdown-item">
+                                                    <i className="flag-icon flag-icon-cn"></i> China
+                                                </Link>
+
+                                            </Dropdown.Menu>
+                                        </Dropdown>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div className="footer-sentence">
+                        <p className='text-left'>
+                            Risk Warning: Trading and investing in digital options involves significant level of risk and is not suitable and/or appropriate for all clients. Please make sure you carefully consider your investment objectives, level of experience and risk appetite before buying or selling any digital asset. You should be aware of and fully understand all the risks associated with trading and investing in digital assets, you should not invest funds you cannot afford to lose. You are granted limited non-exclusive rights to use the IP contained in this site for personal, non-commercial, non-transferable use only in relation to the services offered on the site.
+                        </p>
                     </div>
                 </div>
             </div>
