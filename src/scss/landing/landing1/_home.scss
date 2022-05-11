@@ -1,0 +1,236 @@
+@import "./intro";
+@import "./sponsor";
+@import "./promo";
+@import "./product";
+@import "./brand";
+@import "./features";
+@import "./special";
+@import "./testimonial";
+@import "./support";
+@import "./what-new";
+
+// Get Start
+.getstart {
+    background-image: url("./../images/main_assets/introduce-BG.png");
+    background-position: 50%;
+    background-size: cover;
+
+    .getstart-title {
+        margin-bottom: 170px !important;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        h2 {
+            font-size: 40px;
+        }
+        p {
+            max-width: 680px;
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.5);
+            text-align: center;
+            padding-top: 40px;
+        }
+    }
+}
+
+.getstart-content {
+    text-align: center;
+    padding: 90px 10px 10px 10px;
+    border-radius: 30px;
+    background: #1c2942;
+    position: relative;
+
+    .content-img {
+        position: absolute;
+        top: -50%;
+        left: 50%;
+        -webkit-transform: translateX(-50%);
+        transform: translateX(-50%);
+        height: 185px !important;
+        width: 132px !important;
+    }
+
+    h3 {
+        margin-top: 15px;
+        font-size: 20px;
+    }
+}
+.portfolio-button {
+    text-align: center;
+    padding-top: 50px;
+    .portfolio-btn {
+        background: #34d1d6 !important;
+        padding: 15px 40px;
+        border-radius: 30px;
+        font-weight: 600;
+        font-size: 16px;
+    }
+}
+
+@media only screen and (max-width: 1024px) {
+    .getstart-content {
+        p {
+            padding-left: 20px !important;
+            padding-right: 20px !important;
+        }
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .getstart {
+        padding-top: 100px;
+        .getstart-title {
+            margin-bottom: 100px !important;
+            h2 {
+                font-size: 26px;
+            }
+            p {
+                font-size: 14px;
+            }
+        }
+    }
+    .content-body1 {
+        flex-direction: column;
+        align-items: center;
+        padding-left: 20px;
+        padding-right: 20px;
+        .getstart-content {
+            margin-top: 70px;
+            margin-bottom: 70px;
+        }
+    }
+
+    .portfolio-button {
+        padding-top: 0;
+        .portfolio-btn {
+            padding: 12px 30px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+    }
+}
+
+// Promo
+.promo {
+    // background-color: #fff;
+    // border-bottom: 1px solid $border-color;
+    .promo-content {
+        text-align: center;
+
+        .promo-content-img {
+            background: $primary;
+            height: 150px;
+            width: 150px;
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+
+            // box-shadow: rgba(218, 225, 233, 0.557) 0px 8px 16px;
+            img {
+                max-width: 70px;
+            }
+        }
+
+        h3 {
+            margin-bottom: 15px;
+        }
+
+        p {
+            line-height: 30px;
+        }
+    }
+}
+
+// portfolio
+.portfolio_list {
+    // max-width: 500px;
+    .d-flex {
+        margin-bottom: 30px;
+        // align-items  : center;
+
+        h4 {
+            font-size: 22px;
+        }
+
+        .port-icon {
+            height: 65px;
+            width: 140px;
+            background: $dark;
+            box-shadow: rgba(0, 0, 0, 0.1) 0px 8px 16px;
+            border-radius: 50%;
+            // border      : 1px solid $border-color;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 32px;
+            margin-right: 20px;
+            color: $primary;
+        }
+
+        p {
+            margin-bottom: 0px;
+
+            a {
+                color: $primary;
+            }
+        }
+    }
+}
+
+.portfolio_img {
+    img {
+        border-radius: 5px;
+        box-shadow: 25px 60px 125px -25px rgba(0, 0, 0, 0.2), 16px 40px 75px -40px rgba(0, 0, 0, 0.2);
+    }
+}
+
+// Trade app
+.trade-app-content {
+    border: 0px;
+    background: $dark;
+    box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.1);
+
+    .card-body {
+        padding: 20px 30px;
+
+        span {
+            font-size: 48px;
+            margin-bottom: 15px;
+            display: inline-block;
+            color: $primary;
+        }
+
+        h4 {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        p {
+            min-height: 115px;
+
+            @include respond("tab-land") {
+                min-height: 165px;
+            }
+
+            @include respond("tab-port") {
+                min-height: auto;
+            }
+        }
+
+        a {
+            color: $primary;
+            display: flex;
+            font-weight: 500;
+            align-items: center;
+
+            i {
+                margin-left: 15px;
+                font-size: 18px;
+                font-weight: bold;
+            }
+        }
+    }
+}

@@ -1,0 +1,33 @@
+<svg width="208" height="58" xmlns="http://www.w3.org/2000/svg">
+    <!-- Created with Method Draw - http://github.com/duopixel/Method-Draw/ -->
+
+    <g>
+        <title>background</title>
+        <rect fill="none" id="canvas_background" height="60" width="210" y="-1" x="-1"/>
+        <g display="none" overflow="visible" y="0" x="0" height="100%" width="100%" id="canvasGrid">
+            <rect fill="url(#gridpattern)" stroke-width="0" y="0" x="0" height="100%" width="100%"/>
+        </g>
+    </g>
+    <g>
+        <title>Layer 1</title>
+        <style transform="matrix(0.09347711088867872,0,0,0.09347711088867872,0,0) ">.st0{fill:#49c1bf}.st1{fill:#077a8f}.st2{fill:#298e97}</style>
+        <g stroke="null" id="svg_20">
+            <g stroke="null" transform="matrix(0.10988496136947397,0,0,0.10988496136947397,-0.01727043035125142,-0.6296029405634793) " id="svg_15">
+                <path stroke="null" d="m391.039369,228.222093l-62.8,28l-166.6,84.8l166.6,80.1l0,-132.4l62.8,-28.3l0,195.6l-62.8,28l-245.3,-117.4l0,-62.4l169.8,-83.3l-169.8,-81.6l0,-63.3l63.8,-28l244.3,117.6l0,62.6z" className="st0" id="svg_13"/>
+            </g>
+            <g stroke="null" transform="matrix(0.10988496136947397,0,0,0.10988496136947397,-0.01727043035125142,-0.6296029405634793) " id="svg_16">
+                <path stroke="null" d="m82.939369,76.022093l245.3,117.6l62.8,-28l-244.3,-117.6l-63.8,28z" className="st1" id="svg_12"/>
+            </g>
+            <g stroke="null" transform="matrix(0.10988496136947397,0,0,0.10988496136947397,-0.01727043035125142,-0.6296029405634793) " id="svg_17">
+                <path stroke="null" d="m328.241383,193.357095l62.8,-28l0,62.6l-62.8,28l0,-62.6z" className="st2" id="svg_11"/>
+            </g>
+            <g stroke="null" transform="matrix(0.10988496136947397,0,0,0.10988496136947397,-0.01727043035125142,-0.6296029405634793) " id="svg_18">
+                <path stroke="null" d="m82.939369,76.078093l0,63.3l169.8,81.6l-169.8,83.3l0,62.4l245.3,117.4l0,-62.8l-166.6,-80.2l166.6,-84.8l0,-62.6l-245.3,-117.6z" className="st0" id="svg_10"/>
+            </g>
+            <g stroke="null" transform="matrix(0.10988496136947397,0,0,0.10988496136947397,-0.01727043035125142,-0.6296029405634793) " id="svg_19">
+                <path stroke="null" d="m328.241383,483.61109l62.8,-28l0,-195.6l-62.8,28.3l0,195.3z" className="st2" id="svg_9"/>
+            </g>
+        </g>
+        <text stroke="null" transform="matrix(2.0788268277132405,0,0,2.0788268277132405,-36.832411885727666,-6.11619583674107) " font-weight="bold" xml:space="preserve" text-anchor="start" font-family="'Trebuchet MS', Gadget, sans-serif" font-size="24" id="svg_22" y="25.273653" x="44.864814" stroke-width="0" fill="#439695">zilliqa</text>
+    </g>
+</svg>
