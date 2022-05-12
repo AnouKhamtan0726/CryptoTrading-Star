@@ -19,7 +19,7 @@ function Homepage() {
                         </div>
 
                         <div className="intro-btn">
-                            <Link to={'/signin'} className="btn btn-primary text-white text-uppercase">Get start for free</Link>
+                            <Link to={'/signin'} className="btn btn-primary text-white text-uppercase blink-2">Get start for free</Link>
                         </div>
 
                         <div className="intro-image">
@@ -65,7 +65,7 @@ function Homepage() {
                     <div className="updated-content row">
                         <div className="updated-items col-lg-4 col-md-12 col-sm-12">
                             <div className="items-img">
-                                <img src={require('./../../images/main_assets/secret.png')} alt="" className="img-fluid" width={120} height={120} />
+                                <img src={require('./../../images/main_assets/secret.png')} alt="" className="img-fluid pulsate-fwd" width={120} height={120} />
                             </div>
                             <div className="items-title text-black">
                                 High Security Platform
@@ -76,7 +76,7 @@ function Homepage() {
                         </div>
                         <div className="updated-items col-lg-4 col-md-12 col-sm-12">
                             <div className="items-img">
-                                <img src={require('./../../images/main_assets/sutable.png')} alt="" className="img-fluid" width={120} height={120} />
+                                <img src={require('./../../images/main_assets/sutable.png')} alt="" className="img-fluid pulsate-fwd" width={120} height={120} />
                             </div>
                             <div className="items-title text-black">
                                 Suitable For Everyone
@@ -87,7 +87,7 @@ function Homepage() {
                         </div>
                         <div className="updated-items col-lg-4 col-md-12 col-sm-12">
                             <div className="items-img">
-                                <img src={require('./../../images/main_assets/helpful.png')} alt="" className="img-fluid" width={120} height={120} />
+                                <img src={require('./../../images/main_assets/helpful.png')} alt="" className="img-fluid pulsate-fwd" width={120} height={120} />
                             </div>
                             <div className="items-title text-black">
                                 Helpful Indicators
@@ -112,7 +112,7 @@ function Homepage() {
                                 <div className="content-img">
                                     <img src={require('./../../images/main_assets/introduce_step_1.png')} alt="" className="img-fluid" />
                                 </div>
-                                <h3>Signup</h3>
+                                <h3 className='heartbeat'>Signup</h3>
                                 <p>Use your email to create a free account.</p>
                             </div>
                         </div>
@@ -121,7 +121,7 @@ function Homepage() {
                                 <div className="content-img">
                                     <img src={require('./../../images/main_assets/introduce_step_2.png')} alt="" className="img-fluid" />
                                 </div>
-                                <h3>Deposit fund</h3>
+                                <h3 className='heartbeat'>Deposit fund</h3>
                                 <p>Deposit using cryptocurrency is fast and secured.</p>
                             </div>
                         </div>
@@ -130,13 +130,13 @@ function Homepage() {
                                 <div className="content-img">
                                     <img src={require('./../../images/main_assets/introduce_step_3.png')} alt="" className="img-fluid" />
                                 </div>
-                                <h3>Start trading</h3>
+                                <h3 className='heartbeat'>Start trading</h3>
                                 <p>Predict the asset prices and earn money.</p>
                             </div>
                         </div>
                     </div>
                     <div className="portfolio-button">
-                        <Link to={'/signin'} className="btn portfolio-btn text-white text-uppercase">Join Now</Link>
+                        <Link to={'/signin'} className="btn portfolio-btn text-white text-uppercase blink-2">Join Now</Link>
                     </div>
                 </div>
             </div>
@@ -149,7 +149,7 @@ function Homepage() {
                                 <h2>Become A Pro Trader With Our Tools</h2>
                                 <p className='text-black'>Our technical trading indicators allow you to develop the most profitable trading strategies with less hard work.</p>
                                 <div className="tools-button">
-                                    <Link to={'/signin'} className="btn tools-btn text-white text-uppercase">Get Start For Free</Link>
+                                    <Link to={'/signin'} className="btn tools-btn text-white text-uppercase blink-2">Get Start For Free</Link>
                                 </div>
                             </div>
                         </div>
@@ -169,13 +169,13 @@ function Homepage() {
                         <p>Use popular cryptocurrencies to deposit and withdraw funds quickly and securely.</p>
                     </div>
                     <div className="trade-images">
-                        <div className="img-box">
+                        <div className="img-box pulsate-fwd">
                             <img src={require('./../../images/main_assets/bitcoin.2b7d6815.svg')} alt="" className="img-fluid" />
                         </div>
-                        <div className="img-box">
+                        <div className="img-box pulsate-fwd">
                             <img src={require('./../../images/main_assets/tether.6d1c997e.svg')} alt="" className="img-fluid" />
                         </div>
-                        <div className="img-box">
+                        <div className="img-box pulsate-fwd">
                             <img src={require('./../../images/main_assets/binance.cf56a2f9.svg')} alt="" className="img-fluid" />
                         </div>
                     </div>
