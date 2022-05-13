@@ -7869,7 +7869,7 @@ strong,
 
 .content-body {
   margin-left: 65px;
-  margin-top: 18px;
+  margin-top: 90px;
   margin-right: 6px;
   margin-bottom: 45px; }
 
@@ -10278,7 +10278,8 @@ label.error {
 
 .header.dashboard {
   padding: 5px 10px;
-  box-shadow: 0 10px 30px 0 rgba(82, 63, 105, 0.08); }
+  box-shadow: 0 10px 30px 0 rgba(82, 63, 105, 0.08);
+  background-color: #131722 !important; }
   .header.dashboard .navbar {
     padding: 0px; }
 
@@ -10422,7 +10423,8 @@ label.error {
   .page-title.dashboard {
     background: transparent;
     margin-left: 75px;
-    padding: 20px 0 0px; }
+    padding: 20px 0 0px;
+    margin-top: 70px; }
   .page-title .page-title-content p {
     font-size: 16px;
     font-weight: 400;

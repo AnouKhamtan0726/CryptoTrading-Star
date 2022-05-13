@@ -1,7 +1,6 @@
 import React from 'react';
 import { Accordion, Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import PageTitle from '../element/page-title';
 import Popup from '../element/popup';
 import Footer2 from '../layout/footer2';
 // import { Row, Col, Card } from 'react-bootstrap';
@@ -16,7 +15,6 @@ function Exchange() {
         <>
             <Header2 />
             <Sidebar />
-            <PageTitle />
 
             <div className="content-body">
                 <div className="container">

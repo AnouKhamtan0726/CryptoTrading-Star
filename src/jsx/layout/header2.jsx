@@ -51,8 +51,7 @@ function Header2() {
                     <div className="row">
                         <div className="col-xl-12">
                             <nav className="navbar navbar-expand-lg navbar-light px-0 justify-content-between">
-                                <Link className="navbar-brand" to={"./dashboard"}><img src={require('./../../images/logo.png')} alt="" /></Link>
-
+                                <Link className="navbar-brand" to={'./dashboard'}><img src={require('./../../images/main_assets/main_logo.svg')} alt="" /></Link>
                                 <div className="header-right d-flex my-2 align-items-center">
                                     <div className="language">
                                         <Dropdown>
@@ -60,13 +59,13 @@ function Header2() {
                                             <Dropdown.Menu size="sm" title="">
                                                 <Link to={'#'} className="dropdown-item">
                                                     <i className="flag-icon flag-icon-bd"></i> Bengali
-                                            </Link>
+                                                </Link>
                                                 <Link to={'#'} className="dropdown-item">
                                                     <i className="flag-icon flag-icon-fr"></i> French
-                                            </Link>
+                                                </Link>
                                                 <Link to={'#'} className="dropdown-item">
                                                     <i className="flag-icon flag-icon-cn"></i> China
-                                            </Link>
+                                                </Link>
 
                                             </Dropdown.Menu>
                                         </Dropdown>
@@ -98,19 +97,19 @@ function Header2() {
 
                                                 <Link to={"./account-overview"} className="dropdown-item">
                                                     <i className="mdi mdi-account"></i> Account
-                                            </Link>
+                                                </Link>
                                                 <Link to={"./data-tbi"} className="dropdown-item">
                                                     <i className="mdi mdi-history"></i> History
-                                            </Link>
+                                                </Link>
                                                 <Link to={"./settings"} className="dropdown-item">
                                                     <i className="mdi mdi-settings"></i> Setting
-                                            </Link>
+                                                </Link>
                                                 <Link to={"./lock"} className="dropdown-item">
                                                     <i className="mdi mdi-lock"></i> Lock
-                                            </Link>
+                                                </Link>
                                                 <Link to={"./signin"} className="dropdown-item logout">
                                                     <i className="mdi mdi-logout"></i> Logout
-                                            </Link>
+                                                </Link>
                                             </Dropdown.Menu>
                                         </Dropdown>
                                     </div>

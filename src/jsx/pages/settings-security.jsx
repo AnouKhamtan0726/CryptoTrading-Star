@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import PageTitle from '../element/page-title';
 import Footer2 from '../layout/footer2';
 // import { Row, Col, Card } from 'react-bootstrap';
 import Header2 from '../layout/header2';
@@ -15,7 +14,6 @@ function Security() {
         <>
             <Header2 />
             <Sidebar />
-            <PageTitle />
 
             <div className="content-body">
                 <div className="container">

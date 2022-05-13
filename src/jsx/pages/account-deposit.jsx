@@ -1,6 +1,5 @@
 import React from 'react';
 import { Nav, Tab } from 'react-bootstrap';
-import PageTitle from '../element/page-title';
 import AccountSubmenu from '../layout/account-submenu';
 import Footer2 from '../layout/footer2';
 // import { Link } from 'react-router-dom';
@@ -17,7 +16,6 @@ function AccountDeposit() {
         <>
             <Header2 />
             <Sidebar />
-            <PageTitle />
 
             <div className="content-body">
                 <div className="container">

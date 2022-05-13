@@ -13,8 +13,7 @@ function Footer2() {
                     <div className="row">
                         <div className="col-sm-8 col-12">
                             <div className="copyright">
-                                <p>© Copyright {new Date().getFullYear()}  <Link href="https://themeforest.net/user/quixlab/portfolio">Quixlab</Link> I
-                                All Rights Reserved</p>
+                                <p>© Copyright {new Date().getFullYear()}  - <a href="https://didi.biz/">DIDI : CryptoWorld</a></p>
                             </div>
                         </div>
                         <div className="col-sm-4 col-12">

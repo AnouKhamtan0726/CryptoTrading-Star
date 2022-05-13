@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import PageTitle from "../element/page-title";
 import AccountSubmenu from "../layout/account-submenu";
 import Footer2 from "../layout/footer2";
 // import { Row, Col, Card } from 'react-bootstrap';
@@ -12,7 +11,6 @@ function AccountOverview() {
         <>
             <Header2 />
             <Sidebar />
-            <PageTitle />
 
             <div className="content-body">
                 <div className="container">

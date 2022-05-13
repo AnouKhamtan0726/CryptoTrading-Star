@@ -1,6 +1,5 @@
 import React from 'react';
 import AreaChart from '../charts/area';
-import PageTitle from '../element/page-title';
 import DataSubmenu from '../layout/data-submenu';
 import Footer2 from '../layout/footer2';
 // import { Link } from 'react-router-dom';
@@ -16,7 +15,6 @@ function Tbi() {
         <>
             <Header2 />
             <Sidebar />
-            <PageTitle />
 
             <div className="content-body">
                 <div className="container">

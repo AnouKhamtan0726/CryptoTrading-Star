@@ -1,5 +1,4 @@
 import React from 'react';
-import PageTitle from '../element/page-title';
 import Footer2 from '../layout/footer2';
 //  import { Link } from 'react-router-dom';
 // import { Row, Col, Card } from 'react-bootstrap';
@@ -15,7 +14,6 @@ function Preferences() {
         <>
             <Header2 />
             <Sidebar />
-            <PageTitle />
 
             <div className="content-body">
             <div className="container">

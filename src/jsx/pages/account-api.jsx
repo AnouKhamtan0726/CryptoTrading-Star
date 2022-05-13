@@ -1,5 +1,4 @@
 import React from 'react';
-import PageTitle from '../element/page-title';
 import AccountSubmenu from '../layout/account-submenu';
 import Footer2 from '../layout/footer2';
 // import { Link } from 'react-router-dom';
@@ -15,7 +14,6 @@ function AccountApi() {
         <>
             <Header2 />
             <Sidebar />
-            <PageTitle />
 
             <div className="content-body">
                 <div className="container">
