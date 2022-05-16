@@ -10008,6 +10008,11 @@ react-smooth@^1.0.5:
     raf "^3.4.0"
     react-transition-group "^2.5.0"
 
+react-tradingview-technical-analysis@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/react-tradingview-technical-analysis/-/react-tradingview-technical-analysis-1.0.2.tgz#c718a8fcc019f8cd1a249051792d9cde1259900c"
+  integrity sha512-RobAz0rywDnLtt5LgFtcteCu6J28kyqnq2FKxICjA4R7c200Dy5cYHQAFZQf9nTs++ugA0sROWTeJhix4aYpOg==
+
 react-tradingview-widget@^1.3.2:
   version "1.3.2"
   resolved "https://registry.yarnpkg.com/react-tradingview-widget/-/react-tradingview-widget-1.3.2.tgz#c3af17bd5f72c4ea40bdf217778f01b100243b74"

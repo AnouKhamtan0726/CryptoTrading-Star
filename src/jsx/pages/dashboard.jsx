@@ -5,7 +5,6 @@ import TradingViewWidget, { Themes } from "react-tradingview-widget";
 import Footer2 from "../layout/footer2";
 import Header2 from "../layout/header2";
 import Sidebar from "../layout/sidebar";
-// import TradeViewChart from 'react-crypto-chart';
 
 function Dashboard() {
     return (
@@ -20,18 +19,22 @@ function Dashboard() {
                             {/* <!-- TradingView Widget BEGIN --> */}
                             <div
                                 className="tradingview-widget-container card"
-                                style={{ height: "460px" }}
+                                style={{ height: "50vh" }}
                             >
                                 <TradingViewWidget
-                                    symbol="BTCUSD"
+                                    symbol="COINBASE:BTCUSD"
                                     theme={Themes.DARK}
+                                    hide_top_toolbar={true}
+                                    hide_legend={true}
                                     locale="jp"
+                                    timezone="Asia/Tokyo"
+                                    interval="1"
+                                    details={true}
                                     autosize
                                 />
                             </div>
                             {/* <!-- TradingView Widget END --> */}
                         </div>
-                        {/* <TradeViewChart pair="BTCBUSD" interval="1m" chartLayout="" /> */}
                     </div>
                 </div>
             </div>
