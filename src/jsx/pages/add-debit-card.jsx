@@ -32,7 +32,7 @@ function DebitCard() {
                                                 <input
                                                     type="text"
                                                     className="form-control"
-                                                    placeholder="Saiful Islam"
+                                                    placeholder="Big Star"
                                                 />
                                             </div>
                                             <div className="mb-3 col-xl-12">

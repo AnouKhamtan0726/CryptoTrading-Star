@@ -29,14 +29,14 @@ function AccountOverview() {
                                     <div className="d-flex">
                                         <img
                                             className="me-3 rounded-circle me-0 me-sm-3"
-                                            src={require("../../images/profile/2.png")}
+                                            src={require("../../images/profile/3.png")}
                                             width="60"
                                             height="60"
                                             alt=""
                                         />
                                         <div className="media-body">
                                             <span>Hello</span>
-                                            <h4 className="mb-2">Saiful Islam</h4>
+                                            <h4 className="mb-2">Big Star</h4>
                                             <p className="mb-1">
                                                 {" "}
                                                 <span>

@@ -13,7 +13,7 @@ function PageTitle() {
                         <div className="col-6">
                             <div className="page-title-content">
                                 <p>Welcome Back,
-                                <span> Saiful Islam</span>
+                                <span> Big Star</span>
                                 </p>
                             </div>
                         </div>

@@ -1,22 +1,3 @@
-/*
-    Name: Tradio
-    Author: Quixlab
-    Portfolio : https://themeforest.net/user/quixlab/portfolio
-    Email: quixlab.com@gmail.com
-
-
-    Table of Content: 
-
-    1. Abstract
-    2. Bootstrap CSS
-    3. Base
-    4. Layout
-    5. Component
-    6. Dashboard
-    7. Pages
-    
-    
-*/
 /*!
  * Bootstrap v5.1.3 (https://getbootstrap.com/)
  * Copyright 2011-2021 The Bootstrap Authors
@@ -1530,9 +1511,6 @@ progress {
   padding-top: calc(0.25rem + 1px);
   padding-bottom: calc(0.25rem + 1px);
   font-size: 0.76563rem; }
-  @media (min-width: 1200px) {
-    .col-form-label-sm {
-      font-size: 0.76562rem; } }
 
 .form-text {
   margin-top: 0.25rem;
@@ -1630,9 +1608,6 @@ progress {
   padding: 0.25rem 0.5rem;
   font-size: 0.76563rem;
   border-radius: 0.2rem; }
-  @media (min-width: 1200px) {
-    .form-control-sm {
-      font-size: 0.76562rem; } }
   .form-control-sm::file-selector-button {
     padding: 0.25rem 0.5rem;
     margin: -0.25rem -0.5rem;
@@ -1718,9 +1693,6 @@ textarea.form-control-lg {
   padding-left: 0.5rem;
   font-size: 0.76563rem;
   border-radius: 0.2rem; }
-  @media (min-width: 1200px) {
-    .form-select-sm {
-      font-size: 0.76562rem; } }
 
 .form-select-lg {
   padding-top: 0.5rem;
@@ -1964,12 +1936,6 @@ textarea.form-control-lg {
   padding: 0.25rem 0.5rem;
   font-size: 0.76563rem;
   border-radius: 0.2rem; }
-  @media (min-width: 1200px) {
-    .input-group-sm > .form-control,
-    .input-group-sm > .form-select,
-    .input-group-sm > .input-group-text,
-    .input-group-sm > .btn {
-      font-size: 0.76562rem; } }
 
 .input-group-lg > .form-select,
 .input-group-sm > .form-select {
@@ -2009,9 +1975,6 @@ textarea.form-control-lg {
   color: #000;
   background-color: rgba(16, 216, 118, 0.9);
   border-radius: 0.25rem; }
-  @media (min-width: 1200px) {
-    .valid-tooltip {
-      font-size: 0.76562rem; } }
 
 .was-validated :valid ~ .valid-feedback,
 .was-validated :valid ~ .valid-tooltip,
@@ -2085,9 +2048,6 @@ textarea.form-control-lg {
   color: #fff;
   background-color: rgba(229, 2, 2, 0.9);
   border-radius: 0.25rem; }
-  @media (min-width: 1200px) {
-    .invalid-tooltip {
-      font-size: 0.76562rem; } }
 
 .was-validated :invalid ~ .invalid-feedback,
 .was-validated :invalid ~ .invalid-tooltip,
@@ -2581,9 +2541,6 @@ textarea.form-control-lg {
   padding: 0.25rem 0.5rem;
   font-size: 0.76563rem;
   border-radius: 0.2rem; }
-  @media (min-width: 1200px) {
-    .btn-sm, .btn-group-sm > .btn {
-      font-size: 0.76562rem; } }
 
 .fade {
   transition: opacity 0.15s linear; }
@@ -2836,9 +2793,6 @@ textarea.form-control-lg {
   font-size: 0.76563rem;
   color: #6c757d;
   white-space: nowrap; }
-  @media (min-width: 1200px) {
-    .dropdown-header {
-      font-size: 0.76562rem; } }
 
 .dropdown-item-text {
   display: block;
@@ -3715,9 +3669,6 @@ textarea.form-control-lg {
 .pagination-sm .page-link {
   padding: 0.25rem 0.5rem;
   font-size: 0.76563rem; }
-  @media (min-width: 1200px) {
-    .pagination-sm .page-link {
-      font-size: 0.76562rem; } }
 
 .pagination-sm .page-item:first-child .page-link {
   border-top-left-radius: 0.2rem;
@@ -4427,9 +4378,6 @@ textarea.form-control-lg {
   font-size: 0.76563rem;
   word-wrap: break-word;
   opacity: 0; }
-  @media (min-width: 1200px) {
-    .tooltip {
-      font-size: 0.76562rem; } }
   .tooltip.show {
     opacity: 0.9; }
   .tooltip .tooltip-arrow {
@@ -4518,9 +4466,6 @@ textarea.form-control-lg {
   background-clip: padding-box;
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 0.3rem; }
-  @media (min-width: 1200px) {
-    .popover {
-      font-size: 0.76562rem; } }
   .popover .popover-arrow {
     position: absolute;
     display: block;

@@ -43,9 +43,9 @@ function Settings() {
                                                 <div className="mb-3 col-xl-12">
                                                     <div className="d-flex align-items-center mb-3">
                                                         <img className="me-3 rounded-circle me-0 me-sm-3"
-                                                            src={require('../../images/profile/2.png')} width="50" height="50" alt=""/>
+                                                            src={require('../../images/profile/3.png')} width="50" height="50" alt=""/>
                                                         <div className="flex-grow-1">
-                                                            <h5 className="mb-0">John Doe</h5>
+                                                            <h5 className="mb-0">Big Star</h5>
                                                             <p className="mb-0">Max file size is 20mb
                                                             </p>
                                                         </div>
@@ -101,7 +101,7 @@ function Settings() {
                                             <div className="row">
                                                 <div className="mb-3 col-xl-6 col-md-6">
                                                     <label className="form-label">Your Name</label>
-                                                    <input type="text" className="form-control" placeholder="Saiful Islam"
+                                                    <input type="text" className="form-control" placeholder="Big Star"
                                                         name="fullname"/>
                                                 </div>
                                                 <div className="mb-3 col-xl-6 col-md-6">

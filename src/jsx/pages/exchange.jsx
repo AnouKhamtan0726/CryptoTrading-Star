@@ -140,7 +140,7 @@ function Exchange() {
                                                     <img className="me-3 rounded" src={require("../../images/avatar/2.jpg")} alt="" />
                                                     <div className="media-body">
                                                         <h4>Buyer</h4>
-                                                        <h5 className="text-body">Michael John</h5>
+                                                        <h5 className="text-body">Great Star</h5>
                                                         <Link to={'#'} className="text-body">hello@example.com</Link>
                                                     </div>
                                                 </div>
@@ -149,7 +149,7 @@ function Exchange() {
                                                 <div className="d-flex">
                                                     <div className="media-body">
                                                         <h4>Seller</h4>
-                                                        <h5 className="text-body">John Doe</h5>
+                                                        <h5 className="text-body">Big Star</h5>
                                                         <Link to={'#'} className="text-body">hello@example.com</Link>
                                                     </div>
                                                     <img className="ms-3 rounded" src={require("../../images/avatar/5.jpg")} alt="" />

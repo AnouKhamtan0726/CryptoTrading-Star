@@ -78,8 +78,8 @@ function Header2() {
                                                     <div className="user">
                                                         <span className="thumb"><i className="mdi mdi-account"></i></span>
                                                         <div className="user-info">
-                                                            <h6>Saiful Islam</h6>
-                                                            <span>quixlab.com@gmail.com</span>
+                                                            <h6>Big Star</h6>
+                                                            <span>bigstarcoolmanager@gmail.com</span>
                                                         </div>
                                                     </div>
                                                 </div>

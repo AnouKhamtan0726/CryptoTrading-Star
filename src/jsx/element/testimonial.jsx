@@ -30,7 +30,7 @@ function Testimonial() {
                                     dignissimos similique quas molestiae doloribus recusandae voluptatem et
                                                 repudiandae veritatis.</p>
                                 <div className="customer-info">
-                                    <h6>Mr John Doe</h6>
+                                    <h6>Mr Big Star</h6>
                                     <p>CEO, Example Company</p>
                                 </div>
                             </div>

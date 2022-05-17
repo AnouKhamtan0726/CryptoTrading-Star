@@ -39,7 +39,7 @@ function Security() {
                                         </div>
                                         <div className="col-xl-6">
                                             <div className="id_info">
-                                                <h4>Saiful Islam </h4>
+                                                <h4>Big Star </h4>
                                                 <p className="mb-1 mt-3">ID: 0024 5687 2254 3698 </p>
                                                 <p className="mb-1">Status: <span className="font-weight-bold">Verified</span></p>
                                                 <Link href="verify-step-2.html" className="btn btn-success mt-3">New ID</Link>
