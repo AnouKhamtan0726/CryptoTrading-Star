@@ -5,6 +5,7 @@ import TradingViewWidget, { Themes } from "react-tradingview-widget";
 import Footer2 from "../layout/footer2";
 import Header2 from "../layout/header2";
 import Sidebar from "../layout/sidebar";
+import Chatbot from "../layout/chatbot";
 
 function Dashboard() {
     return (
@@ -40,6 +41,7 @@ function Dashboard() {
             </div>
 
             <Footer2 />
+<Chatbot />
         </>
     );
 }

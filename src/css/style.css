@@ -7854,6 +7854,14 @@ strong,
   margin-right: 6px;
   margin-bottom: 45px; }
 
+.chatbot {
+  position: fixed;
+  z-index: 1000;
+  bottom: 80px;
+  right: 40px;
+  width: 70px;
+  cursor: pointer; }
+
 #preloader {
   position: fixed;
   width: 100%;

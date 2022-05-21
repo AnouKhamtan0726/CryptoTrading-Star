@@ -5,6 +5,7 @@ import Footer2 from "../layout/footer2";
 import Header2 from "../layout/header2";
 import SettingsSubmenu from "../layout/settings-submenu";
 import Sidebar from "../layout/sidebar";
+import Chatbot from "../layout/chatbot";
 
 function SettingAccount() {
     return (
@@ -145,6 +146,7 @@ function SettingAccount() {
             </div>
 
             <Footer2 />
+<Chatbot />
         </>
     );
 }

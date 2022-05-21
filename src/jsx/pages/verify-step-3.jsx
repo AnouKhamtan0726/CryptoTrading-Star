@@ -4,6 +4,7 @@ import Footer2 from "../layout/footer2";
 // import { Row, Col, Card } from 'react-bootstrap';
 import Header2 from "../layout/header2";
 import Sidebar from "../layout/sidebar";
+import Chatbot from "../layout/chatbot";
 
 function VerifyStep3() {
     return (
@@ -45,6 +46,7 @@ function VerifyStep3() {
             </div>
 
             <Footer2 />
+<Chatbot />
         </>
     );
 }
