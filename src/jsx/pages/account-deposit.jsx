@@ -36,9 +36,8 @@ function AccountDeposit() {
                                 <div className="card-body" id="deposits">
                                     <Tab.Container defaultActiveKey="tab1">
                                         <Nav variant="pills">
-                                            <Nav.Link eventKey="tab1">TUSD</Nav.Link>
-                                            <Nav.Link eventKey="tab2">USDC</Nav.Link>
-                                            <Nav.Link eventKey="tab3">FIAT</Nav.Link>
+                                            <Nav.Link eventKey="tab1">USDT</Nav.Link>
+                                            <Nav.Link eventKey="tab2">ALI</Nav.Link>
                                         </Nav>
                                         <Tab.Content>
                                             <Tab.Pane eventKey="tab1">
@@ -58,12 +57,12 @@ function AccountDeposit() {
                                                 <ul>
                                                     <li>
                                                         <i className="mdi mdi-checkbox-blank-circle"></i>
-                                                TUSD network transfers will be credited to your Tradio account after
+                                                USDT network transfers will be credited to your Tradio account after
                                                 25 network confirmations.
                                             </li>
                                                     <li>
                                                         <i className="mdi mdi-checkbox-blank-circle"></i>
-                                                TUSD deposits to this address are unlimited. Note that you may not
+                                                USDT deposits to this address are unlimited. Note that you may not
                                                 be able to withdraw all of your funds at once if you deposit more
                                                 than your daily withdrawal limit.
                                             </li>
@@ -86,40 +85,12 @@ function AccountDeposit() {
                                                 <ul>
                                                     <li>
                                                         <i className="mdi mdi-checkbox-blank-circle"></i>
-                                                USDC network transfers will be credited to your Tradio account after
+                                                ALI network transfers will be credited to your Tradio account after
                                                 25 network confirmations.
                                             </li>
                                                     <li>
                                                         <i className="mdi mdi-checkbox-blank-circle"></i>
-                                                USDC deposits to this address are unlimited. Note that you may not
-                                                be able to withdraw all of your funds at once if you deposit more
-                                                than your daily withdrawal limit.
-                                            </li>
-                                                </ul>
-                                            </Tab.Pane>
-                                            <Tab.Pane eventKey="tab3">
-                                                <div className="qrcode">
-                                                    <img src="./images/qr.svg" alt="" width="150" />
-                                                </div>
-                                                <form action="">
-                                                    <div className="input-group">
-                                                        <input type="text" className="form-control"
-                                                            value="0xceb1b174085b0058201be4f2cd0da6a21bff85d4" />
-                                                        <div className="input-group-append">
-                                                            <span className="input-group-text bg-primary text-white">Copy</span>
-                                                        </div>
-                                                    </div>
-                                                </form>
-
-                                                <ul>
-                                                    <li>
-                                                        <i className="mdi mdi-checkbox-blank-circle"></i>
-                                                USDC network transfers will be credited to your Tradio account after
-                                                25 network confirmations.
-                                            </li>
-                                                    <li>
-                                                        <i className="mdi mdi-checkbox-blank-circle"></i>
-                                                USDC deposits to this address are unlimited. Note that you may not
+                                                ALI deposits to this address are unlimited. Note that you may not
                                                 be able to withdraw all of your funds at once if you deposit more
                                                 than your daily withdrawal limit.
                                             </li>

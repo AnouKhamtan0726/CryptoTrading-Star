@@ -6,7 +6,7 @@ import Exchange from './pages/exchange';
 import Tbi from './pages/data-tbi';
 import Settings from './pages/settings';
 import AccountAffiliate from './pages/account-affiliate';
-import AccountApi from './pages/account-api';
+// import AccountApi from './pages/account-api';
 import AccountDeposit from './pages/account-deposit';
 import AccountOverview from './pages/account-overview';
 import AccountWithdraw from './pages/account-withdraw';
@@ -48,7 +48,7 @@ class Index extends Component {
                             <Route path='/data-tbi' component={Tbi} />
                             <Route path='/settings' component={Settings} />
                             <Route path='/account-affiliate' component={AccountAffiliate} />
-                            <Route path='/account-api' component={AccountApi} />
+                            {/* <Route path='/account-api' component={AccountApi} /> */}
                             <Route path='/account-deposit' component={AccountDeposit} />
                             <Route path='/account-withdraw' component={AccountWithdraw} />
                             <Route path='/add-bank-acc' component={BankAcc} />
