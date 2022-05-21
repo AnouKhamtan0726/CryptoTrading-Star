@@ -9309,10 +9309,15 @@ label.error {
       color: #fff;
       border-bottom: 1px solid #5d78ff; }
 
-#deposits .tab-content .qrcode {
-  text-align: center;
-  margin-top: 50px;
-  padding: 20px 0; }
+#deposits .tab-content .qrcodebox {
+  display: flex;
+  justify-content: center; }
+  #deposits .tab-content .qrcodebox .qrcode {
+    text-align: center;
+    margin-top: 50px;
+    padding: 20px;
+    background: white;
+    display: inline-block; }
 
 #deposits .tab-content form {
   max-width: 750px;

@@ -4,6 +4,7 @@ import AccountSubmenu from '../layout/account-submenu';
 import Footer2 from '../layout/footer2';
 // import { Link } from 'react-router-dom';
 // import { Row, Col, Card } from 'react-bootstrap';
+import QrcodeBox from '../element/qrcode-box';
 import Header2 from '../layout/header2';
 import Sidebar from "../layout/sidebar";
 import Chatbot from "../layout/chatbot";
@@ -41,8 +42,10 @@ function AccountDeposit() {
                                         </Nav>
                                         <Tab.Content>
                                             <Tab.Pane eventKey="tab1">
-                                                <div className="qrcode">
-                                                    <img src="./images/qr.svg" alt="" width="150" />
+                                                <div className="qrcodebox">
+                                                    <div className="qrcode">
+                                                        <QrcodeBox />
+                                                    </div>
                                                 </div>
                                                 <form action="">
                                                     <div className="input-group">
@@ -57,20 +60,15 @@ function AccountDeposit() {
                                                 <ul>
                                                     <li>
                                                         <i className="mdi mdi-checkbox-blank-circle"></i>
-                                                USDT network transfers will be credited to your Tradio account after
-                                                25 network confirmations.
-                                            </li>
-                                                    <li>
-                                                        <i className="mdi mdi-checkbox-blank-circle"></i>
-                                                USDT deposits to this address are unlimited. Note that you may not
-                                                be able to withdraw all of your funds at once if you deposit more
-                                                than your daily withdrawal limit.
-                                            </li>
+                                                        Reminder: For the safety of your funds, please confirm again that the blockchain you wish to use is BSC.
+                                                    </li>
                                                 </ul>
                                             </Tab.Pane>
                                             <Tab.Pane eventKey="tab2">
-                                                <div className="qrcode">
-                                                    <img src="./images/qr.svg" alt="" width="150" />
+                                                <div className="qrcodebox">
+                                                    <div className="qrcode">
+                                                        <QrcodeBox />
+                                                    </div>
                                                 </div>
                                                 <form action="">
                                                     <div className="input-group">
@@ -81,20 +79,6 @@ function AccountDeposit() {
                                                         </div>
                                                     </div>
                                                 </form>
-
-                                                <ul>
-                                                    <li>
-                                                        <i className="mdi mdi-checkbox-blank-circle"></i>
-                                                ALI network transfers will be credited to your Tradio account after
-                                                25 network confirmations.
-                                            </li>
-                                                    <li>
-                                                        <i className="mdi mdi-checkbox-blank-circle"></i>
-                                                ALI deposits to this address are unlimited. Note that you may not
-                                                be able to withdraw all of your funds at once if you deposit more
-                                                than your daily withdrawal limit.
-                                            </li>
-                                                </ul>
                                             </Tab.Pane>
                                         </Tab.Content>
 
@@ -107,7 +91,7 @@ function AccountDeposit() {
             </div>
 
             <Footer2 />
-<Chatbot />
+            <Chatbot />
         </>
     )
 }
