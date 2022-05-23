@@ -20,7 +20,7 @@ function Dashboard() {
                             {/* <!-- TradingView Widget BEGIN --> */}
                             <div
                                 className="tradingview-widget-container card"
-                                style={{ height: "50vh" }}
+                                style={{ height: "70vh" }}
                             >
                                 <TradingViewWidget
                                     symbol="COINBASE:BTCUSD"

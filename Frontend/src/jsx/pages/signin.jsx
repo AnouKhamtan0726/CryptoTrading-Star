@@ -1,7 +1,30 @@
-import React from "react";
+import React, { useState } from 'react'
+import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 import { Link } from "react-router-dom";
 
-function Signin() {
+
+const Signin = () => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [msg, setMsg] = useState('');
+    const history = useHistory();
+
+    const Auth = async (e) => {
+        e.preventDefault();
+        try {
+            await axios.post('http://localhost:5000/login', {
+                email: email,
+                password: password
+            });
+            history.push("/otp-1");
+        } catch (error) {
+            if (error.response) {
+                setMsg(error.response.data.msg);
+            }
+        }
+    }
+
     return (
         <>
             <div className="authincation section-padding">
@@ -20,7 +43,9 @@ function Signin() {
                                         method="post"
                                         name="myform"
                                         className="signin_validate"
+                                        onSubmit={Auth}
                                     >
+                                        <p className="has-text-centered error-message">{msg}</p>
                                         <div className="mb-3">
                                             <label>Email</label>
                                             <input
@@ -28,6 +53,7 @@ function Signin() {
                                                 className="form-control"
                                                 placeholder="hello@example.com"
                                                 name="email"
+                                                value={email} onChange={(e) => setEmail(e.target.value)}
                                             />
                                         </div>
                                         <div className="mb-3">
@@ -37,6 +63,7 @@ function Signin() {
                                                 className="form-control"
                                                 placeholder="Password"
                                                 name="password"
+                                                value={password} onChange={(e) => setPassword(e.target.value)}
                                             />
                                         </div>
                                         <div className="row d-flex justify-content-between mt-4 mb-2">
@@ -59,12 +86,12 @@ function Signin() {
                                             </div>
                                         </div>
                                         <div className="text-center">
-                                            <Link
-                                                to={"./otp-1"}
+                                            <button
+                                                // to={"./otp-1"}
                                                 className="btn btn-success btn-block"
                                             >
                                                 Sign in
-                                            </Link>
+                                            </button>
                                         </div>
                                     </form>
                                     <div className="new-account mt-3">

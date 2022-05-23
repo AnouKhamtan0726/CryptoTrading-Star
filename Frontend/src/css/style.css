@@ -9357,6 +9357,9 @@ label.error {
     display: inline-block;
     margin-bottom: 15px; }
 
+.error-message {
+  color: red; }
+
 .verification {
   height: 100%; }
 

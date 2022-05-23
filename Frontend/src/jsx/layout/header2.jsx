@@ -1,6 +1,8 @@
 import React from 'react';
 import { Dropdown } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 
 const ProfileToggle = React.forwardRef(({ children, onClick }, ref) => (
     <div
@@ -43,6 +45,17 @@ const LanguageToggle = React.forwardRef(({ children, onClick }, ref) => (
 
 
 function Header2() {
+    
+    const history = useHistory();
+
+    const Logout = async () => {
+        try {
+            await axios.delete('http://localhost:5000/logout');
+            history.push("/");
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     return (
         <>
@@ -107,9 +120,9 @@ function Header2() {
                                                 <Link to={"./lock"} className="dropdown-item">
                                                     <i className="mdi mdi-lock"></i> Lock
                                                 </Link>
-                                                <Link to={"./signin"} className="dropdown-item logout">
+                                                <button onClick={Logout} className="dropdown-item logout">
                                                     <i className="mdi mdi-logout"></i> Logout
-                                                </Link>
+                                                </button>
                                             </Dropdown.Menu>
                                         </Dropdown>
                                     </div>
