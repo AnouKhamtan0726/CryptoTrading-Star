@@ -133,7 +133,7 @@ function Exchange() {
                         <div className="col-xl-12">
                             <div className="card">
                                 <div className="card-header">
-                                    <h4 className="card-title">All Activities</h4>
+                                    <h4 className="card-title">Transaction</h4>
                                 </div>
                                 <div className="card-body">
                                     <div className="transaction-table">
@@ -151,7 +151,7 @@ function Exchange() {
                                                             <i className="cc BTC"></i> BTC
                                                         </td>
                                                         <td>
-                                                            Using - Bank *******5264
+                                                            0x30c6961Fe4d39A7b9805199131F535B8F2EdEf91
                                                         </td>
                                                         <td className="text-danger">-0.000242 BTC</td>
                                                         <td>-0.125 USD</td>
@@ -166,7 +166,7 @@ function Exchange() {
                                                             <i className="cc LTC"></i> LTC
                                                         </td>
                                                         <td>
-                                                            Using - Card *******8475
+                                                            0x30c6961Fe4d39A7b9805199131F535B8F2EdEf91
                                                         </td>
                                                         <td className="text-success">-0.000242 BTC</td>
                                                         <td>-0.125 USD</td>
@@ -181,7 +181,7 @@ function Exchange() {
                                                             <i className="cc XRP"></i> XRP
                                                         </td>
                                                         <td>
-                                                            Using - Card *******8475
+                                                            0x30c6961Fe4d39A7b9805199131F535B8F2EdEf91
                                                         </td>
                                                         <td className="text-danger">-0.000242 BTC</td>
                                                         <td>-0.125 USD</td>
@@ -196,7 +196,7 @@ function Exchange() {
                                                             <i className="cc DASH"></i> DASH
                                                         </td>
                                                         <td>
-                                                            Using - Card *******2321
+                                                            0x30c6961Fe4d39A7b9805199131F535B8F2EdEf91
                                                         </td>
                                                         <td className="text-success">-0.000242 BTC</td>
                                                         <td>-0.125 USD</td>
@@ -211,7 +211,7 @@ function Exchange() {
                                                             <i className="cc BTC"></i> BTC
                                                         </td>
                                                         <td>
-                                                            Using - Card *******2321
+                                                            0x30c6961Fe4d39A7b9805199131F535B8F2EdEf91
                                                         </td>
                                                         <td className="text-danger">-0.000242 BTC</td>
                                                         <td>-0.125 USD</td>
