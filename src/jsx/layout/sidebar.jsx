@@ -17,11 +17,11 @@ const accounts = (
         Accounts
     </Tooltip>
 );
-const data = (
-    <Tooltip id="data">
-        Data
-    </Tooltip>
-);
+// const data = (
+//     <Tooltip id="data">
+//         Data
+//     </Tooltip>
+// );
 const settings = (
     <Tooltip id="settings">
         Setting
@@ -56,13 +56,13 @@ function Sidebar() {
                                 </OverlayTrigger>
                             </Link>
                         </li>
-                        <li>
+                        {/* <li>
                             <Link to={"./data-tbi"} activeClassName="active">
                                 <OverlayTrigger placement="right" overlay={data}>
                                     <span><i className="mdi mdi-database"></i></span>
                                 </OverlayTrigger>
                             </Link>
-                        </li>
+                        </li> */}
                         <li>
                             <Link to={"./settings"} activeClassName="active">
                                 <OverlayTrigger placement="right" overlay={settings}>

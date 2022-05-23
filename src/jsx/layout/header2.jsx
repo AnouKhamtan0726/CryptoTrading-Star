@@ -78,7 +78,7 @@ function Header2() {
                                                     <div className="user">
                                                         <span className="thumb"><i className="mdi mdi-account"></i></span>
                                                         <div className="user-info">
-                                                            <h6>Big Star</h6>
+                                                            <h6>BigStar</h6>
                                                             <span>bigstarcoolmanager@gmail.com</span>
                                                         </div>
                                                     </div>
@@ -98,9 +98,9 @@ function Header2() {
                                                 <Link to={"./account-overview"} className="dropdown-item">
                                                     <i className="mdi mdi-account"></i> Account
                                                 </Link>
-                                                <Link to={"./data-tbi"} className="dropdown-item">
+                                                {/* <Link to={"./data-tbi"} className="dropdown-item">
                                                     <i className="mdi mdi-history"></i> History
-                                                </Link>
+                                                </Link> */}
                                                 <Link to={"./settings"} className="dropdown-item">
                                                     <i className="mdi mdi-settings"></i> Setting
                                                 </Link>
