@@ -8586,6 +8586,12 @@ label.error {
 .list-group-item {
   background-color: #131722; }
 
+.trading-status {
+  display: flex;
+  align-items: center; }
+  .trading-status span {
+    margin-right: 10px; }
+
 .total-balance {
   padding: 10px 0px 20px;
   text-align: center; }
@@ -8593,6 +8599,35 @@ label.error {
 .open-position-table table tr th,
 .open-position-table table tr td {
   padding: 10px 10px !important; }
+
+.trading-card .card-body .inde-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; }
+  .trading-card .card-body .inde-box .inde-text {
+    position: relative; }
+    .trading-card .card-body .inde-box .inde-text .inde-input {
+      display: inline-block;
+      width: 150px;
+      margin: 0 10px;
+      padding: 5px 0 5px 20px !important;
+      background: white !important;
+      color: black !important; }
+    .trading-card .card-body .inde-box .inde-text .dollar-symbol {
+      position: absolute;
+      left: 20px;
+      top: 5px;
+      color: black; }
+
+.trading-card .card-body .add-amount-box div {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between; }
+
+.amount-card .card-header {
+  justify-content: start; }
+  .amount-card .card-header .profit-amount {
+    padding-left: 10px; }
 
 .intro {
   background-image: url("./../images/background/intro_background.png");
