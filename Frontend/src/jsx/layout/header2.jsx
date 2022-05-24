@@ -45,7 +45,7 @@ const LanguageToggle = React.forwardRef(({ children, onClick }, ref) => (
 
 
 function Header2() {
-    
+
     const history = useHistory();
 
     const Logout = async () => {
@@ -108,12 +108,15 @@ function Header2() {
                                                     </div>
                                                 </div>
 
+                                                <Link to={"./dashboard"} className="dropdown-item responsive-dropdown-item">
+                                                    <i className="mdi mdi-view-dashboard"></i> Trading
+                                                </Link>
+                                                <Link to={"./exchange"} className="dropdown-item responsive-dropdown-item">
+                                                    <i className="mdi mdi-tumblr-reblog"></i> Exchange
+                                                </Link>
                                                 <Link to={"./account-overview"} className="dropdown-item">
                                                     <i className="mdi mdi-account"></i> Account
                                                 </Link>
-                                                {/* <Link to={"./data-tbi"} className="dropdown-item">
-                                                    <i className="mdi mdi-history"></i> History
-                                                </Link> */}
                                                 <Link to={"./settings"} className="dropdown-item">
                                                     <i className="mdi mdi-settings"></i> Setting
                                                 </Link>

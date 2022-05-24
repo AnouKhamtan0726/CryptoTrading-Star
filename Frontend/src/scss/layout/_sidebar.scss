@@ -8,6 +8,12 @@
     box-shadow: 0 10px 30px 0 rgba(82, 63, 105, 0.08);
 }
 
+@media only screen and (max-width: 425px) {
+    .sidebar {
+        display: none;
+    }
+}
+
 .menu {
     margin-top: 100px;
     ul {

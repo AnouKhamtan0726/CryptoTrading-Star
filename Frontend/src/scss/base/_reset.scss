@@ -7,12 +7,12 @@
     padding: 0;
 
     &::after {
-        margin : 0;
+        margin: 0;
         padding: 0;
     }
 
     &::before {
-        margin : 0;
+        margin: 0;
         padding: 0;
     }
 }
@@ -23,14 +23,12 @@ body {
     &.fixed {
         overflow: hidden;
         position: fixed;
-    } 
-
-
+    }
 }
 
 ul {
     padding: 0;
-    margin : 0;
+    margin: 0;
 }
 
 li {
@@ -40,14 +38,14 @@ li {
 a {
     // color       : $td;
     text-decoration: none;
-    outline        : none;
+    outline: none;
 
     &:hover,
     &:focus,
     &.active {
         text-decoration: none;
-        outline        : none;
-        color          : $primary;
+        outline: none;
+        color: $primary;
     }
 }
 
@@ -55,7 +53,7 @@ b,
 strong,
 .strong {
     font-weight: 500;
-    color      : $headings-color;
+    color: $headings-color;
 }
 
 .h-0 {
@@ -64,10 +62,10 @@ strong,
 
 #main-wrapper {
     // opacity       : 0;
-    transition    : all 0.25s ease-in;
-    overflow      : hidden;
-    position      : relative;
-    z-index       : 1;
+    transition: all 0.25s ease-in;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
     // height     : 100vh;
     // padding-top: 75px;
 
@@ -77,10 +75,17 @@ strong,
 }
 
 .content-body {
-    margin-left  : 65px;
-    margin-top   : 90px;
-    margin-right : 6px;
+    margin-left: 65px;
+    margin-top: 90px;
+    margin-right: 6px;
     margin-bottom: 45px;
+}
+
+@media only screen and (max-width: 425px) {
+    .content-body {
+        margin-left: 6px;
+        margin-bottom: 65px;
+    }
 }
 
 .chatbot {
