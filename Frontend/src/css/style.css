@@ -7854,6 +7854,11 @@ strong,
   margin-right: 6px;
   margin-bottom: 45px; }
 
+@media only screen and (max-width: 425px) {
+  .content-body {
+    margin-left: 6px;
+    margin-bottom: 65px; } }
+
 .chatbot {
   position: fixed;
   z-index: 1000;
@@ -8054,7 +8059,7 @@ strong,
   width: 100%;
   margin: 15px 0 20px; }
 
-input[type='range'] {
+input[type="range"] {
   position: relative;
   z-index: 1000;
   -webkit-appearance: none;
@@ -8068,7 +8073,7 @@ input[type='range'] {
   padding: 0;
   width: 100%;
   box-shadow: 0 0 1px rgba(0, 0, 0, 0.9); }
-  input[type='range']::-webkit-slider-thumb {
+  input[type="range"]::-webkit-slider-thumb {
     position: relative;
     -webkit-appearance: none;
     appearance: none;
@@ -8081,13 +8086,13 @@ input[type='range'] {
     z-index: 5000;
     -webkit-transition: background 0.3s ease-in-out;
     transition: background 0.3s ease-in-out; }
-    input[type='range']::-webkit-slider-thumb:hover, input[type='range']::-webkit-slider-thumb:active {
+    input[type="range"]::-webkit-slider-thumb:hover, input[type="range"]::-webkit-slider-thumb:active {
       background: #2a4eff;
       -webkit-transition: background 0.3s ease-in-out;
       transition: background 0.3s ease-in-out; }
-  input[type='range']::-moz-range-track {
+  input[type="range"]::-moz-range-track {
     background: transparent; }
-  input[type='range']::-moz-range-thumb {
+  input[type="range"]::-moz-range-thumb {
     position: relative;
     -moz-appearance: none;
     appearance: none;
@@ -8100,7 +8105,7 @@ input[type='range'] {
     z-index: 5000;
     -moz-transition: background 0.3s ease-in-out;
     transition: background 0.3s ease-in-out; }
-    input[type='range']::-moz-range-thumb:hover, input[type='range']::-moz-range-thumb:active {
+    input[type="range"]::-moz-range-thumb:hover, input[type="range"]::-moz-range-thumb:active {
       background: #2a4eff;
       -moz-transition: background 0.3s ease-in-out;
       transition: background 0.3s ease-in-out; }
@@ -8138,6 +8143,15 @@ input[type='range'] {
       border: 0px; }
     .dropdown-menu .dropdown-item:hover, .dropdown-menu .dropdown-item:focus, .dropdown-menu .dropdown-item.active {
       background-color: transparent; }
+  .dropdown-menu .responsive-dropdown-item {
+    display: none !important; }
+
+@media only screen and (max-width: 425px) {
+  .dropdown-menu .responsive-dropdown-item {
+    display: block !important; } }
+
+.nav-tabs .nav-link.active {
+  color: white; }
 
 @media only screen and (min-width: 1200px) and (max-width: 1440px) {
   .col-xxl-1 {
@@ -8628,6 +8642,9 @@ label.error {
   justify-content: start; }
   .amount-card .card-header .profit-amount {
     padding-left: 10px; }
+
+.progress {
+  background: red !important; }
 
 .intro {
   background-image: url("./../images/background/intro_background.png");
@@ -10493,6 +10510,10 @@ label.error {
   top: 0;
   box-shadow: 0 10px 30px 0 rgba(82, 63, 105, 0.08); }
 
+@media only screen and (max-width: 425px) {
+  .sidebar {
+    display: none; } }
+
 .menu {
   margin-top: 100px; }
   .menu ul li {
@@ -11425,5 +11446,114 @@ label.error {
     width: 90%;
     right: 0px;
     bottom: 0px; }
+
+.stake-card .card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; }
+  .stake-card .card-header .box-title {
+    display: flex;
+    align-items: center; }
+    .stake-card .card-header .box-title .stakeali-text {
+      margin-bottom: 0;
+      margin-left: 5px; }
+
+.stake-card .card-body {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; }
+  .stake-card .card-body .stakedali-amount,
+  .stake-card .card-body .earnedali-amount {
+    display: flex;
+    align-items: baseline; }
+
+.tokeninfo-card .card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; }
+
+.tokeninfo-card .card-body {
+  display: flex;
+  justify-content: space-around; }
+  .tokeninfo-card .card-body .card-content {
+    display: flex;
+    align-items: center; }
+    .tokeninfo-card .card-body .card-content div {
+      margin-left: 10px; }
+      .tokeninfo-card .card-body .card-content div span {
+        color: white; }
+      .tokeninfo-card .card-body .card-content div h2, .tokeninfo-card .card-body .card-content div .h2 {
+        margin-bottom: 0;
+        color: yellow; }
+
+.staking-settingcard .card-header {
+  display: block; }
+  .staking-settingcard .card-header .cryptocard-box {
+    border-radius: 10px;
+    border: 1px solid gray;
+    padding: 0px 20px;
+    margin: 20px 0; }
+    .staking-settingcard .card-header .cryptocard-box .content-line {
+      margin: 5px 0;
+      display: flex;
+      justify-content: space-between; }
+      .staking-settingcard .card-header .cryptocard-box .content-line h5, .staking-settingcard .card-header .cryptocard-box .content-line .h5 {
+        margin-bottom: 0; }
+      .staking-settingcard .card-header .cryptocard-box .content-line .crypto-box {
+        margin-left: 10px;
+        padding: 5px;
+        background: rgba(128, 128, 128, 0.488);
+        display: flex;
+        align-items: center;
+        border-radius: 10px; }
+
+.pricebar {
+  position: relative;
+  height: 15px;
+  background: rgba(131, 131, 131, 0.5); }
+  .pricebar img {
+    position: absolute;
+    top: -50%; }
+  .pricebar .trust-img1 {
+    left: -15px; }
+  .pricebar .trust-img2 {
+    left: 9%; }
+  .pricebar .trust-img3 {
+    left: 20%; }
+  .pricebar .trust-img4 {
+    left: 40%; }
+  .pricebar .trust-img5 {
+    right: -15px; }
+  .pricebar span {
+    position: absolute;
+    top: 25px; }
+  .pricebar .trust-text1 {
+    left: -15px;
+    color: #efc3ab; }
+  .pricebar .trust-text2 {
+    left: 8%;
+    color: #a2bbe7; }
+  .pricebar .trust-text3 {
+    left: 19%;
+    color: #aa721c; }
+  .pricebar .trust-text4 {
+    left: 39%;
+    color: #a2a9ff; }
+  .pricebar .trust-text5 {
+    right: -15px;
+    color: #d7c180; }
+
+.result-box {
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 10px 20px; }
+  .result-box .box-content1 h4, .result-box .box-content1 .h4 {
+    margin-left: 10px; }
+
+.text-right {
+  text-align: right; }
+
+.middle-line {
+  border-top: gray dashed 2px; }
 
 /*# sourceMappingURL=style.css.map */

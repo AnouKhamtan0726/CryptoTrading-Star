@@ -1,0 +1,145 @@
+.stake-card {
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .box-title {
+            display: flex;
+            align-items: center;
+            .stakeali-text {
+                margin-bottom: 0;
+                margin-left: 5px;
+            }
+        }
+    }
+    .card-body {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .stakedali-amount,
+        .earnedali-amount {
+            display: flex;
+            align-items: baseline;
+        }
+    }
+}
+
+.tokeninfo-card {
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .card-body {
+        display: flex;
+        justify-content: space-around;
+        .card-content {
+            display: flex;
+            align-items: center;
+            div {
+                margin-left: 10px;
+                span {
+                    color: white;
+                }
+                h2 {
+                    margin-bottom: 0;
+                    color: yellow;
+                }
+            }
+        }
+    }
+}
+
+.staking-settingcard {
+    .card-header {
+        display: block;
+        .cryptocard-box {
+            border-radius: 10px;
+            border: 1px solid gray;
+            padding: 0px 20px;
+            margin: 20px 0;
+            .content-line {
+                margin: 5px 0;
+                display: flex;
+                justify-content: space-between;
+                h5 {
+                    margin-bottom: 0;
+                }
+                .crypto-box {
+                    margin-left: 10px;
+                    padding: 5px;
+                    background: rgba(128, 128, 128, 0.488);
+                    display: flex;
+                    align-items: center;
+                    border-radius: 10px;
+                }
+            }
+        }
+    }
+}
+
+.pricebar {
+    position: relative;
+    height: 15px;
+    background: rgba(131, 131, 131, 0.5);
+    img {
+        position: absolute;
+        top: -50%;
+    }
+    .trust-img1 {
+        left: -15px;
+    }
+    .trust-img2 {
+        left: 9%;
+    }
+    .trust-img3 {
+        left: 20%;
+    }
+    .trust-img4 {
+        left: 40%;
+    }
+    .trust-img5 {
+        right: -15px;
+    }
+    span {
+        position: absolute;
+        top: 25px;
+    }
+    .trust-text1 {
+        left: -15px;
+        color: #efc3ab;
+    }
+    .trust-text2 {
+        left: 8%;
+        color: #a2bbe7;
+    }
+    .trust-text3 {
+        left: 19%;
+        color: #aa721c;
+    }
+    .trust-text4 {
+        left: 39%;
+        color: #a2a9ff;
+    }
+    .trust-text5 {
+        right: -15px;
+        color: #d7c180;
+    }
+}
+.result-box {
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 10px 20px;
+    .box-content1 {
+        h4 {
+            margin-left: 10px;
+        }
+    }
+}
+.text-right {
+    text-align: right;
+}
+.middle-line {
+    border-top: gray dashed 2px;
+
+}
