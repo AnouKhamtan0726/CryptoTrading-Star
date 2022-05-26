@@ -9415,6 +9415,13 @@ label.error {
 .verification {
   height: 100%; }
 
+.password-show {
+  top: 45px;
+  right: 10px;
+  cursor: pointer; }
+  .password-show span i {
+    font-size: 20px; }
+
 .identity-content {
   text-align: center; }
   .identity-content .icon {

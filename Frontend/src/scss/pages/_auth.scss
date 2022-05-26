@@ -27,8 +27,18 @@
 }
 
 .verification {
-    // margin-top: 100px;
     height: 100%;
+}
+
+.password-show {
+    top: 45px;
+    right: 10px;
+    cursor: pointer;
+    span {
+        i {
+            font-size: 20px;
+        }
+    }
 }
 
 .identity-content {

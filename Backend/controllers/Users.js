@@ -15,13 +15,26 @@ export const getUsers = async (req, res) => {
 
 export const Register = async (req, res) => {
     const { name, email, password, confPassword } = req.body;
-    if (password !== confPassword) return res.status(400).json({ msg: "Password and Confirm Password do not match" });
-    if (name == "") return res.status(400).json({ msg: "Please input username" });
-    if (email == "") return res.status(400).json({ msg: "Please input email" });
-    if (password == "") return res.status(400).json({ msg: "Please input password" });
+    const regExpPassword = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{6,})/;
+
+    if (name == "") {
+        return res.status(400).json({ msg: "Please input username" });
+    } else if (email == "") {
+        return res.status(400).json({ msg: "Please input email" });
+    } else if (password == "") {
+        return res.status(400).json({ msg: "Please input password" });
+    } else if (!regExpPassword.test(password)) {
+        return res.status(400).json({ msg: "Please check password" });
+    } else if (password !== confPassword) {
+        return res.status(400).json({ msg: "Password and Confirm Password do not match" });
+    }
+
     const salt = await bcrypt.genSalt();
     const hashPassword = await bcrypt.hash(password, salt);
     try {
+        // const emailExits = await user.findOne({ email: req.body.email });
+        // if (emailExits) return res.status(400).send('Email already exits');
+
         await Users.create({
             name: name,
             email: email,
@@ -62,7 +75,7 @@ export const Login = async (req, res) => {
         });
         res.json({ accessToken });
     } catch (error) {
-        res.status(404).json({ msg: "Email not found" });
+        res.status(404).json({ msg: "No matching user information." });
     }
 }
 

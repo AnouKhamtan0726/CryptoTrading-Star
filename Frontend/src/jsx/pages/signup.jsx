@@ -2,17 +2,44 @@ import React, { useState } from 'react'
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
+import validator from 'validator'
+import PasswordChecklist from "react-password-checklist"
 
 const Signup = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confPassword, setConfPassword] = useState('');
+    const [passwordShown, setPasswordShown] = useState(false);
+    const [passwordShown1, setPasswordShown1] = useState(false);
     const [msg, setMsg] = useState('');
     const history = useHistory();
 
+    const togglePassword = () => {
+        setPasswordShown(!passwordShown);
+    };
+
+    const togglePassword1 = () => {
+        setPasswordShown1(!passwordShown1);
+    };
+
+    const validateEmail = () => {
+
+        if (validator.isEmail(email) || email === '') {
+            setMsg('')
+        } else {
+            setMsg('Enter valid Email!')
+            return false;
+        }
+        return true;
+    }
+
     const Signup = async (e) => {
         e.preventDefault();
+        let ret = validateEmail();
+        if (!ret) {
+            return;
+        }
         try {
             await axios.post('http://localhost:5000/users', {
                 name: name,
@@ -47,7 +74,6 @@ const Signup = () => {
                                         method="post"
                                         name="myform"
                                         className="signup_validate"
-                                        onSubmit={Signup}
                                     >
                                         <p className="has-text-centered error-message">{msg}</p>
                                         <div className="mb-3">
@@ -73,22 +99,38 @@ const Signup = () => {
                                         <div className="mb-3">
                                             <label>Password *</label>
                                             <input
-                                                type="password"
+                                                type={passwordShown ? "text" : "password"}
                                                 className="form-control"
                                                 placeholder="Password"
                                                 name="password"
                                                 value={password} onChange={(e) => setPassword(e.target.value)}
                                             />
+                                            <div className='password-show position-absolute' onClick={togglePassword}>
+                                                <span className="icon">
+                                                    <i className="fa fa-eye"></i>
+                                                </span>
+                                            </div>
+                                            <PasswordChecklist
+                                                rules={["minLength", "specialChar", "number", "capital"]}
+                                                minLength={6}
+                                                value={password}
+                                                onChange={(isValid) => { }}
+                                            />
                                         </div>
                                         <div className="mb-3">
                                             <label>Confirm Password *</label>
                                             <input
-                                                type="password"
+                                                type={passwordShown1 ? "text" : "password"}
                                                 className="form-control"
                                                 placeholder="Re-type Password"
                                                 name="password"
                                                 value={confPassword} onChange={(e) => setConfPassword(e.target.value)}
                                             />
+                                            <div className='password-show position-absolute' onClick={togglePassword1}>
+                                                <span className="icon">
+                                                    <i className="fa fa-eye"></i>
+                                                </span>
+                                            </div>
                                         </div>
                                         {/* <div className="mb-3">
                                             <label>Invite Code</label>
@@ -100,12 +142,12 @@ const Signup = () => {
                                             />
                                         </div> */}
                                         <div className="text-center mt-4">
-                                            <button
-                                                // to={"./signin"}
+                                            <div
                                                 className="btn btn-success btn-block"
+                                                onClick={Signup}
                                             >
                                                 Sign up
-                                            </button>
+                                            </div>
                                         </div>
                                     </form>
                                     <div className="new-account mt-3">

@@ -2,16 +2,37 @@ import React, { useState } from 'react'
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import { Link } from "react-router-dom";
-
+// import validator from 'validator'
 
 const Signin = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [msg, setMsg] = useState('');
+    const [passwordShown, setPasswordShown] = useState(false);
     const history = useHistory();
+
+    const togglePassword = () => {
+        setPasswordShown(!passwordShown);
+    };
+
+    // const validateEmail = () => {
+
+    //     if (validator.isEmail(email) || email == '' ) {
+    //         setMsg('')
+    //     } else {
+    //         setMsg('Enter valid Email!')
+    //         return false;
+    //     }
+    //     return true;
+    // }
+
 
     const Auth = async (e) => {
         e.preventDefault();
+        // let ret = validateEmail();
+        // if (!ret) {
+        //     return;
+        // }
         try {
             await axios.post('http://localhost:5000/login', {
                 email: email,
@@ -43,7 +64,6 @@ const Signin = () => {
                                         method="post"
                                         name="myform"
                                         className="signin_validate"
-                                        onSubmit={Auth}
                                     >
                                         <p className="has-text-centered error-message">{msg}</p>
                                         <div className="mb-3">
@@ -56,15 +76,20 @@ const Signin = () => {
                                                 value={email} onChange={(e) => setEmail(e.target.value)}
                                             />
                                         </div>
-                                        <div className="mb-3">
+                                        <div className="mb-3 position-relative">
                                             <label>Password</label>
                                             <input
-                                                type="password"
+                                                type={passwordShown ? "text" : "password"}
                                                 className="form-control"
                                                 placeholder="Password"
                                                 name="password"
                                                 value={password} onChange={(e) => setPassword(e.target.value)}
                                             />
+                                            <div className='password-show position-absolute' onClick={togglePassword}>
+                                                <span className="icon">
+                                                    <i className="fa fa-eye"></i>
+                                                </span>
+                                            </div>
                                         </div>
                                         <div className="row d-flex justify-content-between mt-4 mb-2">
                                             <div className="mb-3 mb-0">
@@ -86,12 +111,12 @@ const Signin = () => {
                                             </div>
                                         </div>
                                         <div className="text-center">
-                                            <button
-                                                // to={"./otp-1"}
+                                            <div
                                                 className="btn btn-success btn-block"
+                                                onClick={Auth}
                                             >
                                                 Sign in
-                                            </button>
+                                            </div>
                                         </div>
                                     </form>
                                     <div className="new-account mt-3">
