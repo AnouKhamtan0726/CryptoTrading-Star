@@ -27,6 +27,7 @@ import Preferences from './pages/settings-preferences';
 import Security from './pages/settings-security';
 import Signin from './pages/signin';
 import Signup from './pages/signup';
+import PrizePool from './pages/prize-pool';
 import VerifyStep1 from './pages/verify-step-1';
 import VerifyStep2 from './pages/verify-step-2';
 import VerifyStep3 from './pages/verify-step-3';
@@ -74,6 +75,7 @@ class Index extends Component {
                             <Route path='/verify-step-4' component={VerifyStep4} />
                             <Route path='/verify-step-5' component={VerifyStep5} />
                             <Route path='/verify-step-6' component={VerifyStep6} />
+                            <Route path='/prize-pool' component={PrizePool} />
                         </Switch>
                     </div>
                 </BrowserRouter>

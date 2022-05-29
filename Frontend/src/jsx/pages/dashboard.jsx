@@ -149,20 +149,20 @@ function Dashboard() {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-xl-2 col-lg-2 col-md-12">
-                            <div className="col-xl-12 col-lg-12 col-md-4">
+                        <div className="col-xl-2 col-lg-12">
+                            <div className="col-12">
                                 <div className="card trading-card">
                                     <div className="card-header">
                                         Amount
                                     </div>
                                     <div className="card-body">
                                         <div className="inde-box">
-                                            <button className="inde-btn btn btn-success btn-block" onClick={incrementCount}>+</button>
-                                            <div className="inde-text" >
+                                            <button className="inde-btn btn btn-danger btn-block col-3" onClick={decrementCount}>-</button>
+                                            <div className="inde-text col-5" >
                                                 <span className="dollar-symbol">$</span>
                                                 <input className="inde-input form-control" type="text" value={count} />
                                             </div>
-                                            <button className="inde-btn btn btn-danger btn-block" onClick={decrementCount}>-</button>
+                                            <button className="inde-btn btn btn-success btn-block col-3" onClick={incrementCount}>+</button>
                                         </div>
                                         <div className="add-amount-box">
                                             <div>
@@ -178,7 +178,7 @@ function Dashboard() {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-xl-12 col-lg-12 col-md-4">
+                            <div className="col-12">
                                 <div className="card amount-card">
                                     <div className="card-header">
                                         <span>Profit</span>
@@ -195,7 +195,7 @@ function Dashboard() {
                                     </div>
                                 </div>
                             </div>
-                            <div className="col-xl-12 col-lg-12 col-md-4">
+                            <div className="col-12">
                                 <div className="card buysell-box">
                                     <div className="card-header">
                                         Buy / Sell

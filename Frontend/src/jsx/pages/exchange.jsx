@@ -163,7 +163,7 @@ function Exchange() {
                                                             <span className="badge badge-success p-2">Buy</span>
                                                         </td>
                                                         <td>
-                                                            <i className="cc LTC"></i> LTC
+                                                            <i className="cc BTC"></i> BTC
                                                         </td>
                                                         <td>
                                                             0x30c6961Fe4d39A7b9805199131F535B8F2EdEf91
@@ -178,7 +178,7 @@ function Exchange() {
                                                             <span className="badge badge-danger p-2">Sold</span>
                                                         </td>
                                                         <td>
-                                                            <i className="cc XRP"></i> XRP
+                                                            <i className="cc BTC"></i> BTC
                                                         </td>
                                                         <td>
                                                             0x30c6961Fe4d39A7b9805199131F535B8F2EdEf91
@@ -193,7 +193,7 @@ function Exchange() {
                                                             <span className="badge badge-success p-2">Buy</span>
                                                         </td>
                                                         <td>
-                                                            <i className="cc DASH"></i> DASH
+                                                            <i className="cc BTC"></i> BTC
                                                         </td>
                                                         <td>
                                                             0x30c6961Fe4d39A7b9805199131F535B8F2EdEf91

@@ -1,9 +1,8 @@
 import React from 'react';
-// import AreaChart from '../charts/area';
+import AreaChart from '../charts/area';
+import BarChart from '../charts/bar';
 import DataSubmenu from '../layout/data-submenu';
 import Footer2 from '../layout/footer2';
-// import { Link } from 'react-router-dom';
-// import { Row, Col, Card } from 'react-bootstrap';
 import Header2 from '../layout/header2';
 import Sidebar from "../layout/sidebar";
 import Chatbot from "../layout/chatbot";
@@ -242,6 +241,18 @@ function Tbi() {
                                             Token Info
                                         </h4>
                                     </div>
+                                    <Tabs defaultActiveKey="price" id="uncontrolled-tab-example" className="mb-3">
+                                        <Tab eventKey="price" title="Price Statistic">
+                                            <TabContainer>
+                                                <AreaChart />
+                                            </TabContainer>
+                                        </Tab>
+                                        <Tab eventKey="volume" title="Volume Statistic">
+                                            <TabContainer>
+                                                <BarChart />
+                                            </TabContainer>
+                                        </Tab>
+                                    </Tabs>
                                     <div className="card-body">
                                         <div className="card tokeninfo-card">
                                             <div className="card-header">

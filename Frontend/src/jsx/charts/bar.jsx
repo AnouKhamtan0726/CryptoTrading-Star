@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import ReactApexChart from "react-apexcharts";
 
-class AreaChart extends Component {
+class BarChart extends Component {
     constructor(props) {
         super(props);
 
@@ -129,7 +129,7 @@ class AreaChart extends Component {
                     <ReactApexChart
                         options={this.state.options}
                         series={this.state.series}
-                        type="area"
+                        type="bar"
                         height={350}
                     />
                 </div>
@@ -138,7 +138,7 @@ class AreaChart extends Component {
     }
 }
 
-export default AreaChart;
+export default BarChart;
 
 function generateDayWiseTimeSeries(s, count) {
     var values = [

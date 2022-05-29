@@ -10,6 +10,7 @@
 @import url("../icons/line-awesome/css/line-awesome.min.css");
 @import url("../icons/font-awesome/css/font-awesome.min.css");
 @import url("../icons/cryptocoins/css/cryptocoins.css");
+@import url("../icons/frizon/css/frizon.css");
 @import url("../icons/cryptocoins/css/cryptocoins-colors.css");
 @import url("../icons/material-design-iconic-font/css/materialdesignicons.min.css");
 @import url("../icons/flag-icon-css/flag-icon.min.css");
@@ -8622,14 +8623,12 @@ label.error {
     position: relative; }
     .trading-card .card-body .inde-box .inde-text .inde-input {
       display: inline-block;
-      width: 150px;
-      margin: 0 10px;
       padding: 5px 0 5px 20px !important;
       background: white !important;
       color: black !important; }
     .trading-card .card-body .inde-box .inde-text .dollar-symbol {
       position: absolute;
-      left: 20px;
+      left: 10px;
       top: 5px;
       color: black; }
 
@@ -10477,6 +10476,141 @@ label.error {
       .profile_log .dropdown-menu .dropdown-item:hover, .profile_log .dropdown-menu .dropdown-item:focus, .profile_log .dropdown-menu .dropdown-item.active {
         background-color: transparent; }
 
+.account-select {
+  cursor: pointer;
+  background: #10d876;
+  border-radius: 10px; }
+  .account-select .select-pointer p {
+    font-size: 10px; }
+  .account-select .dropdown-menu {
+    border: 0px;
+    padding: 0px;
+    margin: 0px;
+    top: 47px;
+    box-shadow: 0 10px 20px rgba(92, 119, 252, 0.15);
+    border-radius: 5px;
+    background-color: #131722;
+    min-width: 240px; }
+    .account-select .dropdown-menu .demo-account {
+      border-top: solid gray 1px; }
+    .account-select .dropdown-menu .dropdown-item {
+      padding: 5px 20px;
+      border-top: 1px solid #363C4E;
+      font-size: 14px;
+      color: #a1a0a7;
+      font-weight: 400;
+      display: flex;
+      align-items: center; }
+      .account-select .dropdown-menu .dropdown-item:first-child {
+        border: 0px; }
+      .account-select .dropdown-menu .dropdown-item.logout {
+        color: #E50202; }
+        .account-select .dropdown-menu .dropdown-item.logout i {
+          color: #E50202; }
+      .account-select .dropdown-menu .dropdown-item i {
+        margin-right: 10px;
+        font-size: 22px;
+        color: #5d78ff;
+        font-weight: bold; }
+      .account-select .dropdown-menu .dropdown-item:hover, .account-select .dropdown-menu .dropdown-item:focus, .account-select .dropdown-menu .dropdown-item.active {
+        background-color: transparent; }
+
+.prize-pool {
+  border: 1px solid #592ae6;
+  background: linear-gradient(133deg, #020024, #290c7e 0, #592ae6);
+  border-radius: 10px;
+  position: relative; }
+  .prize-pool p {
+    font-size: 10px; }
+  .prize-pool .prize-icon {
+    position: absolute;
+    left: -30px;
+    top: -5px; }
+
+.deposit-btn form {
+  width: 250px; }
+  .deposit-btn form ::placeholder {
+    color: black;
+    font-size: 12px; }
+  .deposit-btn form .position-absolute {
+    right: 5px;
+    top: 10px;
+    color: #10d876;
+    cursor: pointer; }
+
+.deposit-btn .btn-light {
+  text-align: left !important;
+  font-size: 18px; }
+  .deposit-btn .btn-light span {
+    margin-left: 5px; }
+
+.deposit-btn .deposit-amount {
+  background: wheat;
+  color: black; }
+
+.alert_panel .thumb {
+  height: 32px;
+  width: 32px;
+  border-radius: 50px;
+  border: 1px solid #5d78ff;
+  display: inline-block;
+  margin-right: 7px;
+  background: #5d78ff;
+  color: #fff;
+  text-align: center;
+  padding: 3px 0; }
+  .alert_panel .thumb i {
+    font-size: 18px;
+    line-height: 1.3; }
+
+.panel-container {
+  width: 350px;
+  height: 500px;
+  overflow: auto; }
+  .panel-container .panel-header {
+    padding: 0px 20px; }
+  .panel-container .panel-body {
+    padding: 10px 0;
+    border-top: 1px solid wheat; }
+    .panel-container .panel-body .thumb {
+      margin-right: 10px; }
+      .panel-container .panel-body .thumb i {
+        color: white;
+        font-size: 20px; }
+    .panel-container .panel-body .body-content {
+      padding: 0px 20px 10px 20px;
+      border-bottom: 1px solid wheat; }
+      .panel-container .panel-body .body-content .box-title {
+        font-size: 14px;
+        color: white; }
+      .panel-container .panel-body .body-content .box-date {
+        padding: 0px 10px;
+        background: #38654f;
+        border-radius: 5px; }
+      .panel-container .panel-body .body-content .notification-item-text {
+        font-size: 12px; }
+      .panel-container .panel-body .body-content .alert-status {
+        border-radius: 50%;
+        border: 5px solid white;
+        height: fit-content;
+        margin-top: 10px; }
+
+.small-text {
+  font-size: 10px; }
+
+.unread {
+  border-color: red !important; }
+
+@media only screen and (max-width: 425px) {
+  .quick-deposit {
+    display: none; }
+  .navbar-brand {
+    display: none !important; }
+  .navbar-expand-lg {
+    justify-content: end !important; }
+  .dashboard_log {
+    margin-left: 10px; } }
+
 .page-title {
   padding: 30px 0; }
   .page-title.dashboard {
@@ -10515,6 +10649,7 @@ label.error {
   height: 100%;
   width: 60px;
   top: 0;
+  z-index: 10;
   box-shadow: 0 10px 30px 0 rgba(82, 63, 105, 0.08); }
 
 @media only screen and (max-width: 425px) {
@@ -11562,5 +11697,175 @@ label.error {
 
 .middle-line {
   border-top: gray dashed 2px; }
+
+html {
+  scroll-behavior: smooth; }
+
+.prize-content-body {
+  margin-top: 70px;
+  margin-left: 60px; }
+  .prize-content-body .prize-pool-container {
+    background: url("./../images/main_assets/prizebg1.png") top no-repeat;
+    background-size: 100% auto;
+    overflow: hidden;
+    padding-top: 90px; }
+    .prize-content-body .prize-pool-container .prize-intro .prizeman-img {
+      bottom: -30px;
+      width: 374px;
+      height: 356px;
+      z-index: 1; }
+    .prize-content-body .prize-pool-container .prize-intro h2, .prize-content-body .prize-pool-container .prize-intro .h2 {
+      font-size: 50px;
+      margin-bottom: 95px; }
+    .prize-content-body .prize-pool-container .prize-intro .prize-amount {
+      width: 500px;
+      height: 120px;
+      border: 1px solid #592ae6;
+      background: rgba(41, 12, 126, 0.44);
+      border-radius: 25px;
+      display: flex;
+      align-items: center;
+      justify-content: center; }
+      .prize-content-body .prize-pool-container .prize-intro .prize-amount .prize-amount-number {
+        font-size: 48px;
+        color: #f7a62f; }
+      .prize-content-body .prize-pool-container .prize-intro .prize-amount .prize-pool-label {
+        border-radius: 35px;
+        border: 2px solid #592ae6;
+        background: #290c7e;
+        padding: 0 20px;
+        top: -30px;
+        height: 48px;
+        font-size: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #f7a62f;
+        z-index: 10; }
+      .prize-content-body .prize-pool-container .prize-intro .prize-amount .prizefire-img {
+        top: -65px; }
+      .prize-content-body .prize-pool-container .prize-intro .prize-amount .prizebox1-img {
+        left: -54px; }
+      .prize-content-body .prize-pool-container .prize-intro .prize-amount .prizebox2-img {
+        right: -74px; }
+      .prize-content-body .prize-pool-container .prize-intro .prize-amount .prize-pool-mega-fund {
+        position: absolute;
+        width: 370px;
+        height: 77px;
+        left: 50%;
+        bottom: -65px;
+        color: #b100ff;
+        font-size: 26px;
+        font-weight: 700;
+        transform: translateX(-50%);
+        text-align: center;
+        padding-top: 10px;
+        background: url("./../images/main_assets/prizetextbox1.png");
+        background-size: cover; }
+    .prize-content-body .prize-pool-container .prize-intro .go-help {
+      text-decoration: underline;
+      color: #f7a62f;
+      text-align: center;
+      display: block;
+      cursor: pointer; }
+    .prize-content-body .prize-pool-container .prize-last {
+      background: url("./../images/main_assets/prizebg2.png") top no-repeat;
+      background-size: cover;
+      overflow: hidden;
+      padding-top: 90px;
+      margin-top: 100px; }
+      .prize-content-body .prize-pool-container .prize-last p {
+        font-weight: bold; }
+      .prize-content-body .prize-pool-container .prize-last h2, .prize-content-body .prize-pool-container .prize-last .h2 {
+        font-size: 40px;
+        margin-bottom: 55px; }
+      .prize-content-body .prize-pool-container .prize-last .prize-amount {
+        width: 500px;
+        height: 120px;
+        border: 2px solid #f7a62f;
+        background: linear-gradient(180deg, #020024, #7a4900 0, #342500);
+        border-radius: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column; }
+        .prize-content-body .prize-pool-container .prize-last .prize-amount .prize-amount-number {
+          font-size: 24px;
+          font-family: sans-serif;
+          color: #f7a62f;
+          font-weight: 700; }
+        .prize-content-body .prize-pool-container .prize-last .prize-amount .prize-pool-label {
+          border-radius: 7px;
+          border: 1px solid #f7a62f;
+          background: linear-gradient(45deg, #020024, #2c1d01 0, #2b1c01);
+          top: -15px;
+          height: 24px;
+          font-size: 10px;
+          display: flex;
+          justify-content: center;
+          text-transform: uppercase;
+          align-items: center;
+          color: #f7a62f;
+          z-index: 10;
+          line-height: 22px;
+          padding: 0 15px;
+          margin: 0; }
+        .prize-content-body .prize-pool-container .prize-last .prize-amount .prizebox1-img {
+          left: -54px; }
+        .prize-content-body .prize-pool-container .prize-last .prize-amount .prizebox2-img {
+          right: -50px; }
+        .prize-content-body .prize-pool-container .prize-last .prize-amount .prize-pool-mega-fund {
+          position: absolute;
+          width: 370px;
+          height: 77px;
+          left: 50%;
+          bottom: -65px;
+          color: #b100ff;
+          font-size: 26px;
+          font-weight: 700;
+          transform: translateX(-50%);
+          text-align: center;
+          padding-top: 10px;
+          background: url("./../images/main_assets/prizetextbox1.png");
+          background-size: cover; }
+      .prize-content-body .prize-pool-container .prize-last .win-streak {
+        color: #18c67a; }
+      .prize-content-body .prize-pool-container .prize-last .lose-streak {
+        color: #fc5f5f; }
+      .prize-content-body .prize-pool-container .prize-last .statistic-table {
+        margin: 100px 0 !important; }
+    .prize-content-body .prize-pool-container .prize-help {
+      background: url("./../images/main_assets/prizebg3.png") top no-repeat;
+      padding-bottom: 70px;
+      padding-top: 100px;
+      background-size: cover;
+      position: relative; }
+      .prize-content-body .prize-pool-container .prize-help .help-title {
+        color: #f7a62f;
+        font-size: 20px;
+        font-weight: 500; }
+      .prize-content-body .prize-pool-container .prize-help .help-challenge-title {
+        font-size: 40px; }
+      .prize-content-body .prize-pool-container .prize-help .help-card-box .help-card {
+        padding: 35px 20px 20px;
+        background: #2a1c52;
+        border-radius: 5px;
+        text-align: center;
+        height: 270px;
+        width: 200px;
+        margin-right: 20px; }
+        .prize-content-body .prize-pool-container .prize-help .help-card-box .help-card .help-card-text {
+          color: rgba(128, 134, 177, 0.7);
+          font-size: 14px;
+          line-height: 16px !important; }
+      .prize-content-body .prize-pool-container .prize-help .prizeroket1-img {
+        top: -70px;
+        left: 0; }
+      .prize-content-body .prize-pool-container .prize-help .prizeroket2-img {
+        top: 70px;
+        right: 0; }
+
+.font-frizon {
+  font-family: "frizon"; }
 
 /*# sourceMappingURL=style.css.map */
