@@ -1,15 +1,14 @@
 import dashboard from './dashboard';
-import trading from './trading';
-import agent from './agents';
-import system from './systems';
-import report from './reports';
-import other from './others';
-
+import trading from './tradings';
+import referral from './referrals';
+import admin from './admins';
+import users from './users';
+import billing from './billings';
 
 // ==============================|| MENU ITEMS ||============================== //
 
 const menuItems = {
-    items: [dashboard, trading, agent, system, report, other ]
+    items: [dashboard, admin, users, trading, referral, billing]
 };
 
 export default menuItems;

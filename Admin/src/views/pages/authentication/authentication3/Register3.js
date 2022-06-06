@@ -47,7 +47,6 @@ const Register = () => {
                                                     >
                                                         Sign up
                                                     </Typography>
-
                                                 </Stack>
                                             </Grid>
                                         </Grid>

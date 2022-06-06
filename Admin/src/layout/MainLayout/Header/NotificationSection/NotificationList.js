@@ -2,9 +2,6 @@
 import { useTheme, styled } from '@mui/material/styles';
 import {
     Avatar,
-    Button,
-    Card,
-    CardContent,
     Chip,
     Divider,
     Grid,
@@ -13,12 +10,11 @@ import {
     ListItemAvatar,
     ListItemSecondaryAction,
     ListItemText,
-    Stack,
     Typography
 } from '@mui/material';
 
 // assets
-import { IconBrandTelegram, IconBuildingStore, IconMailbox, IconPhoto } from '@tabler/icons';
+import { IconBuildingStore } from '@tabler/icons';
 import User1 from 'assets/images/users/user-round.svg';
 
 // styles
@@ -53,13 +49,6 @@ const NotificationList = () => {
         ...chipSX,
         color: theme.palette.warning.dark,
         backgroundColor: theme.palette.warning.light
-    };
-
-    const chipSuccessSX = {
-        ...chipSX,
-        color: theme.palette.success.dark,
-        backgroundColor: theme.palette.success.light,
-        height: 28
     };
 
     return (

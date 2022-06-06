@@ -126,3 +126,9 @@
         transform: translateX(10px);
     }
 }
+
+@media (max-width: 1024px) {
+    .responsivecard {
+        margin-bottom: 20px;
+    }
+}

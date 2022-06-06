@@ -119,7 +119,9 @@ const FirebaseRegister = ({ ...others }) => {
                 </Grid>
                 <Grid item xs={12} container alignItems="center" justifyContent="center">
                     <Box sx={{ mb: 2 }}>
-                        <Typography variant="subtitle1" style={{ color: 'white' }}>Sign up with Email address</Typography>
+                        <Typography variant="subtitle1" style={{ color: 'white' }}>
+                            Sign up with Email address
+                        </Typography>
                     </Box>
                 </Grid>
             </Grid>
@@ -244,7 +246,7 @@ const FirebaseRegister = ({ ...others }) => {
                                             />
                                         </Grid>
                                         <Grid item>
-                                            <Typography variant="subtitle1" fontSize="0.75rem" style={{ color: 'white' }} >
+                                            <Typography variant="subtitle1" fontSize="0.75rem" style={{ color: 'white' }}>
                                                 {level?.label}
                                             </Typography>
                                         </Grid>
