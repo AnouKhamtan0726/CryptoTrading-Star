@@ -74,7 +74,7 @@ const EarningCard = ({ isLoading }) => {
                                                             color: '#111936'
                                                         }}
                                                     >
-                                                        Online Users
+                                                        Referral Accounts
                                                     </Typography>
                                                 </Grid>
                                             </Grid>
@@ -82,7 +82,7 @@ const EarningCard = ({ isLoading }) => {
                                         <Grid container alignItems="center">
                                             <Grid item>
                                                 <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 0.75, mb: 1.75 }}>
-                                                    270,000
+                                                    50,000
                                                 </Typography>
                                             </Grid>
                                             <Grid item>
@@ -110,7 +110,7 @@ const EarningCard = ({ isLoading }) => {
                                         color: theme.palette.secondary[200]
                                     }}
                                 >
-                                    Total Users : 300,000
+                                    Total Accounts : 100,000
                                 </Typography>
                             </Grid>
                         </Grid>

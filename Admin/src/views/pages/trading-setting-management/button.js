@@ -3,20 +3,40 @@ import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import { purple } from '@mui/material/colors';
+import { useTheme } from '@mui/material/styles';
 
-const AddButton = styled(Button)(({ theme }) => ({
+const StopButton = styled(Button)(({ theme }) => ({
     color: theme.palette.getContrastText(purple[500]),
-    backgroundColor: purple[500],
+    backgroundColor: theme.palette.secondary.main,
     '&:hover': {
-        backgroundColor: purple[700]
+        backgroundColor: theme.palette.secondary.dark
+    }
+}));
+
+const IncButton = styled(Button)(({ theme }) => ({
+    color: theme.palette.getContrastText(purple[500]),
+    backgroundColor: theme.palette.primary.main,
+    '&:hover': {
+        backgroundColor: theme.palette.primary.dark
+    }
+}));
+
+const DecButton = styled(Button)(({ theme }) => ({
+    color: theme.palette.getContrastText(purple[500]),
+    backgroundColor: theme.palette.error.main,
+    '&:hover': {
+        backgroundColor: theme.palette.error.dark
     }
 }));
 
 export default function CustomizedButtons() {
+    const theme = useTheme();
+
     return (
         <Stack spacing={2} direction="row">
-            <AddButton variant="contained">Graph Stop</AddButton>
-            <AddButton variant="contained">Save</AddButton>
+            <StopButton variant="contained">Graph Stop</StopButton>
+            <IncButton variant="contained">Increse</IncButton>
+            <DecButton variant="contained">Decrese</DecButton>
         </Stack>
     );
 }

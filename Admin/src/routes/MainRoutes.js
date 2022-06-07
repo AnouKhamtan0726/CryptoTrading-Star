@@ -15,7 +15,6 @@ const TradingStatisticPage = Loadable(lazy(() => import('views/pages/trading-sta
 const TradingSettingPage = Loadable(lazy(() => import('views/pages/trading-setting-management')));
 const ReferralStatisticPage = Loadable(lazy(() => import('views/pages/referral-statistic-management')));
 const BillingStatisticPage = Loadable(lazy(() => import('views/pages/billing-statistic-management')));
-const BillingSettingPage = Loadable(lazy(() => import('views/pages/billing-setting-management')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -54,10 +53,6 @@ const MainRoutes = {
         {
             path: '/billing-statistic',
             element: <BillingStatisticPage />
-        },
-        {
-            path: '/billing-setting',
-            element: <BillingSettingPage />
         },
         {
             path: '/sample-page',

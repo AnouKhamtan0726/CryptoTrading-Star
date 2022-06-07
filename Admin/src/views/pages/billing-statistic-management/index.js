@@ -1,115 +1,48 @@
 import * as React from 'react';
 import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
-
-const columns = [
-    { id: 'name', label: 'Name', minWidth: 170 },
-    { id: 'code', label: 'ISO\u00a0Code', minWidth: 100 },
-    {
-        id: 'population',
-        label: 'Population',
-        minWidth: 170,
-        align: 'right',
-        format: (value) => value.toLocaleString('en-US')
-    },
-    {
-        id: 'size',
-        label: 'Size\u00a0(km\u00b2)',
-        minWidth: 170,
-        align: 'right',
-        format: (value) => value.toLocaleString('en-US')
-    },
-    {
-        id: 'density',
-        label: 'Density',
-        minWidth: 170,
-        align: 'right',
-        format: (value) => value.toFixed(2)
-    }
-];
-
-function createData(name, code, population, size) {
-    const density = population / size;
-    return { name, code, population, size, density };
-}
-
-const rows = [
-    createData('India', 'IN', 1324171354, 3287263),
-    createData('China', 'CN', 1403500365, 9596961),
-    createData('Italy', 'IT', 60483973, 301340),
-    createData('United States', 'US', 327167434, 9833520),
-    createData('Canada', 'CA', 37602103, 9984670),
-    createData('Australia', 'AU', 25475400, 7692024),
-    createData('Germany', 'DE', 83019200, 357578),
-    createData('Ireland', 'IE', 4857000, 70273),
-    createData('Mexico', 'MX', 126577691, 1972550),
-    createData('Japan', 'JP', 126317000, 377973),
-    createData('France', 'FR', 67022000, 640679),
-    createData('United Kingdom', 'GB', 67545757, 242495),
-    createData('Russia', 'RU', 146793744, 17098246),
-    createData('Nigeria', 'NG', 200962417, 923768),
-    createData('Brazil', 'BR', 210147125, 8515767)
-];
+import Grid from '@mui/material/Grid';
+import { Box } from '@mui/system';
+import TotalMainWallet from './TotalMainWallet';
+import TotalTradingWallet from './TotalTradingWallet';
+import StatisticCard from './StatisticCard';
+import BillingTable from './BillingTable';
+import TextField from '@mui/material/TextField';
+import Button from './button';
 
 export default function StickyHeadTable() {
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
-    const handleChangePage = (event, newPage) => {
-        setPage(newPage);
-    };
-
-    const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(+event.target.value);
-        setPage(0);
-    };
-
     return (
-        <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-            <TableContainer sx={{ maxHeight: 440 }}>
-                <Table stickyHeader aria-label="sticky table">
-                    <TableHead>
-                        <TableRow>
-                            {columns.map((column) => (
-                                <TableCell key={column.id} align={column.align} style={{ minWidth: column.minWidth }}>
-                                    {column.label}
-                                </TableCell>
-                            ))}
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                            return (
-                                <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                                    {columns.map((column) => {
-                                        const value = row[column.id];
-                                        return (
-                                            <TableCell key={column.id} align={column.align}>
-                                                {column.format && typeof value === 'number' ? column.format(value) : value}
-                                            </TableCell>
-                                        );
-                                    })}
-                                </TableRow>
-                            );
-                        })}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-            <TablePagination
-                rowsPerPageOptions={[10, 25, 100]}
-                component="div"
-                count={rows.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-        </Paper>
+        <Box>
+            <Paper sx={{ padding: '20px', marginBottom: '20px' }}>
+                <Grid container justifyContent="space-around">
+                    <Grid item lg={3} md={12} sm={12} xs={12} className="responsivecard">
+                        <TotalMainWallet />
+                    </Grid>
+                    <Grid item lg={3} md={12} sm={12} xs={12} className="responsivecard">
+                        <TotalTradingWallet />
+                    </Grid>
+                    <Grid item lg={3} md={12} sm={12} xs={12} className="responsivecard">
+                        <StatisticCard />
+                    </Grid>
+                </Grid>
+            </Paper>
+            <Paper sx={{ padding: '20px' }}>
+                <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+                    <Box component="form" noValidate autoComplete="off">
+                        <Grid container justifyContent="space-around" alignItems="center">
+                            <Grid item lg={3} md={3} sm={6} xs={6} sx={{ padding: '10px' }}>
+                                <TextField id="trading-profit" label="Transaction Fee" variant="outlined" fullWidth />
+                            </Grid>
+                            <Grid item lg={3} md={3} sm={6} xs={6} sx={{ padding: '10px' }}>
+                                <TextField id="round-wait" label="Once deposit / withdraw amount" variant="outlined" fullWidth />
+                            </Grid>
+                            <Grid item lg={3} md={3} sm={6} xs={6} sx={{ padding: '10px' }}>
+                                <Button />
+                            </Grid>
+                        </Grid>
+                    </Box>
+                    <BillingTable />
+                </Paper>
+            </Paper>
+        </Box>
     );
 }

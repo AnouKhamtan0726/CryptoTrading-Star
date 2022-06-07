@@ -12,7 +12,7 @@ import SkeletonEarningCard from 'ui-component/cards/Skeleton/EarningCard';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 
 const CardWrapper = styled(MainCard)(({ theme }) => ({
-    backgroundColor: theme.palette.secondary.dark,
+    backgroundColor: theme.palette.success.dark,
     color: '#fff',
     overflow: 'hidden',
     position: 'relative',
@@ -21,7 +21,7 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
         position: 'absolute',
         width: 210,
         height: 210,
-        background: theme.palette.secondary[800],
+        background: theme.palette.success[200],
         borderRadius: '50%',
         top: -85,
         right: -95,
@@ -35,7 +35,7 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
         position: 'absolute',
         width: 210,
         height: 210,
-        background: theme.palette.secondary[800],
+        background: theme.palette.success[200],
         borderRadius: '50%',
         top: -125,
         right: -15,
@@ -74,7 +74,7 @@ const EarningCard = ({ isLoading }) => {
                                                             color: '#111936'
                                                         }}
                                                     >
-                                                        Online Users
+                                                        Current Trading Users
                                                     </Typography>
                                                 </Grid>
                                             </Grid>
@@ -82,7 +82,7 @@ const EarningCard = ({ isLoading }) => {
                                         <Grid container alignItems="center">
                                             <Grid item>
                                                 <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 0.75, mb: 1.75 }}>
-                                                    270,000
+                                                    5,000
                                                 </Typography>
                                             </Grid>
                                             <Grid item>
@@ -90,8 +90,8 @@ const EarningCard = ({ isLoading }) => {
                                                     sx={{
                                                         cursor: 'pointer',
                                                         ...theme.typography.smallAvatar,
-                                                        backgroundColor: theme.palette.secondary[200],
-                                                        color: theme.palette.secondary.dark
+                                                        backgroundColor: theme.palette.success[200],
+                                                        color: theme.palette.success.dark
                                                     }}
                                                 >
                                                     <ArrowUpwardIcon fontSize="inherit" sx={{ transform: 'rotate3d(1, 1, 1, 45deg)' }} />
@@ -107,10 +107,10 @@ const EarningCard = ({ isLoading }) => {
                                     sx={{
                                         fontSize: '1rem',
                                         fontWeight: 500,
-                                        color: theme.palette.secondary[200]
+                                        color: theme.palette.success[200]
                                     }}
                                 >
-                                    Total Users : 300,000
+                                    Total Users : 100,000
                                 </Typography>
                             </Grid>
                         </Grid>

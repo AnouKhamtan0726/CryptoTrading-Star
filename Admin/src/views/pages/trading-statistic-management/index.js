@@ -40,13 +40,13 @@ const columns = [
         align: 'right'
     },
     {
-        id: 'baseprices',
+        id: 'baseprice',
         label: 'Base Price',
         minWidth: 70,
         align: 'right'
     },
     {
-        id: 'closedprices',
+        id: 'closedprice',
         label: 'Closed Price',
         minWidth: 70,
         align: 'right'

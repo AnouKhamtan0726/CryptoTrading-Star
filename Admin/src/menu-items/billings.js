@@ -18,15 +18,16 @@ const billing = {
             url: '/billing-statistic',
             icon: icons.IconBrandAsana,
             breadcrumbs: false
-        },
-        {
-            id: 'billing-setting-page',
-            title: 'Setting',
-            type: 'item',
-            url: '/billing-setting',
-            icon: icons.IconListCheck,
-            breadcrumbs: false
         }
+        // ,
+        // {
+        //     id: 'billing-setting-page',
+        //     title: 'Setting',
+        //     type: 'item',
+        //     url: '/billing-setting',
+        //     icon: icons.IconListCheck,
+        //     breadcrumbs: false
+        // }
     ]
 };
 

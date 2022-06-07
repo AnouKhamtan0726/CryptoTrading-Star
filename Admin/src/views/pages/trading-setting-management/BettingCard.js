@@ -2,17 +2,14 @@ import PropTypes from 'prop-types';
 
 // material-ui
 import { styled, useTheme } from '@mui/material/styles';
-import { Avatar, Box, Grid, Typography } from '@mui/material';
+import { Box, Grid, Typography } from '@mui/material';
 
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
 import SkeletonEarningCard from 'ui-component/cards/Skeleton/EarningCard';
 
-// assets
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-
 const CardWrapper = styled(MainCard)(({ theme }) => ({
-    backgroundColor: theme.palette.secondary.dark,
+    backgroundColor: theme.palette.primary.dark,
     color: '#fff',
     overflow: 'hidden',
     position: 'relative',
@@ -21,7 +18,7 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
         position: 'absolute',
         width: 210,
         height: 210,
-        background: theme.palette.secondary[800],
+        background: theme.palette.primary[800],
         borderRadius: '50%',
         top: -85,
         right: -95,
@@ -35,7 +32,7 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
         position: 'absolute',
         width: 210,
         height: 210,
-        background: theme.palette.secondary[800],
+        background: theme.palette.primary[800],
         borderRadius: '50%',
         top: -125,
         right: -15,
@@ -74,28 +71,16 @@ const EarningCard = ({ isLoading }) => {
                                                             color: '#111936'
                                                         }}
                                                     >
-                                                        Online Users
+                                                        Buy:2000 / Sell:3,000
                                                     </Typography>
                                                 </Grid>
                                             </Grid>
                                         </Grid>
                                         <Grid container alignItems="center">
                                             <Grid item>
-                                                <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 0.75, mb: 1.75 }}>
-                                                    270,000
+                                                <Typography sx={{ fontSize: '1.7rem', fontWeight: 500, mr: 1, mt: 0.75, mb: 1.75 }}>
+                                                    $170,00 / $30,00
                                                 </Typography>
-                                            </Grid>
-                                            <Grid item>
-                                                <Avatar
-                                                    sx={{
-                                                        cursor: 'pointer',
-                                                        ...theme.typography.smallAvatar,
-                                                        backgroundColor: theme.palette.secondary[200],
-                                                        color: theme.palette.secondary.dark
-                                                    }}
-                                                >
-                                                    <ArrowUpwardIcon fontSize="inherit" sx={{ transform: 'rotate3d(1, 1, 1, 45deg)' }} />
-                                                </Avatar>
                                             </Grid>
                                         </Grid>
                                     </Grid>
@@ -107,10 +92,10 @@ const EarningCard = ({ isLoading }) => {
                                     sx={{
                                         fontSize: '1rem',
                                         fontWeight: 500,
-                                        color: theme.palette.secondary[200]
+                                        color: theme.palette.primary[200]
                                     }}
                                 >
-                                    Total Users : 300,000
+                                    Current Round - 00314
                                 </Typography>
                             </Grid>
                         </Grid>

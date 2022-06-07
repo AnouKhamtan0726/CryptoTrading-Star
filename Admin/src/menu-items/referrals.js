@@ -18,15 +18,16 @@ const referral = {
             url: '/referral-statistic',
             icon: icons.IconFriends,
             breadcrumbs: false
-        },
-        {
-            id: 'referral-setting-page',
-            title: 'Setting',
-            type: 'item',
-            url: '/referral-setting',
-            icon: icons.IconAdjustmentsAlt,
-            breadcrumbs: false
         }
+        // ,
+        // {
+        //     id: 'referral-setting-page',
+        //     title: 'Setting',
+        //     type: 'item',
+        //     url: '/referral-setting',
+        //     icon: icons.IconAdjustmentsAlt,
+        //     breadcrumbs: false
+        // }
     ]
 };
 
