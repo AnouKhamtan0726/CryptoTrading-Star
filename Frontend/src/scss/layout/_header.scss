@@ -1,76 +1,76 @@
 .header {
+  padding: 10px 0px;
+  background-color: rgba(9, 15, 62, 0.5);
+  border-bottom: 0px solid $border-color;
+  transition: all 0.3s ease-in-out;
+  z-index: 999;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+
+  &.fixed {
     padding: 10px 0px;
-    background-color: rgba(9, 15, 62, 0.5);
-    border-bottom: 0px solid $border-color;
-    transition: all 0.3s ease-in-out;
-    z-index: 999;
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
+    box-shadow: 0 0.05rem 0.01rem rgba(75, 75, 90, 0.075);
+    border-color: transparent;
+  }
 
-    &.fixed {
-        padding: 10px 0px;
-        box-shadow: 0 0.05rem 0.01rem rgba(75, 75, 90, 0.075);
-        border-color: transparent;
-    }
+  .header-body {
+    padding: 0px 86px;
+  }
 
-    .header-body {
-        padding: 0px 86px;
+  .navigation {
+    .navbar {
+      background-color: transparent !important;
+      padding: 0px;
+      justify-content: space-between !important;
     }
-
-    .navigation {
-        .navbar {
-            background-color: transparent !important;
-            padding: 0px;
-            justify-content: space-between !important;
-        }
-    }
+  }
 }
 
 .signin-btn {
-    .btn {
-        padding: 5px 15px !important;
-        min-width: 85px !important;
-        border-radius: 10px !important;
-        font-weight: 500;
-        font-size: 18px;
-    }
+  .btn {
+    padding: 5px 15px !important;
+    min-width: 85px !important;
+    border-radius: 10px !important;
+    font-weight: 500;
+    font-size: 18px;
+  }
 
-    .register-btn {
-        background-color: #34d1d6 !important;
-        border-color: #34d1d6 !important;
-    }
+  .register-btn {
+    background-color: #34d1d6 !important;
+    border-color: #34d1d6 !important;
+  }
 
-    .login-btn {
-        background-color: #2f3342 !important;
-        border-color: #2f3342 !important;
+  .login-btn {
+    background-color: #2f3342 !important;
+    border-color: #2f3342 !important;
 
-        & :hover {
-            opacity: 0.1;
-        }
+    & :hover {
+      opacity: 0.1;
     }
+  }
 }
 
 @media only screen and (max-width: 425px) {
-    .header {
-        .header-body {
-            padding: 0 10px !important;
-            .navbar-brand {
-                img {
-                    width: 130px !important;
-                    height: 35px !important;
-                }
-            }
+  .header {
+    .header-body {
+      padding: 0 10px !important;
+      .navbar-brand {
+        img {
+          width: 130px !important;
+          height: 35px !important;
         }
-
-        .signin-btn {
-            .btn {
-                border-radius: 3px !important;
-                font-weight: 400;
-                font-size: 12px;
-                margin-left: 5px !important;
-            }
-        }
+      }
     }
+
+    .signin-btn {
+      .btn {
+        border-radius: 3px !important;
+        font-weight: 400;
+        font-size: 12px;
+        margin-left: 5px !important;
+      }
+    }
+  }
 }

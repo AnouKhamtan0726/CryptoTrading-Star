@@ -1,42 +1,41 @@
-.footer{
-    border-top:1px solid darken(#1B2A4E, 5%);
-    background: #131722;
-    padding: 10px 0px;
-    &.dashboard{
-        background: $dark;
-        // margin-left: 55px;
-        border-color: $border-color;
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
+.footer {
+  border-top: 1px solid darken(#1b2a4e, 5%);
+  background: #131722;
+  padding: 10px 0px;
+  &.dashboard {
+    background: $dark;
+    // margin-left: 55px;
+    border-color: $border-color;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+  .copyright {
+    p {
+      margin: 0;
+      font-size: 14px;
+      color: #7f88a6;
+      a {
+        color: $primary;
+        font-weight: 500;
+      }
+      @include respond("phone") {
+        text-align: center;
+      }
     }
-    .copyright{
-        p{
-            margin: 0;
-            font-size: 14px;
-            color: #7f88a6;
-            a{
-                color: $primary;
-                font-weight: 500;
-            }
-            @include respond('phone'){
-            text-align: center;
-        }
-        }
+  }
+  .footer-social {
+    text-align: right;
+    @include respond("phone") {
+      text-align: center;
     }
-    .footer-social{
-        text-align: right;
-        @include respond('phone'){
-            text-align: center;
-        }
-        li{
-            display: inline-block;
-            a{
-                color: #7f88a6;
-                padding: 0px 10px;
-            }
-        }
+    li {
+      display: inline-block;
+      a {
+        color: #7f88a6;
+        padding: 0px 10px;
+      }
     }
+  }
 }
-

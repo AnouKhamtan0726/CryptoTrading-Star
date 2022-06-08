@@ -80,7 +80,7 @@
     }
   }
 
-  #nav_header{
+  #nav_header {
     @each $name, $color in $theme_primary_color {
       &_#{$name} {
         + label {
@@ -95,9 +95,8 @@
       }
     }
   }
-  
-  
-  #header{
+
+  #header {
     @each $name, $color in $theme_backgrounds {
       &_#{$name} {
         + label {

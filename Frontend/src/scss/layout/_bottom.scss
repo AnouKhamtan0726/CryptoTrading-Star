@@ -1,51 +1,51 @@
 .bottom {
-    background: #131722;
+  background: #131722;
 
-    .bottom-logo {
-        p {
-            // color   : #b2b6c4;
-            line-height: 30px;
-            font-weight: 400;
-        }
+  .bottom-logo {
+    p {
+      // color   : #b2b6c4;
+      line-height: 30px;
+      font-weight: 400;
+    }
+  }
+
+  .bottom-widget {
+    @include respond("tab-port") {
+      margin-bottom: 30px;
     }
 
-    .bottom-widget {
-        @include respond("tab-port") {
-            margin-bottom: 30px;
-        }
-
-        .widget-title {
-            font-size    : 18px;
-            font-weight  : 500;
-            color        : #fff;
-            margin-bottom: 20px;
-        }
-
-        ul {
-            li {
-                a {
-                    // color     : #b2b6c4;
-                    color        : $body-color;
-                    font-weight  : 400;
-                    margin-bottom: 10px;
-                    display      : inline-block;
-                }
-            }
-        }
+    .widget-title {
+      font-size: 18px;
+      font-weight: 500;
+      color: #fff;
+      margin-bottom: 20px;
     }
-    .footer-sentence {
-        border-top: 1px solid rgba(139,141,150,.28);
-        padding-top: 50px;
-        margin-top: 50px;
+
+    ul {
+      li {
+        a {
+          // color     : #b2b6c4;
+          color: $body-color;
+          font-weight: 400;
+          margin-bottom: 10px;
+          display: inline-block;
+        }
+      }
     }
+  }
+  .footer-sentence {
+    border-top: 1px solid rgba(139, 141, 150, 0.28);
+    padding-top: 50px;
+    margin-top: 50px;
+  }
 }
 
 @media only screen and (max-width: 425px) {
-    .bottom {
-        padding-left: 30px;
-        padding-right: 30px;
-        .footer-content {
-            margin-top: 20px;
-        }
+  .bottom {
+    padding-left: 30px;
+    padding-right: 30px;
+    .footer-content {
+      margin-top: 20px;
     }
+  }
 }

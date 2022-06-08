@@ -1,68 +1,71 @@
 //to ignore cli warning about deprecated mixin
 $enable-deprecation-messages: false;
-$ignore-warning             : true;
+$ignore-warning: true;
 
 // stylelint-disable-next-line scss/dollar-variable-default
-$primary   : #5d78ff;
-$secondary : #673BB7 !default;
-$success   : #10d876 !default;
-$info      : #2754e6 !default;
-$warning   : #FE9431 !default;
-$danger    : #E50202 !default;
-$light     : #f8f9fa !default;
-$dark      : #131722;
+$primary: #5d78ff;
+$secondary: #673bb7 !default;
+$success: #10d876 !default;
+$info: #2754e6 !default;
+$warning: #fe9431 !default;
+$danger: #e50202 !default;
+$light: #f8f9fa !default;
+$dark: #131722;
 
 // Body
-$body-bg   : #000;
+$body-bg: #000;
 $body-color: rgb(161, 160, 167);
 // Typography
-$barlow: 'Barlow',
-sans-serif;
-$font-family-base : 'Poppins',
-sans-serif;
-$headings-font-weight   : 500;
+$barlow: "Barlow", sans-serif;
+$font-family-base: "Poppins", sans-serif;
+$headings-font-weight: 500;
 // $headings-font-family:        $fm;
-$font-size-base         : 0.875rem !default;
-$font-weight-base       : 400 !default;
+$font-size-base: 0.875rem !default;
+$font-weight-base: 400 !default;
 // $line-height-base    : 1.6;
-$h1-font-size           : 2.25rem;
-$h2-font-size           : 1.875rem;
-$h3-font-size           : 1.5rem;
-$h4-font-size           : 1.125rem;
-$h5-font-size           : 1rem;
-$h6-font-size           : 0.875rem;
+$h1-font-size: 2.25rem;
+$h2-font-size: 1.875rem;
+$h3-font-size: 1.5rem;
+$h4-font-size: 1.125rem;
+$h5-font-size: 1rem;
+$h6-font-size: 0.875rem;
 
-$text-muted   : #AEAED5;
-$colors       : () !default;
+$text-muted: #aeaed5;
+$colors: () !default;
 
 $heading-primary-size: 1.8rem;
-$sub-heading-size    : 1.6rem !default;
-$grid-gutter-width   : 20px;
-$dropdown-lik-color  : $body-color;
-$border-color        : #363C4E;
-$headings-color      :#fff !default;
-$grid-breakpoints    : (xs: 0, sm: 576px, md: 768px, lg: 992px, xl: 1200px, xxl: 1440);
-$container-max-widths: (sm: 540px,
+$sub-heading-size: 1.6rem !default;
+$grid-gutter-width: 20px;
+$dropdown-lik-color: $body-color;
+$border-color: #363c4e;
+$headings-color: #fff !default;
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1440,
+);
+$container-max-widths: (
+  sm: 540px,
   md: 720px,
   lg: 960px,
-  xl: 1199px) !default;
+  xl: 1199px,
+) !default;
 
 $input-btn-focus-width: 0rem !default;
-
-
-
 
 //color for coller pallate
 $color_background_1: #fff;
 $color_background_2: #131722;
-$color_background_3: #2D2B55;
-$color_background_4: #30243D;
+$color_background_3: #2d2b55;
+$color_background_4: #30243d;
 $color_background_5: #193549;
 
-
 //color for coller pallate
-$color_primary_1: #10D078;
-$color_primary_2: #FF0096;
-$color_primary_3: #002EFF;
-$color_primary_4: #FF2F00;
-$color_primary_5: #00CCD3;
+$color_primary_1: #10d078;
+$color_primary_2: #ff0096;
+$color_primary_3: #002eff;
+$color_primary_4: #ff2f00;
+$color_primary_5: #00ccd3;

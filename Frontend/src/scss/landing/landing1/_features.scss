@@ -42,39 +42,37 @@
 //     }
 // }
 
-
 .features-content {
-    text-align: center;
+  text-align: center;
 
-    @include respond('phone-land') {
-        margin-bottom: 50px;
-    }
+  @include respond("phone-land") {
+    margin-bottom: 50px;
+  }
 
-    span {
-        i {
-            color    : $primary;
-            font-size: 36px;
-        }
+  span {
+    i {
+      color: $primary;
+      font-size: 36px;
     }
+  }
 
-    h4 {
-        font-size    : 20px;
-        margin-top   : 30px;
-        margin-bottom: 15px;
-        text-overflow: ellipsis;
-        overflow     : hidden;
-        white-space  : nowrap;
-    }
+  h4 {
+    font-size: 20px;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
 
-    p {
-        line-height: 27px;
-        max-width  : 350px;
-        margin     : 0 auto 30px;
-    }
+  p {
+    line-height: 27px;
+    max-width: 350px;
+    margin: 0 auto 30px;
+  }
 
-    a {
-        color    : $primary;
-        font-size: 14px;
-    }
+  a {
+    color: $primary;
+    font-size: 14px;
+  }
 }
-

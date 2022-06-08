@@ -1,206 +1,206 @@
 html {
-    scroll-behavior: smooth;
+  scroll-behavior: smooth;
 }
 .prize-content-body {
-    margin-top: 70px;
-    margin-left: 60px;
-    .prize-pool-container {
-        background: url("./../images/main_assets/prizebg1.png") top no-repeat;
-        background-size: 100% auto;
-        overflow: hidden;
-        padding-top: 90px;
-        .prize-intro {
-            .prizeman-img {
-                bottom: -30px;
-                width: 374px;
-                height: 356px;
-                z-index: 1;
-            }
-            h2 {
-                font-size: 50px;
-                margin-bottom: 95px;
-            }
-            .prize-amount {
-                width: 500px;
-                height: 120px;
-                border: 1px solid #592ae6;
-                background: rgba(41, 12, 126, 0.44);
-                border-radius: 25px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                .prize-amount-number {
-                    font-size: 48px;
-                    color: #f7a62f;
-                }
-                .prize-pool-label {
-                    border-radius: 35px;
-                    border: 2px solid #592ae6;
-                    background: #290c7e;
-                    padding: 0 20px;
-                    top: -30px;
-                    height: 48px;
-                    font-size: 20px;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    color: #f7a62f;
-                    z-index: 10;
-                }
-                .prizefire-img {
-                    top: -65px;
-                }
-                .prizebox1-img {
-                    left: -54px;
-                }
-                .prizebox2-img {
-                    right: -74px;
-                }
-                .prize-pool-mega-fund {
-                    position: absolute;
-                    width: 370px;
-                    height: 77px;
-                    left: 50%;
-                    bottom: -65px;
-                    color: #b100ff;
-                    font-size: 26px;
-                    font-weight: 700;
-                    transform: translateX(-50%);
-                    text-align: center;
-                    padding-top: 10px;
-                    background: url("./../images/main_assets/prizetextbox1.png");
-                    background-size: cover;
-                }
-            }
-            .go-help {
-                text-decoration: underline;
-                color: #f7a62f;
-                text-align: center;
-                display: block;
-                cursor: pointer;
-            }
+  margin-top: 70px;
+  margin-left: 60px;
+  .prize-pool-container {
+    background: url("./../images/main_assets/prizebg1.png") top no-repeat;
+    background-size: 100% auto;
+    overflow: hidden;
+    padding-top: 90px;
+    .prize-intro {
+      .prizeman-img {
+        bottom: -30px;
+        width: 374px;
+        height: 356px;
+        z-index: 1;
+      }
+      h2 {
+        font-size: 50px;
+        margin-bottom: 95px;
+      }
+      .prize-amount {
+        width: 500px;
+        height: 120px;
+        border: 1px solid #592ae6;
+        background: rgba(41, 12, 126, 0.44);
+        border-radius: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .prize-amount-number {
+          font-size: 48px;
+          color: #f7a62f;
         }
-        .prize-last {
-            background: url("./../images/main_assets/prizebg2.png") top no-repeat;
-            background-size: cover;
-            overflow: hidden;
-            padding-top: 90px;
-            margin-top: 100px;
-            p {
-                font-weight: bold;
-            }
-            h2 {
-                font-size: 40px;
-                margin-bottom: 55px;
-            }
-            .prize-amount {
-                width: 500px;
-                height: 120px;
-                border: 2px solid #f7a62f;
-                background: linear-gradient(180deg, #020024, #7a4900 0, #342500);
-                border-radius: 25px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                flex-direction: column;
-                .prize-amount-number {
-                    font-size: 24px;
-                    font-family: sans-serif;
-                    color: #f7a62f;
-                    font-weight: 700;
-                }
-                .prize-pool-label {
-                    border-radius: 7px;
-                    border: 1px solid #f7a62f;
-                    background: linear-gradient(45deg, #020024, #2c1d01 0, #2b1c01);
-                    top: -15px;
-                    height: 24px;
-                    font-size: 10px;
-                    display: flex;
-                    justify-content: center;
-                    text-transform: uppercase;
-                    align-items: center;
-                    color: #f7a62f;
-                    z-index: 10;
-                    line-height: 22px;
-                    padding: 0 15px;
-                    margin: 0;
-                }
-                .prizebox1-img {
-                    left: -54px;
-                }
-                .prizebox2-img {
-                    right: -50px;
-                }
-                .prize-pool-mega-fund {
-                    position: absolute;
-                    width: 370px;
-                    height: 77px;
-                    left: 50%;
-                    bottom: -65px;
-                    color: #b100ff;
-                    font-size: 26px;
-                    font-weight: 700;
-                    transform: translateX(-50%);
-                    text-align: center;
-                    padding-top: 10px;
-                    background: url("./../images/main_assets/prizetextbox1.png");
-                    background-size: cover;
-                }
-            }
-
-            .win-streak {
-                color: #18c67a;
-            }
-            .lose-streak {
-                color: #fc5f5f;
-            }
-            .statistic-table {
-                margin: 100px 0 !important;
-            }
+        .prize-pool-label {
+          border-radius: 35px;
+          border: 2px solid #592ae6;
+          background: #290c7e;
+          padding: 0 20px;
+          top: -30px;
+          height: 48px;
+          font-size: 20px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          color: #f7a62f;
+          z-index: 10;
         }
-        .prize-help {
-            background: url("./../images/main_assets/prizebg3.png") top no-repeat;
-            padding-bottom: 70px;
-            padding-top: 100px;
-            background-size: cover;
-            position: relative;
-            .help-title {
-                color: #f7a62f;
-                font-size: 20px;
-                font-weight: 500;
-            }
-            .help-challenge-title {
-                font-size: 40px;
-            }
-            .help-card-box {
-                .help-card {
-                    padding: 35px 20px 20px;
-                    background: #2a1c52;
-                    border-radius: 5px;
-                    text-align: center;
-                    height: 270px;
-                    width: 200px;
-                    margin-right: 20px;
-                    .help-card-text {
-                        color: rgba(128, 134, 177, 0.7);
-                        font-size: 14px;
-                        line-height: 16px !important;
-                    }
-                }
-            }
-            .prizeroket1-img {
-                top: -70px;
-                left: 0;
-            }
-            .prizeroket2-img {
-                top: 70px;
-                right: 0;
-            }
+        .prizefire-img {
+          top: -65px;
         }
+        .prizebox1-img {
+          left: -54px;
+        }
+        .prizebox2-img {
+          right: -74px;
+        }
+        .prize-pool-mega-fund {
+          position: absolute;
+          width: 370px;
+          height: 77px;
+          left: 50%;
+          bottom: -65px;
+          color: #b100ff;
+          font-size: 26px;
+          font-weight: 700;
+          transform: translateX(-50%);
+          text-align: center;
+          padding-top: 10px;
+          background: url("./../images/main_assets/prizetextbox1.png");
+          background-size: cover;
+        }
+      }
+      .go-help {
+        text-decoration: underline;
+        color: #f7a62f;
+        text-align: center;
+        display: block;
+        cursor: pointer;
+      }
     }
+    .prize-last {
+      background: url("./../images/main_assets/prizebg2.png") top no-repeat;
+      background-size: cover;
+      overflow: hidden;
+      padding-top: 90px;
+      margin-top: 100px;
+      p {
+        font-weight: bold;
+      }
+      h2 {
+        font-size: 40px;
+        margin-bottom: 55px;
+      }
+      .prize-amount {
+        width: 500px;
+        height: 120px;
+        border: 2px solid #f7a62f;
+        background: linear-gradient(180deg, #020024, #7a4900 0, #342500);
+        border-radius: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        .prize-amount-number {
+          font-size: 24px;
+          font-family: sans-serif;
+          color: #f7a62f;
+          font-weight: 700;
+        }
+        .prize-pool-label {
+          border-radius: 7px;
+          border: 1px solid #f7a62f;
+          background: linear-gradient(45deg, #020024, #2c1d01 0, #2b1c01);
+          top: -15px;
+          height: 24px;
+          font-size: 10px;
+          display: flex;
+          justify-content: center;
+          text-transform: uppercase;
+          align-items: center;
+          color: #f7a62f;
+          z-index: 10;
+          line-height: 22px;
+          padding: 0 15px;
+          margin: 0;
+        }
+        .prizebox1-img {
+          left: -54px;
+        }
+        .prizebox2-img {
+          right: -50px;
+        }
+        .prize-pool-mega-fund {
+          position: absolute;
+          width: 370px;
+          height: 77px;
+          left: 50%;
+          bottom: -65px;
+          color: #b100ff;
+          font-size: 26px;
+          font-weight: 700;
+          transform: translateX(-50%);
+          text-align: center;
+          padding-top: 10px;
+          background: url("./../images/main_assets/prizetextbox1.png");
+          background-size: cover;
+        }
+      }
+
+      .win-streak {
+        color: #18c67a;
+      }
+      .lose-streak {
+        color: #fc5f5f;
+      }
+      .statistic-table {
+        margin: 100px 0 !important;
+      }
+    }
+    .prize-help {
+      background: url("./../images/main_assets/prizebg3.png") top no-repeat;
+      padding-bottom: 70px;
+      padding-top: 100px;
+      background-size: cover;
+      position: relative;
+      .help-title {
+        color: #f7a62f;
+        font-size: 20px;
+        font-weight: 500;
+      }
+      .help-challenge-title {
+        font-size: 40px;
+      }
+      .help-card-box {
+        .help-card {
+          padding: 35px 20px 20px;
+          background: #2a1c52;
+          border-radius: 5px;
+          text-align: center;
+          height: 270px;
+          width: 200px;
+          margin-right: 20px;
+          .help-card-text {
+            color: rgba(128, 134, 177, 0.7);
+            font-size: 14px;
+            line-height: 16px !important;
+          }
+        }
+      }
+      .prizeroket1-img {
+        top: -70px;
+        left: 0;
+      }
+      .prizeroket2-img {
+        top: 70px;
+        right: 0;
+      }
+    }
+  }
 }
 
 .font-frizon {
-    font-family: "frizon";
+  font-family: "frizon";
 }

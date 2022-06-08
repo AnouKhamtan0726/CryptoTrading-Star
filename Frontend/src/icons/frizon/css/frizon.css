@@ -3,5 +3,5 @@
   font-style: normal;
   font-weight: 400;
   font-display: auto;
-  src: url('../fonts/Frizon.ttf') format('truetype');
+  src: url("../fonts/Frizon.ttf") format("truetype");
 }

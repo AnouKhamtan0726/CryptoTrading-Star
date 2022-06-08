@@ -4,188 +4,187 @@
 .trade-history,
 .depth-chart,
 .open-orders .buy-sell-limit {
-    position: relative;
-    height: 400px;
-    margin-bottom: 10px;
+  position: relative;
+  height: 400px;
+  margin-bottom: 10px;
 }
 
 .price-pair,
 .balance-widget,
 .market-news,
 .your-position {
-    position: relative;
-    height: 400px;
-    margin-bottom: 10px;
+  position: relative;
+  height: 400px;
+  margin-bottom: 10px;
 }
 
 .limit-nested {
-    position: relative;
-    height: 210px;
+  position: relative;
+  height: 210px;
 }
 
 .market-nested {
-    position: relative;
-    height: 270px;
+  position: relative;
+  height: 270px;
 }
 
 .stop-limit-nested {
-    position: relative;
-    height: 165px;
+  position: relative;
+  height: 165px;
 }
 
 .open-position-table {
-    position: relative;
-    height: 400px;
-    margin-bottom: 10px;
+  position: relative;
+  height: 400px;
+  margin-bottom: 10px;
 }
 
 .card-header {
-    .nav-pills {
-        line-height: initial;
+  .nav-pills {
+    line-height: initial;
 
-        a {
-            padding: 0px 7px;
-            color: $body-color;
-            font-weight: 500;
+    a {
+      padding: 0px 7px;
+      color: $body-color;
+      font-weight: 500;
 
-            &.active {
-                background-color: transparent !important;
-                color: $primary !important;
-                opacity: 1;
-            }
-        }
+      &.active {
+        background-color: transparent !important;
+        color: $primary !important;
+        opacity: 1;
+      }
     }
+  }
 }
 
 .order-book-divider {
-    text-align: center;
-    padding: 15px 0px;
+  text-align: center;
+  padding: 15px 0px;
 
-    font-family: $barlow;
+  font-family: $barlow;
 
-    h6 {
-        margin-bottom: 0px;
-    }
+  h6 {
+    margin-bottom: 0px;
+  }
 }
 
 #chartdiv {
-    width: 100%;
-    height: 380px;
+  width: 100%;
+  height: 380px;
 }
 
 .chartContainer {
-    height: 500px;
+  height: 500px;
 }
 
 .duration-option {
-    box-shadow: 0px 36px 48px rgba(31, 66, 135, 0.04);
+  box-shadow: 0px 36px 48px rgba(31, 66, 135, 0.04);
 
-    a {
-        display: inline-block;
-        margin-left: 10px;
-        text-align: center;
-        padding: 5px 15px;
-        border: 1px solid $border-color;
-        // float     : left;
-        transition: all 0.3s ease;
-        font-weight: 500;
-        border-radius: 5px;
+  a {
+    display: inline-block;
+    margin-left: 10px;
+    text-align: center;
+    padding: 5px 15px;
+    border: 1px solid $border-color;
+    // float     : left;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    border-radius: 5px;
 
-        // color: $white;
-        & :hover,
-        &:focus,
-        &.active {
-            background: $primary;
-            color: $white;
-            border-right: 1px solid transparent;
-        }
-
-        // &:first-child {
-        //     border-top-left-radius   : 25px;
-        //     border-bottom-left-radius: 25px;
-        // }
-        // &:last-child {
-        //     border: 0px;
-        // }
+    // color: $white;
+    & :hover,
+    &:focus,
+    &.active {
+      background: $primary;
+      color: $white;
+      border-right: 1px solid transparent;
     }
+
+    // &:first-child {
+    //     border-top-left-radius   : 25px;
+    //     border-bottom-left-radius: 25px;
+    // }
+    // &:last-child {
+    //     border: 0px;
+    // }
+  }
 }
 
 .market-news {
-    img {
-        border-radius: 5px;
-    }
+  img {
+    border-radius: 5px;
+  }
 }
 
 .list-group-item {
-    background-color: $dark;
+  background-color: $dark;
 }
 
 .trading-status {
-    display: flex;
-    align-items: center;
-    span {
-        margin-right: 10px;
-    }
+  display: flex;
+  align-items: center;
+  span {
+    margin-right: 10px;
+  }
 }
 
 .total-balance {
-    padding: 10px 0px 20px;
-    text-align: center;
+  padding: 10px 0px 20px;
+  text-align: center;
 }
 
 .open-position-table {
-    table {
-        tr {
-            th,
-            td {
-                padding: 10px 10px !important;
-            }
-        }
+  table {
+    tr {
+      th,
+      td {
+        padding: 10px 10px !important;
+      }
     }
+  }
 }
 
 .trading-card {
-    .card-body {
-        .inde-box {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            .inde-text {
-                position: relative;
-                .inde-input {
-                    display: inline-block;
-                    padding: 5px 0 5px 20px !important;
-                    background: white !important;
-                    color: black !important;
-                }
-                .dollar-symbol {
-                    position: absolute;
-                    left: 10px;
-                    top: 5px;
-                    color: black;
-                }
-            }
+  .card-body {
+    .inde-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .inde-text {
+        position: relative;
+        .inde-input {
+          display: inline-block;
+          padding: 5px 0 5px 20px !important;
+          background: white !important;
+          color: black !important;
         }
-        .add-amount-box {
-            div {
-                margin-top: 10px;
-                display: flex;
-                justify-content: space-between;
-            }
+        .dollar-symbol {
+          position: absolute;
+          left: 10px;
+          top: 5px;
+          color: black;
         }
+      }
     }
+    .add-amount-box {
+      div {
+        margin-top: 10px;
+        display: flex;
+        justify-content: space-between;
+      }
+    }
+  }
 }
 
 .amount-card {
-    .card-header {
-        justify-content: start;
-        .profit-amount {
-            padding-left: 10px;
-        }
+  .card-header {
+    justify-content: start;
+    .profit-amount {
+      padding-left: 10px;
     }
+  }
 }
 
-
 .progress {
-    background: red !important;
+  background: red !important;
 }
