@@ -24,17 +24,33 @@ const Users = db.define(
     refresh_token: {
       type: DataTypes.TEXT,
     },
+    email_verify_code: {
+      type: DataTypes.STRING,
+    },
     email_verify_status: {
       type: DataTypes.BOOLEAN,
+      defaultValue: "0",
+    },
+    email_sent_at: {
+      type: 'TIMESTAMP',
+    },
+    phone_verify_code: {
+      type: DataTypes.STRING,
     },
     phone_verify_status: {
       type: DataTypes.BOOLEAN,
+      defaultValue: "0",
+    },
+    phone_sent_at: {
+      type: 'TIMESTAMP',
     },
     current_status: {
       type: DataTypes.TINYINT(20),
+      defaultValue: "0",
     },
     is_deleted: {
       type: DataTypes.BOOLEAN,
+      defaultValue: "0",
     },
   },
   {

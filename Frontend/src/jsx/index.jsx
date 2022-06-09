@@ -33,6 +33,8 @@ import IndexPrice from "./pages/data-index-price";
 import InsuranceFund from "./pages/data-insurance-fund";
 import LastPrice from "./pages/data-last-price";
 import MarkPrice from "./pages/data-mark-price";
+import EmailVerification from "./pages/email-verification";
+
 class Index extends Component {
   render() {
     return (
@@ -46,6 +48,7 @@ class Index extends Component {
               <Route path="/lock" component={Lock} />
               <Route path="/otp-1" component={Otp1} />
               <Route path="/otp-2" component={Otp2} />
+              <Route path="/email-verify" component={EmailVerification} />
               <Route path="/reset" component={Reset} />
               <Route path="/signin" component={Signin} />
               <Route path="/signup" component={Signup} />

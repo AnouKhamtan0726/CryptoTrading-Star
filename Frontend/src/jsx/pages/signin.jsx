@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { initOnLoad } from "apexcharts";
 // import validator from 'validator'
 
 const Signin = () => {
@@ -33,11 +34,18 @@ const Signin = () => {
     //     return;
     // }
     try {
-      await axios.post("http://localhost:5000/login", {
+      var res = await axios.post("http://localhost:5000/login", {
         email: email,
         password: password,
       }, {withCredentials: true, credentials: 'include'});
-      history.push("/otp-1");
+
+      if (res.data.email_verify_status == false) {
+        history.push('/email-verify')
+      } else if (res.data.phone_verify_status == false) {
+        history.push('/otp-1')
+      } else {
+        history.push("/dashboard");
+      }
     } catch (error) {
       if (error.response) {
         setMsg(error.response.data.msg);
