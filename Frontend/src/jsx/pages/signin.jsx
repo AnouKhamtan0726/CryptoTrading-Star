@@ -34,15 +34,19 @@ const Signin = () => {
     //     return;
     // }
     try {
-      var res = await axios.post("http://localhost:5000/login", {
-        email: email,
-        password: password,
-      }, {withCredentials: true, credentials: 'include'});
+      var res = await axios.post(
+        "http://localhost:5000/login",
+        {
+          email: email,
+          password: password,
+        },
+        { withCredentials: true, credentials: "include" }
+      );
 
       if (res.data.email_verify_status == false) {
-        history.push('/email-verify')
+        history.push("/email-verify");
       } else if (res.data.phone_verify_status == false) {
-        history.push('/otp-1')
+        history.push("/otp-1");
       } else {
         history.push("/dashboard");
       }

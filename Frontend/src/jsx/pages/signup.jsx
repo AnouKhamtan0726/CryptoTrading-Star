@@ -146,13 +146,13 @@ const Signup = () => {
                       </div>
                     </div>
                     <div className="mb-3">
-                        <label>Invite Code</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            placeholder="Enter Invite Code"
-                            name="invitecode"
-                        />
+                      <label>Invite Code</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Enter Invite Code"
+                        name="invitecode"
+                      />
                     </div>
                     <div className="text-center mt-4">
                       <div

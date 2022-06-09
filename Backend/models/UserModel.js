@@ -32,7 +32,7 @@ const Users = db.define(
       defaultValue: "0",
     },
     email_sent_at: {
-      type: 'TIMESTAMP',
+      type: "TIMESTAMP",
     },
     phone_verify_code: {
       type: DataTypes.STRING,
@@ -42,7 +42,7 @@ const Users = db.define(
       defaultValue: "0",
     },
     phone_sent_at: {
-      type: 'TIMESTAMP',
+      type: "TIMESTAMP",
     },
     current_status: {
       type: DataTypes.TINYINT(20),

@@ -2,17 +2,19 @@ import Users from "../models/UserModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import SibApiV3Sdk from 'sib-api-v3-sdk';
+import SibApiV3Sdk from "sib-api-v3-sdk";
 dotenv.config();
 
 var defaultClient = SibApiV3Sdk.ApiClient.instance;
-var apiKey = defaultClient.authentications['api-key'];
+var apiKey = defaultClient.authentications["api-key"];
 apiKey.apiKey = process.env.SIB_API_KEY;
 
 var apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 
 function convertTimeToGMT(time) {
-  return new Date(new Date(time).toISOString().slice(0, 19).replace('T', ' ')).getTime()
+  return new Date(
+    new Date(time).toISOString().slice(0, 19).replace("T", " ")
+  ).getTime();
 }
 
 export const getUsers = async (req, res) => {
@@ -21,8 +23,7 @@ export const getUsers = async (req, res) => {
       attributes: ["id", "name", "email"],
     });
     res.json(users);
-  } catch (error) {
-  }
+  } catch (error) {}
 };
 
 export const Register = async (req, res) => {
@@ -53,7 +54,7 @@ export const Register = async (req, res) => {
         email: email,
       },
     });
-    if (emailExits) return res.status(400).json({msg: 'Email already exits'});
+    if (emailExits) return res.status(400).json({ msg: "Email already exits" });
 
     await Users.create({
       name: name,
@@ -63,7 +64,7 @@ export const Register = async (req, res) => {
 
     res.json({ msg: "Registration Successful" });
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 };
 
@@ -94,13 +95,13 @@ export const Login = async (req, res) => {
       }
     );
 
-    var code = 100000 + Math.floor(Math.random() * 899999)
+    var code = 100000 + Math.floor(Math.random() * 899999);
 
     await Users.update(
       {
         refresh_token: refreshToken,
         email_verify_code: code,
-        email_sent_at: new Date().toISOString().slice(0, 19).replace('T', ' ')
+        email_sent_at: new Date().toISOString().slice(0, 19).replace("T", " "),
       },
       {
         where: {
@@ -112,25 +113,36 @@ export const Login = async (req, res) => {
     res.cookie("refreshToken", refreshToken, {
       httpOnly: false,
       maxAge: 24 * 60 * 60 * 1000,
-    })
+    });
 
     let sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
 
     sendSmtpEmail.subject = "Didi Email Verification";
-    sendSmtpEmail.htmlContent = '<b>This is your verify code! </b><br/>\
-    <h1>' + code + '</h1><br/>\
-    Thanks!';
-    sendSmtpEmail.sender = {"name":"Didi Developing Team","email":"bigstarcoolmanager@gmail.com"};
-    sendSmtpEmail.to = [{"email": email, "name": name}];
-    sendSmtpEmail.headers = {"Some-Custom-Name":"unique-id-1234"};
-    sendSmtpEmail.params = {"parameter": code, "subject": "New Subject"};
+    sendSmtpEmail.htmlContent =
+      "<b>This is your verify code! </b><br/>\
+    <h1>" +
+      code +
+      "</h1><br/>\
+    Thanks!";
+    sendSmtpEmail.sender = {
+      name: "Didi Developing Team",
+      email: "bigstarcoolmanager@gmail.com",
+    };
+    sendSmtpEmail.to = [{ email: email, name: name }];
+    sendSmtpEmail.headers = { "Some-Custom-Name": "unique-id-1234" };
+    sendSmtpEmail.params = { parameter: code, subject: "New Subject" };
 
-    apiInstance.sendTransacEmail(sendSmtpEmail).then(function(data) {
-      console.log('API called successfully. Returned data: ' + JSON.stringify(data));
-    }, function(error) {
-      console.error(error);
-    });
-    
+    apiInstance.sendTransacEmail(sendSmtpEmail).then(
+      function (data) {
+        console.log(
+          "API called successfully. Returned data: " + JSON.stringify(data)
+        );
+      },
+      function (error) {
+        console.error(error);
+      }
+    );
+
     res.send(user[0]);
   } catch (error) {
     res.status(404).json({ msg: "No matching user information." });
@@ -159,7 +171,7 @@ export const Logout = async (req, res) => {
   );
   res.clearCookie("refreshToken", {
     httpOnly: false,
-    path:'/',
+    path: "/",
   });
   return res.sendStatus(200);
 };
@@ -167,21 +179,21 @@ export const Logout = async (req, res) => {
 export const LoginStatus = async (req, res) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
-  
+
   if (token == null) return res.sendStatus(401);
   jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, async (err, decoded) => {
     if (err) return res.sendStatus(403);
-    
+
     const user = await Users.findAll({
       where: {
         email: decoded.email,
       },
     });
-    
+
     if (user.length == 0) {
-      res.status(403).json({msg: "No matching user exists."})
+      res.status(403).json({ msg: "No matching user exists." });
     } else {
-      res.send(user[0])
+      res.send(user[0]);
     }
   });
 };
@@ -189,12 +201,12 @@ export const LoginStatus = async (req, res) => {
 export const VerifyEmail = async (req, res) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
-  const {code} = req.body
-  
+  const { code } = req.body;
+
   if (token == null) return res.sendStatus(401);
   jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, async (err, decoded) => {
     if (err) return res.sendStatus(403);
-    
+
     const user = await Users.findAll({
       where: {
         email: decoded.email,
@@ -202,17 +214,26 @@ export const VerifyEmail = async (req, res) => {
     });
 
     if (user.length == 0) {
-      return res.status(403).json({msg: "Sign in first!"})
+      return res.status(403).json({ msg: "Sign in first!" });
     }
 
-    if (user[0].email_verify_code == code && convertTimeToGMT(new Date().getTime()) - new Date(user[0].email_sent_at).getTime() <= 60000) {
-      return res.send('Success')
+    if (
+      user[0].email_verify_code == code &&
+      convertTimeToGMT(new Date().getTime()) -
+        new Date(user[0].email_sent_at).getTime() <=
+        60000
+    ) {
+      return res.send("Success");
     }
 
     if (user[0].email_verify_code != code) {
-      return res.status(400).json({msg: "Verify code doesn't match with we sent!"})
+      return res
+        .status(400)
+        .json({ msg: "Verify code doesn't match with we sent!" });
     }
 
-    return res.status(400).json({msg: "Verify code has expired! Plesae try again!"})
+    return res
+      .status(400)
+      .json({ msg: "Verify code has expired! Plesae try again!" });
   });
 };

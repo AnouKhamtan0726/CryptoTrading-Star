@@ -1,34 +1,34 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
 
 function EmailVerification() {
-    const [verifyCode, setVerifyCode] = useState('')
-    const [msg, setMsg] = useState("");
-    const history = useHistory();
+  const [verifyCode, setVerifyCode] = useState("");
+  const [msg, setMsg] = useState("");
+  const history = useHistory();
 
-    async function init() {
-        var refreshToken = (await window.cookieStore.get('refreshToken')).value
+  async function init() {
+    var refreshToken = (await window.cookieStore.get("refreshToken")).value;
 
-        axios.defaults.headers.common['Authorization'] = "Basic " + refreshToken;
+    axios.defaults.headers.common["Authorization"] = "Basic " + refreshToken;
+  }
+
+  useEffect(() => {
+    init();
+  }, []);
+
+  async function Verify() {
+    try {
+      await axios.post("http://localhost:5000/verify-email", {
+        code: verifyCode,
+      });
+      history.push("/otp-1");
+    } catch (error) {
+      if (error.response) {
+        setMsg(error.response.data.msg);
+      }
     }
-
-    useEffect(() => {
-        init()
-    }, [])
-
-    async function Verify() {
-        try {
-            await axios.post('http://localhost:5000/verify-email', {
-                code: verifyCode
-            })
-            history.push('/otp-1')
-        } catch (error) {
-            if (error.response) {
-                setMsg(error.response.data.msg);
-            }
-        }
-    }
+  }
 
   return (
     <>
@@ -58,8 +58,11 @@ function EmailVerification() {
                   </p>
                   <form>
                     <div className="mb-3">
-                        <p className="has-text-centered error-message">{msg}</p>
-                      <label>Your Email Verify Code(Code will be expired after 1 minute)</label>
+                      <p className="has-text-centered error-message">{msg}</p>
+                      <label>
+                        Your Email Verify Code(Code will be expired after 1
+                        minute)
+                      </label>
                       <input
                         type="text"
                         className="form-control text-center font-weight-bold"
@@ -68,7 +71,13 @@ function EmailVerification() {
                       />
                     </div>
                     <div className="text-center">
-                      <button type="button" className="btn btn-success btn-block" onClick={Verify}>Verify</button>
+                      <button
+                        type="button"
+                        className="btn btn-success btn-block"
+                        onClick={Verify}
+                      >
+                        Verify
+                      </button>
                     </div>
                   </form>
                   <div className="info mt-3">

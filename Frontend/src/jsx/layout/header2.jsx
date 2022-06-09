@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { Dropdown } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -96,8 +96,8 @@ const LanguageToggle = React.forwardRef(({ children, onClick }, ref) => (
 
 function Header2() {
   const history = useHistory();
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const current = new Date();
   const date = `${
     current.getMonth() + 1
@@ -105,24 +105,24 @@ function Header2() {
 
   useEffect(async () => {
     try {
-      var refreshToken = (await window.cookieStore.get('refreshToken')).value
+      var refreshToken = (await window.cookieStore.get("refreshToken")).value;
 
-      axios.defaults.headers.common['Authorization'] = "Basic " + refreshToken;
-    
-      var res = await axios.post("http://localhost:5000/login-status")
+      axios.defaults.headers.common["Authorization"] = "Basic " + refreshToken;
 
-      setUsername(res.data.name)
-      setEmail(res.data.email)
-    } catch(err) {
-      window.location.href = '/'
+      var res = await axios.post("http://localhost:5000/login-status");
+
+      setUsername(res.data.name);
+      setEmail(res.data.email);
+    } catch (err) {
+      window.location.href = "/";
     }
-  }, [])
+  }, []);
 
   const Logout = async () => {
     try {
       await axios.post("http://localhost:5000/logout");
-      window.cookieStore.delete('refreshToken')
-      window.location.href = '/'
+      window.cookieStore.delete("refreshToken");
+      window.location.href = "/";
     } catch (error) {
       console.log(error);
     }
