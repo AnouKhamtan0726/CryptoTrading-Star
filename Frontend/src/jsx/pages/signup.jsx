@@ -145,15 +145,15 @@ const Signup = () => {
                         </span>
                       </div>
                     </div>
-                    {/* <div className="mb-3">
-                                            <label>Invite Code</label>
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                placeholder="Enter Invite Code"
-                                                name="invitecode"
-                                            />
-                                        </div> */}
+                    <div className="mb-3">
+                        <label>Invite Code</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Enter Invite Code"
+                            name="invitecode"
+                        />
+                    </div>
                     <div className="text-center mt-4">
                       <div
                         className="btn btn-success btn-block"

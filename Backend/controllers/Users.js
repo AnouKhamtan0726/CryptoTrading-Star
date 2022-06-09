@@ -9,7 +9,6 @@ export const getUsers = async (req, res) => {
     });
     res.json(users);
   } catch (error) {
-    console.log(error);
   }
 };
 
@@ -45,7 +44,6 @@ export const Register = async (req, res) => {
     });
     res.json({ msg: "Registration Successful" });
   } catch (error) {
-    console.log(error);
   }
 };
 
@@ -83,18 +81,22 @@ export const Login = async (req, res) => {
         },
       }
     );
+
     res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
+      httpOnly: false,
       maxAge: 24 * 60 * 60 * 1000,
-    });
-    res.json({ accessToken });
+    })
+    
+    res.send({ accessToken });
   } catch (error) {
     res.status(404).json({ msg: "No matching user information." });
   }
 };
 
 export const Logout = async (req, res) => {
-  const refreshToken = req.cookies.refreshToken;
+  const authHeader = req.headers["authorization"];
+  const refreshToken = authHeader && authHeader.split(" ")[1];
+
   if (!refreshToken) return res.sendStatus(204);
   const user = await Users.findAll({
     where: {
@@ -111,6 +113,23 @@ export const Logout = async (req, res) => {
       },
     }
   );
-  res.clearCookie("refreshToken");
+  res.clearCookie("refreshToken", {
+    httpOnly: false,
+    path:'/',
+  });
   return res.sendStatus(200);
+};
+
+export const LoginStatus = async (req, res) => {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+  
+  if (token == null) return res.sendStatus(401);
+  jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, (err, decoded) => {
+    if (err) return res.sendStatus(403);
+    res.send({
+      name: decoded.name,
+      email: decoded.email,
+    })
+  });
 };

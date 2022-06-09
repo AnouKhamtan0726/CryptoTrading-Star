@@ -53,7 +53,7 @@ function createData(id, name, email, phone, statistic, status, price) {
                 fullname: 'Big Star',
                 mainWalletAmount: '$3000',
                 tradingWalletAmount: '$3000',
-                round: 100 + ' : (30/70)'
+                round: '100 : (30/70)'
             }
         ]
     };

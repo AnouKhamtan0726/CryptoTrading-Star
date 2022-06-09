@@ -36,7 +36,7 @@ const Signin = () => {
       await axios.post("http://localhost:5000/login", {
         email: email,
         password: password,
-      });
+      }, {withCredentials: true, credentials: 'include'});
       history.push("/otp-1");
     } catch (error) {
       if (error.response) {

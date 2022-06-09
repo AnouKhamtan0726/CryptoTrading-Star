@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { Dropdown } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -96,15 +96,33 @@ const LanguageToggle = React.forwardRef(({ children, onClick }, ref) => (
 
 function Header2() {
   const history = useHistory();
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const current = new Date();
   const date = `${
     current.getMonth() + 1
   }/${current.getDate()}/${current.getFullYear()} ${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
 
+  useEffect(async () => {
+    try {
+      var refreshToken = (await window.cookieStore.get('refreshToken')).value
+
+      axios.defaults.headers.common['Authorization'] = "Basic " + refreshToken;
+    
+      var res = await axios.post("http://localhost:5000/login-status")
+
+      setUsername(res.data.name)
+      setEmail(res.data.email)
+    } catch(err) {
+      window.location.href = '/'
+    }
+  }, [])
+
   const Logout = async () => {
     try {
-      await axios.delete("http://localhost:5000/logout");
-      history.push("/");
+      await axios.post("http://localhost:5000/logout");
+      window.cookieStore.delete('refreshToken')
+      window.location.href = '/'
     } catch (error) {
       console.log(error);
     }
@@ -302,8 +320,8 @@ function Header2() {
                               <i className="mdi mdi-account"></i>
                             </span>
                             <div className="user-info">
-                              <h6>BigStar</h6>
-                              <span>bigstarcoolmanager@gmail.com</span>
+                              <h6>{username}</h6>
+                              <span>{email}</span>
                             </div>
                           </div>
                         </div>
