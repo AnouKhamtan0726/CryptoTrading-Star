@@ -2,16 +2,16 @@ import React, { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
 import {SERVER_URL} from "../../server";
+import { useCookies } from 'react-cookie'
 
 function EmailVerification() {
   const [verifyCode, setVerifyCode] = useState("");
   const [msg, setMsg] = useState("");
   const history = useHistory();
+  const [cookies, setCookie, removeCookie] = useCookies(['refreshToken']);
 
   async function init() {
-    var refreshToken = (await window.cookieStore.get("refreshToken")).value;
-
-    axios.defaults.headers.common["Authorization"] = "Basic " + refreshToken;
+    axios.defaults.headers.common["Authorization"] = "Basic " + cookies.refreshToken;
   }
 
   useEffect(() => {

@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import {SERVER_URL} from "../../server";
 import { useHistory } from "react-router-dom";
+import { useCookies } from "react-cookie";
 
 const ProfileToggle = React.forwardRef(({ children, onClick }, ref) => (
   <div
@@ -100,15 +101,14 @@ function Header2() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const current = new Date();
+  const [cookies, setCookie, removeCookie] = useCookies(['refreshToken']);
   const date = `${
     current.getMonth() + 1
   }/${current.getDate()}/${current.getFullYear()} ${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
 
   async function init() {
     try {
-      var refreshToken = (await window.cookieStore.get("refreshToken")).value;
-
-      axios.defaults.headers.common["Authorization"] = "Basic " + refreshToken;
+      axios.defaults.headers.common["Authorization"] = "Basic " + cookies.refreshToken;
 
       var res = await axios.post( SERVER_URL + "/login-status");
 
@@ -126,7 +126,7 @@ function Header2() {
   const Logout = async () => {
     try {
       await axios.post( SERVER_URL + "/logout");
-      window.cookieStore.delete("refreshToken");
+      removeCookie("refreshToken");
       history.push("/")
     } catch (error) {
       console.log(error);
