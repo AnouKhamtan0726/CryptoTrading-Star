@@ -54,7 +54,13 @@ export const Register = async (req, res) => {
         email: email,
       },
     });
-    if (emailExits) return res.status(400).json({ msg: "Email already exits" });
+    if (emailExits) return res.status(400).json({ msg: "Email already exists" });
+    const nameExits = await Users.findOne({
+      where: {
+        name: name,
+      },
+    });
+    if (nameExits) return res.status(400).json({msg: 'Username already exists'});
 
     await Users.create({
       name: name,
