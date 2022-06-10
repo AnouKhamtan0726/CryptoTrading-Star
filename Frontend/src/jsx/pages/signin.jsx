@@ -3,6 +3,7 @@ import axios from "axios";
 import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { initOnLoad } from "apexcharts";
+import BACKEND_URL from "../../config";
 // import validator from 'validator'
 
 const Signin = () => {
@@ -35,7 +36,7 @@ const Signin = () => {
     // }
     try {
       var res = await axios.post(
-        "http://localhost:5000/login",
+        BACKEND_URL + "/login",
         {
           email: email,
           password: password,

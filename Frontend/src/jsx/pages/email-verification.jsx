@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
+import BACKEND_URL from "../../config";
 
 function EmailVerification() {
   const [verifyCode, setVerifyCode] = useState("");
@@ -19,7 +20,7 @@ function EmailVerification() {
 
   async function Verify() {
     try {
-      await axios.post("http://localhost:5000/verify-email", {
+      await axios.post(BACKEND_URL + "/verify-email", {
         code: verifyCode,
       });
       history.push("/otp-1");

@@ -4,6 +4,7 @@ import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
 import validator from "validator";
 import PasswordChecklist from "react-password-checklist";
+import BACKEND_URL from "../../config";
 
 const Signup = () => {
   const [name, setName] = useState("");
@@ -40,7 +41,7 @@ const Signup = () => {
       return;
     }
     try {
-      await axios.post("http://localhost:5000/users", {
+      await axios.post(BACKEND_URL + "/users", {
         name: name,
         email: email,
         password: password,
