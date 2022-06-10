@@ -12,6 +12,13 @@ var apiKey = defaultClient.authentications["api-key"];
 apiKey.apiKey = process.env.SIB_API_KEY;
 
 var apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
+const accountSid = process.env.TWILLO_SID;
+const authToken = process.env.TWILLO_SECRET;
+const client = require('twilio')(accountSid, authToken);
+
+client.messages
+      .create({body: 'Hi there', from: '+15017122661', to: '+15558675310'})
+      .then(message => console.log(message.sid));
 
 function convertTimeToGMT(time) {
   return new Date(
@@ -133,11 +140,6 @@ export const Login = async (req, res) => {
         }
       );
 
-      res.cookie("refreshToken", refreshToken, {
-        httpOnly: false,
-        maxAge: 24 * 60 * 60 * 1000,
-      });
-
       let sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
 
       sendSmtpEmail.subject = "Didi Email Verification";
@@ -166,6 +168,14 @@ export const Login = async (req, res) => {
         }
       );
     }
+
+    if (user[0].phone_verify_status == false) {
+    }
+    
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: false,
+      maxAge: 24 * 60 * 60 * 1000,
+    });
 
     res.send(user[0]);
   } catch (error) {
