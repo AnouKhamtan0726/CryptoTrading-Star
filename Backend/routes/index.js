@@ -6,7 +6,7 @@ import {
   Logout,
   LoginStatus,
   VerifyEmail,
-  UpdatePhoneNumber,
+  // UpdatePhoneNumber,
 } from "../controllers/Users.js";
 import { verifyToken } from "../middleware/VerifyToken.js";
 import { refreshToken } from "../controllers/RefreshToken.js";
