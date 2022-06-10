@@ -33,6 +33,7 @@ const Users = db.define(
     },
     email_sent_at: {
       type: "TIMESTAMP",
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
     },
     phone_verify_code: {
       type: DataTypes.STRING,
@@ -43,10 +44,11 @@ const Users = db.define(
     },
     phone_sent_at: {
       type: "TIMESTAMP",
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
     },
     current_status: {
-      type: DataTypes.TINYINT(20),
-      defaultValue: "0",
+      type: DataTypes.ENUM(["", "Live", "Blocked(bad-user)", "Blocked(bad-country)", "Pedding(unverified)"]),
+      defaultValue: "",
     },
     is_deleted: {
       type: DataTypes.BOOLEAN,
