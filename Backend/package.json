@@ -21,6 +21,7 @@
     "nodemailer": "^6.7.5",
     "sequelize": "^6.20.0",
     "sib-api-v3-sdk": "^8.3.0",
+    "twilio": "^3.77.2",
     "yarn": "^1.22.18"
   },
   "devDependencies": {

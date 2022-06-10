@@ -1,7 +1,9 @@
-import React from "react";
+import React, {useState} from "react";
 import { Link } from "react-router-dom";
 
 function Otp1() {
+  const [phoneNumber, setPhoneNumber] = useState('')
+
   return (
     <>
       <div className="authincation section-padding">
@@ -40,7 +42,9 @@ function Otp1() {
                         <input
                           type="text"
                           className="form-control"
-                          value="+1 12365480"
+                          placeholder="+1 12365480"
+                          value={phoneNumber}
+                          onChange={(e) => setPhoneNumber(e.target.value)}
                         />
                       </div>
                     </div>

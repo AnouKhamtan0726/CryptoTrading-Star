@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import SibApiV3Sdk from "sib-api-v3-sdk";
 import validator from "validator";
+import twilio from 'twilio'
 
 dotenv.config();
 
@@ -13,12 +14,8 @@ apiKey.apiKey = process.env.SIB_API_KEY;
 
 var apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 const accountSid = process.env.TWILLO_SID;
-const authToken = process.env.TWILLO_SECRET;
-const client = require('twilio')(accountSid, authToken);
-
-client.messages
-      .create({body: 'Hi there', from: '+15017122661', to: '+15558675310'})
-      .then(message => console.log(message.sid));
+const authToken = process.env.TWILLO_TOKEN;
+const client = twilio(accountSid, authToken);
 
 function convertTimeToGMT(time) {
   return new Date(
@@ -39,8 +36,6 @@ export const Register = async (req, res) => {
   const { name, email, password, confPassword } = req.body;
   const regExpPassword =
     /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{6,})/;
-  const regExpEmail =
-    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
   if (name == "") {
     return res.status(400).json({ msg: "Please input username" });
@@ -151,7 +146,7 @@ export const Login = async (req, res) => {
       Thanks!";
       sendSmtpEmail.sender = {
         name: "Didi Developing Team",
-        email: "talentboy726@gmail.com",
+        email: process.env.EMAIL,
       };
       sendSmtpEmail.to = [{ email: email, name: name }];
       sendSmtpEmail.headers = { "Some-Custom-Name": "unique-id-1234" };
@@ -171,7 +166,7 @@ export const Login = async (req, res) => {
 
     if (user[0].phone_verify_status == false) {
     }
-    
+
     res.cookie("refreshToken", refreshToken, {
       httpOnly: false,
       maxAge: 24 * 60 * 60 * 1000,
@@ -276,4 +271,51 @@ export const VerifyEmail = async (req, res) => {
       .status(400)
       .json({ msg: "Verify code has expired! Plesae try again!" });
   });
+};
+
+export const UpdatePhoneNumber = async (req, res) => {
+  const { phone } = req.body;
+  const regExpPhone =
+    /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3,4}[\s.-]\d{4}$/;
+
+  if (phone == "") {
+    return res.status(400).json({ msg: "Please input phone number" });
+  } else if (!regExpPhone.test(phone)) {
+    return res.status(400).json({ msg: "Please check phone number" });
+  }
+
+  phone = phone.replace(/ /g, '').replace(/-/g, '').replace(new RegExp('(', 'g'), '').replace(new RegExp(')', 'g'), '')
+
+  try {
+    const phoneExists = await Users.findOne({
+      where: {
+        phone: phone,
+      },
+    });
+    if (phoneExists) return res.status(400).json({ msg: "Phone number already exists" });
+
+    var code = 100000 + Math.floor(Math.random() * 899999);
+
+    client.messages
+      .create({body: 'Hi there!\nThis is your Didi phone verify code.\n' + code + '\n + Thanks', from: process.env.PHONE_NUMBER, to: phone})
+      .then(message => console.log(message))
+      .catch(err => console.log(err));
+
+    await Users.update({
+      phone: phone,
+      phone_verify_status: false,
+      phone_verify_code: code,
+      phone_sent_at: new Date().toISOString().slice(0, 19).replace("T", " "),
+    },
+    {
+      where: {
+        id: phoneExists.id
+      }
+    });
+
+    res.json({ msg: "Phone number is added successful" });
+  } catch (error) {
+    res.status(500).json({ msg: 'Server Error!' })
+    console.log(error);
+  }
 };
