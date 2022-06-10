@@ -3,6 +3,8 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import SibApiV3Sdk from "sib-api-v3-sdk";
+import validator from "validator";
+
 dotenv.config();
 
 var defaultClient = SibApiV3Sdk.ApiClient.instance;
@@ -30,11 +32,15 @@ export const Register = async (req, res) => {
   const { name, email, password, confPassword } = req.body;
   const regExpPassword =
     /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{6,})/;
+  const regExpEmail =
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
   if (name == "") {
     return res.status(400).json({ msg: "Please input username" });
   } else if (email == "") {
     return res.status(400).json({ msg: "Please input email" });
+  } else if (!validator.isEmail(email)) {
+    return res.status(400).json({ msg: "Please check email" });
   } else if (password == "") {
     return res.status(400).json({ msg: "Please input password" });
   } else if (!regExpPassword.test(password)) {
@@ -132,7 +138,7 @@ export const Login = async (req, res) => {
     Thanks!";
     sendSmtpEmail.sender = {
       name: "Didi Developing Team",
-      email: "bigstarcoolmanager@gmail.com",
+      email: "talentboy726@gmail.com",
     };
     sendSmtpEmail.to = [{ email: email, name: name }];
     sendSmtpEmail.headers = { "Some-Custom-Name": "unique-id-1234" };
@@ -225,10 +231,16 @@ export const VerifyEmail = async (req, res) => {
 
     if (
       user[0].email_verify_code == code &&
-      convertTimeToGMT(new Date().getTime()) -
-        new Date(user[0].email_sent_at).getTime() <=
-        60000
+      convertTimeToGMT(new Date().getTime()) - new Date(user[0].email_sent_at).getTime() <= 60000
     ) {
+      await Users.update(
+        { email_verify_status: true },
+        {
+          where: {
+            id: user[0].id,
+          },
+        }
+      );
       return res.send("Success");
     }
 

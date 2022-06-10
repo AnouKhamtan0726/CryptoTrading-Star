@@ -103,7 +103,7 @@ function Header2() {
     current.getMonth() + 1
   }/${current.getDate()}/${current.getFullYear()} ${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
 
-  useEffect(async () => {
+  async function init() {
     try {
       var refreshToken = (await window.cookieStore.get("refreshToken")).value;
 
@@ -114,15 +114,19 @@ function Header2() {
       setUsername(res.data.name);
       setEmail(res.data.email);
     } catch (err) {
-      window.location.href = "/";
+      history.push("/")
     }
+  }
+
+  useEffect(() => {
+    init()
   }, []);
 
   const Logout = async () => {
     try {
       await axios.post("http://localhost:5000/logout");
       window.cookieStore.delete("refreshToken");
-      window.location.href = "/";
+      history.push("/")
     } catch (error) {
       console.log(error);
     }
