@@ -13,9 +13,9 @@ var apiKey = defaultClient.authentications["api-key"];
 apiKey.apiKey = process.env.SIB_API_KEY;
 
 var apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
-const accountSid = process.env.TWILLO_SID;
-const authToken = process.env.TWILLO_TOKEN;
-const client = twilio(accountSid, authToken);
+// const accountSid = process.env.TWILLO_SID;
+// const authToken = process.env.TWILLO_TOKEN;
+// const client = twilio(accountSid, authToken);
 
 function convertTimeToGMT(time) {
   return new Date(
@@ -273,49 +273,49 @@ export const VerifyEmail = async (req, res) => {
   });
 };
 
-export const UpdatePhoneNumber = async (req, res) => {
-  const { phone } = req.body;
-  const regExpPhone =
-    /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3,4}[\s.-]\d{4}$/;
+// export const UpdatePhoneNumber = async (req, res) => {
+//   const { phone } = req.body;
+//   const regExpPhone =
+//     /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3,4}[\s.-]\d{4}$/;
 
-  if (phone == "") {
-    return res.status(400).json({ msg: "Please input phone number" });
-  } else if (!regExpPhone.test(phone)) {
-    return res.status(400).json({ msg: "Please check phone number" });
-  }
+//   if (phone == "") {
+//     return res.status(400).json({ msg: "Please input phone number" });
+//   } else if (!regExpPhone.test(phone)) {
+//     return res.status(400).json({ msg: "Please check phone number" });
+//   }
 
-  phone = phone.replace(/ /g, '').replace(/-/g, '').replace(new RegExp('(', 'g'), '').replace(new RegExp(')', 'g'), '')
+//   phone = phone.replace(/ /g, '').replace(/-/g, '').replace(new RegExp('(', 'g'), '').replace(new RegExp(')', 'g'), '')
 
-  try {
-    const phoneExists = await Users.findOne({
-      where: {
-        phone: phone,
-      },
-    });
-    if (phoneExists) return res.status(400).json({ msg: "Phone number already exists" });
+//   try {
+//     const phoneExists = await Users.findOne({
+//       where: {
+//         phone: phone,
+//       },
+//     });
+//     if (phoneExists) return res.status(400).json({ msg: "Phone number already exists" });
 
-    var code = 100000 + Math.floor(Math.random() * 899999);
+//     var code = 100000 + Math.floor(Math.random() * 899999);
 
-    client.messages
-      .create({body: 'Hi there!\nThis is your Didi phone verify code.\n' + code + '\n + Thanks', from: process.env.PHONE_NUMBER, to: phone})
-      .then(message => console.log(message))
-      .catch(err => console.log(err));
+//     client.messages
+//       .create({body: 'Hi there!\nThis is your Didi phone verify code.\n' + code + '\n + Thanks', from: process.env.PHONE_NUMBER, to: phone})
+//       .then(message => console.log(message))
+//       .catch(err => console.log(err));
 
-    await Users.update({
-      phone: phone,
-      phone_verify_status: false,
-      phone_verify_code: code,
-      phone_sent_at: new Date().toISOString().slice(0, 19).replace("T", " "),
-    },
-    {
-      where: {
-        id: phoneExists.id
-      }
-    });
+//     await Users.update({
+//       phone: phone,
+//       phone_verify_status: false,
+//       phone_verify_code: code,
+//       phone_sent_at: new Date().toISOString().slice(0, 19).replace("T", " "),
+//     },
+//     {
+//       where: {
+//         id: phoneExists.id
+//       }
+//     });
 
-    res.json({ msg: "Phone number is added successful" });
-  } catch (error) {
-    res.status(500).json({ msg: 'Server Error!' })
-    console.log(error);
-  }
-};
+//     res.json({ msg: "Phone number is added successful" });
+//   } catch (error) {
+//     res.status(500).json({ msg: 'Server Error!' })
+//     console.log(error);
+//   }
+// };

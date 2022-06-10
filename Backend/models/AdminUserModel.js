@@ -4,7 +4,7 @@ import db from "../config/Database.js";
 const { DataTypes } = Sequelize;
 
 const Users = db.define(
-  "users",
+  "admins",
   {
     name: {
       type: DataTypes.STRING,
@@ -49,7 +49,6 @@ const Users = db.define(
     current_status: {
       type: DataTypes.ENUM(["", "Live", "Blocked(bad-user)", "Blocked(bad-country)", "Pedding(unverified)"]),
       defaultValue: "",
-      description: "1:Live 2:Blocked(bad-user) 3:Blocked(bad-country) 4:Pedding(unverified)",
     },
     is_deleted: {
       type: DataTypes.BOOLEAN,
