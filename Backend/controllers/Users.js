@@ -107,13 +107,9 @@ export const Login = async (req, res) => {
       }
     );
 
-    var code = 100000 + Math.floor(Math.random() * 899999);
-
     await Users.update(
       {
         refresh_token: refreshToken,
-        email_verify_code: code,
-        email_sent_at: new Date().toISOString().slice(0, 19).replace("T", " "),
       },
       {
         where: {
@@ -122,38 +118,54 @@ export const Login = async (req, res) => {
       }
     );
 
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: false,
-      maxAge: 24 * 60 * 60 * 1000,
-    });
+    if (user[0].email_verify_status == false) {
+      var code = 100000 + Math.floor(Math.random() * 899999);
 
-    let sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
+      await Users.update(
+        {
+          email_verify_code: code,
+          email_sent_at: new Date().toISOString().slice(0, 19).replace("T", " "),
+        },
+        {
+          where: {
+            id: userId,
+          },
+        }
+      );
 
-    sendSmtpEmail.subject = "Didi Email Verification";
-    sendSmtpEmail.htmlContent =
-      "<b>This is your verify code! </b><br/>\
-    <h1>" +
-      code +
-      "</h1><br/>\
-    Thanks!";
-    sendSmtpEmail.sender = {
-      name: "Didi Developing Team",
-      email: "talentboy726@gmail.com",
-    };
-    sendSmtpEmail.to = [{ email: email, name: name }];
-    sendSmtpEmail.headers = { "Some-Custom-Name": "unique-id-1234" };
-    sendSmtpEmail.params = { parameter: code, subject: "New Subject" };
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: false,
+        maxAge: 24 * 60 * 60 * 1000,
+      });
 
-    apiInstance.sendTransacEmail(sendSmtpEmail).then(
-      function (data) {
-        console.log(
-          "API called successfully. Returned data: " + JSON.stringify(data)
-        );
-      },
-      function (error) {
-        console.error(error);
-      }
-    );
+      let sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
+
+      sendSmtpEmail.subject = "Didi Email Verification";
+      sendSmtpEmail.htmlContent =
+        "<b>This is your verify code! </b><br/>\
+      <h1>" +
+        code +
+        "</h1><br/>\
+      Thanks!";
+      sendSmtpEmail.sender = {
+        name: "Didi Developing Team",
+        email: "talentboy726@gmail.com",
+      };
+      sendSmtpEmail.to = [{ email: email, name: name }];
+      sendSmtpEmail.headers = { "Some-Custom-Name": "unique-id-1234" };
+      sendSmtpEmail.params = { parameter: code, subject: "New Subject" };
+
+      apiInstance.sendTransacEmail(sendSmtpEmail).then(
+        function (data) {
+          console.log(
+            "API called successfully. Returned data: " + JSON.stringify(data)
+          );
+        },
+        function (error) {
+          console.error(error);
+        }
+      );
+    }
 
     res.send(user[0]);
   } catch (error) {
