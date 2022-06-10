@@ -35,6 +35,8 @@ import { strengthColor, strengthIndicator } from 'utils/password-strength';
 // assets
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import axios from 'axios';
+import validator from 'validator';
 
 // ===========================|| FIREBASE - REGISTER ||=========================== //
 
@@ -44,10 +46,15 @@ const FirebaseRegister = ({ ...others }) => {
     const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
     const customization = useSelector((state) => state.customization);
     const [showPassword, setShowPassword] = useState(false);
-    const [checked, setChecked] = useState(true);
+    const [checked, setChecked] = useState(false);
+    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
 
     const [strength, setStrength] = useState(0);
     const [level, setLevel] = useState();
+    const [msg, setMsg] = useState('');
 
     const googleHandler = async () => {
         console.error('Register');
@@ -67,13 +74,27 @@ const FirebaseRegister = ({ ...others }) => {
         setLevel(strengthColor(temp));
     };
 
+    const validateEmail = () => {
+        if (validator.isEmail(email) || email === '') {
+          setMsg('');
+        } else {
+          setMsg("Enter valid Email!");
+          return false;
+        }
+        return true;
+    };
+
+    const signUp = (e) => {
+        console.log(firstName, lastName, email, password)
+    }
+
     useEffect(() => {
         changePassword('123456');
     }, []);
 
     return (
         <>
-            <Grid container direction="column" justifyContent="center" spacing={2}>
+            {/* <Grid container direction="column" justifyContent="center" spacing={2}>
                 <Grid item xs={12}>
                     <AnimateButton>
                         <Button
@@ -124,7 +145,7 @@ const FirebaseRegister = ({ ...others }) => {
                         </Typography>
                     </Box>
                 </Grid>
-            </Grid>
+            </Grid> */}
 
             <Formik
                 initialValues={{
@@ -154,6 +175,7 @@ const FirebaseRegister = ({ ...others }) => {
             >
                 {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
                     <form noValidate onSubmit={handleSubmit} {...others}>
+                        <p className="has-text-centered error-message">{msg}</p>
                         <Grid container spacing={matchDownSM ? 0 : 2}>
                             <Grid item xs={12} sm={6}>
                                 <TextField
@@ -162,7 +184,9 @@ const FirebaseRegister = ({ ...others }) => {
                                     margin="normal"
                                     name="fname"
                                     type="text"
-                                    defaultValue=""
+                                    defaultValue=''
+                                    value={firstName}
+                                    onChange={(e) => setFirstName(e.target.value)}
                                     sx={{ ...theme.typography.customInput }}
                                 />
                             </Grid>
@@ -173,7 +197,9 @@ const FirebaseRegister = ({ ...others }) => {
                                     margin="normal"
                                     name="lname"
                                     type="text"
-                                    defaultValue=""
+                                    defaultValue=''
+                                    value={lastName}
+                                    onChange={(e) => setLastName(e.target.value)}
                                     sx={{ ...theme.typography.customInput }}
                                 />
                             </Grid>
@@ -183,11 +209,14 @@ const FirebaseRegister = ({ ...others }) => {
                             <OutlinedInput
                                 id="outlined-adornment-email-register"
                                 type="email"
-                                value={values.email}
                                 name="email"
                                 onBlur={handleBlur}
-                                onChange={handleChange}
+                                onChange={(e) => {
+                                    setEmail(e.target.value);
+                                    handleChange(e);
+                                }}
                                 inputProps={{}}
+                                value={email}
                             />
                             {touched.email && errors.email && (
                                 <FormHelperText error id="standard-weight-helper-text--register">
@@ -205,11 +234,12 @@ const FirebaseRegister = ({ ...others }) => {
                             <OutlinedInput
                                 id="outlined-adornment-password-register"
                                 type={showPassword ? 'text' : 'password'}
-                                value={values.password}
                                 name="password"
                                 label="Password"
                                 onBlur={handleBlur}
+                                value={password}
                                 onChange={(e) => {
+                                    setPassword(e.target.value);
                                     handleChange(e);
                                     changePassword(e.target.value);
                                 }}
@@ -287,12 +317,13 @@ const FirebaseRegister = ({ ...others }) => {
                             <AnimateButton>
                                 <Button
                                     disableElevation
-                                    disabled={isSubmitting}
+                                    disabled={!checked}
                                     fullWidth
                                     size="large"
                                     type="submit"
                                     variant="contained"
                                     color="secondary"
+                                    onClick={signUp}
                                 >
                                     Sign up
                                 </Button>

@@ -47,9 +47,9 @@ const Users = db.define(
       defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
     },
     current_status: {
-      type: DataTypes.ENUM(["", "Live", "Blocked(bad-user)", "Blocked(bad-country)", "Pedding(unverified)"]),
-      defaultValue: "",
-      description: "1:Live 2:Blocked(bad-user) 3:Blocked(bad-country) 4:Pedding(unverified)",
+      type: DataTypes.TINYINT(20),
+      defaultValue: 0,
+      comment: "1:Live 2:Blocked(bad-user) 3:Blocked(bad-country) 4:Pedding(unverified)",
     },
     is_deleted: {
       type: DataTypes.BOOLEAN,

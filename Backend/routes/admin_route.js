@@ -1,23 +1,19 @@
 import express from "express";
 import {
-  getUsers,
   Register,
   Login,
   Logout,
   LoginStatus,
   VerifyEmail,
   // UpdatePhoneNumber,
-} from "../controllers/Users.js";
-import { verifyToken } from "../middleware/VerifyToken.js";
-import { refreshToken } from "../controllers/RefreshToken.js";
+} from "../controllers/AdminUsers.js";
+import { adminVerifyToken } from "../middleware/VerifyToken.js";
 
 const router = express.Router();
 
-router.get("/users", verifyToken, getUsers);
-router.post("/users", Register);
+router.post("/register", Register);
 router.post("/login", Login);
 router.post("/login-status", LoginStatus);
-router.get("/token", refreshToken);
 router.post("/logout", Logout);
 router.post("/verify-email", verifyToken, VerifyEmail);
 // router.post("/phone-number", verifyToken, UpdatePhoneNumber);

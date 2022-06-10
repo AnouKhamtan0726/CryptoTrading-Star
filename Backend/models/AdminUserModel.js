@@ -24,6 +24,16 @@ const Users = db.define(
     refresh_token: {
       type: DataTypes.TEXT,
     },
+    role: {
+      type: DataTypes.TINYINT(20),
+      defaultValue: 0,
+      comment: "1:Main-Admin 2:Account-Admin 3:Trading-Admin",
+    },
+    access_setting: {
+      type: DataTypes.TINYINT(20),
+      defaultValue: 0,
+      comment: "1:Admin 2:Users 3:Referral 4:Trading 5:Billing",
+    },
     email_verify_code: {
       type: DataTypes.STRING,
     },
@@ -47,8 +57,9 @@ const Users = db.define(
       defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
     },
     current_status: {
-      type: DataTypes.ENUM(["", "Live", "Blocked(bad-user)", "Blocked(bad-country)", "Pedding(unverified)"]),
-      defaultValue: "",
+      type: DataTypes.TINYINT(20),
+      defaultValue: 0,
+      comment: "1:Live 2:Blocked(bad-user) 3:Blocked(bad-country) 4:Pedding(unverified)",
     },
     is_deleted: {
       type: DataTypes.BOOLEAN,
