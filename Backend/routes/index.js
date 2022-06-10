@@ -20,6 +20,6 @@ router.post("/login-status", LoginStatus);
 router.get("/token", refreshToken);
 router.post("/logout", Logout);
 router.post("/verify-email", verifyToken, VerifyEmail);
-router.post("/phone-number", verifyToken, UpdatePhoneNumber);
+// router.post("/phone-number", verifyToken, UpdatePhoneNumber);
 
 export default router;
