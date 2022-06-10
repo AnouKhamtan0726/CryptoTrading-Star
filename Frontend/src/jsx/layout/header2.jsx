@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Dropdown } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import BACKEND_URL from "../../config";
+import {SERVER_URL} from "../../server";
 import { useHistory } from "react-router-dom";
 
 const ProfileToggle = React.forwardRef(({ children, onClick }, ref) => (
@@ -110,7 +110,7 @@ function Header2() {
 
       axios.defaults.headers.common["Authorization"] = "Basic " + refreshToken;
 
-      var res = await axios.post( BACKEND_URL + "/login-status");
+      var res = await axios.post( SERVER_URL + "/login-status");
 
       setUsername(res.data.name);
       setEmail(res.data.email);
@@ -125,7 +125,7 @@ function Header2() {
 
   const Logout = async () => {
     try {
-      await axios.post( BACKEND_URL + "/logout");
+      await axios.post( SERVER_URL + "/logout");
       window.cookieStore.delete("refreshToken");
       history.push("/")
     } catch (error) {
