@@ -1,0 +1,13 @@
+ACCESS_TOKEN_SECRET = jsfgfjguwrg8783wgbjs849h2fu3cnsvh8wyr8fhwfvi2g225
+REFRESH_TOKEN_SECRET = 825y8i3hnfjmsbv7gwajbl7fobqrjfvbs7gbfj2q3bgh8f42
+ADMIN_REFRESH_TOKEN_SECRET = 825y8i3hnfjmsbv7gw123asdobqrjfvbs7gbfj2q3bgh8f42
+
+SIB_API_KEY = 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
+SMTP_SIB_KEY = xsmtpsib-bb1bcf2b158907afe44e28479daa378888be241f92f0e795eccb79fd584fbabd-9MfYXPRxHy08naS1
+
+TWILLO_SID = AC515faad98ee705b17f4f879e259fee98
+TWILLO_TOKEN = 57b667bcc7e2ff7f6b952df6d026df0c
+PHONE_NUMBER = "+16084134887"
+EMAIL = "talentboy726@gmail.com"
+
+TZ="GMT"
