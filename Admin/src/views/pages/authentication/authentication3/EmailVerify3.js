@@ -36,15 +36,14 @@ const Login = () => {
           >
             <Grid item sx={{ m: { xs: 1, sm: 3 }, mb: 0 }}>
               <AuthCardWrapper>
-                  
-          <Grid itme xs={12}>
-        <Link className="page-back text-muted" to={"/login"}>
-            <span>
-                <i className="fa fa-angle-left"></i>
-            </span>{" "}
-            Back
-        </Link>
-              </Grid>
+                <Grid itme xs={12}>
+                  <Link className="page-back text-muted" to={"/login"}>
+                    <span>
+                      <i className="fa fa-angle-left"></i>
+                    </span>{" "}
+                    Back
+                  </Link>
+                </Grid>
                 <Grid
                   container
                   spacing={2}

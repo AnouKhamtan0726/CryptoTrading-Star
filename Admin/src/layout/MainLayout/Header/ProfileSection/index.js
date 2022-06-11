@@ -26,7 +26,7 @@ import {
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { useCookies } from "react-cookie";
 import axios from "axios";
-import config from '../../../../config'
+import config from "../../../../config";
 
 // project imports
 import MainCard from "ui-component/cards/MainCard";
@@ -45,7 +45,7 @@ const ProfileSection = () => {
 
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [open, setOpen] = useState(false);
-  const [cookies, setCookie, removeCookie] = useCookies(['refreshToken']);
+  const [cookies, setCookie, removeCookie] = useCookies(["refreshToken"]);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   /**
@@ -82,27 +82,28 @@ const ProfileSection = () => {
     }
 
     prevOpen.current = open;
-    init()
+    init();
   }, [open]);
 
   async function init() {
     try {
-      axios.defaults.headers.common["Authorization"] = "Basic " + cookies.refreshToken;
+      axios.defaults.headers.common["Authorization"] =
+        "Basic " + cookies.refreshToken;
 
-      var res = await axios.post( config.SERVER_URL + "/login-status");
+      var res = await axios.post(config.SERVER_URL + "/login-status");
 
       setUsername(res.data.name);
       setEmail(res.data.email);
     } catch (err) {
-      navigate("/login")
+      navigate("/login");
     }
   }
 
   const Logout = async () => {
     try {
-      await axios.post( config.SERVER_URL + "/logout");
+      await axios.post(config.SERVER_URL + "/logout");
       removeCookie("refreshToken");
-      navigate("/login")
+      navigate("/login");
     } catch (error) {
       console.log(error);
     }
@@ -305,7 +306,9 @@ const ProfileSection = () => {
                           </ListItemIcon>
                           <ListItemText
                             primary={
-                              <Typography variant="body1" onClick={Logout}>Logout</Typography>
+                              <Typography variant="body1" onClick={Logout}>
+                                Logout
+                              </Typography>
                             }
                           />
                         </ListItemButton>

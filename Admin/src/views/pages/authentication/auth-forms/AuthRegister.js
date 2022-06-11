@@ -37,7 +37,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import axios from "axios";
 import validator from "validator";
-import config from '../../../../config'
+import config from "../../../../config";
 
 // ===========================|| FIREBASE - REGISTER ||=========================== //
 

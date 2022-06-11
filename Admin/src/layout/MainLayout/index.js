@@ -81,9 +81,9 @@ const MainLayout = () => {
   const dispatch = useDispatch();
   const handleLeftDrawerToggle = () => {
     dispatch({ type: SET_MENU, opened: !leftDrawerOpened });
-  };  
+  };
 
-  useEffect(() => {    
+  useEffect(() => {
     dispatch({ type: SET_MENU, opened: !matchDownMd });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [matchDownMd]);

@@ -35,8 +35,8 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 import Google from "assets/images/icons/social-google.svg";
-import axios from 'axios';
-import config from '../../../../config';
+import axios from "axios";
+import config from "../../../../config";
 
 // ============================|| FIREBASE - LOGIN ||============================ //
 
@@ -220,8 +220,8 @@ const FirebaseLogin = ({ ...others }) => {
                 name="email"
                 onBlur={handleBlur}
                 onChange={(e) => {
-                  setEmail(e.target.value)
-                  handleChange(e)
+                  setEmail(e.target.value);
+                  handleChange(e);
                 }}
                 label="Email Address / Username"
                 inputProps={{}}
@@ -252,8 +252,8 @@ const FirebaseLogin = ({ ...others }) => {
                 value={password}
                 onBlur={handleBlur}
                 onChange={(e) => {
-                  setPassword(e.target.value)
-                  handleChange(e)
+                  setPassword(e.target.value);
+                  handleChange(e);
                 }}
                 endAdornment={
                   <InputAdornment position="end">

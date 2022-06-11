@@ -35,9 +35,9 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 import Google from "assets/images/icons/social-google.svg";
-import axios from 'axios';
-import config from '../../../../config';
-import { useCookies } from 'react-cookie';
+import axios from "axios";
+import config from "../../../../config";
+import { useCookies } from "react-cookie";
 
 // ============================|| FIREBASE - LOGIN ||============================ //
 
@@ -50,14 +50,15 @@ const FirebaseLogin = ({ ...others }) => {
   const [msg, setMsg] = useState("");
   const [verifyCode, setVerifyCode] = useState("");
   const navigate = useNavigate();
-  const [cookies, setCookie, removeCookie] = useCookies(['refreshToken']);
+  const [cookies, setCookie, removeCookie] = useCookies(["refreshToken"]);
 
   const googleHandler = async () => {
     console.error("Login");
   };
 
   async function init() {
-    axios.defaults.headers.common["Authorization"] = "Basic " + cookies.refreshToken;
+    axios.defaults.headers.common["Authorization"] =
+      "Basic " + cookies.refreshToken;
   }
 
   useEffect(() => {
@@ -65,7 +66,7 @@ const FirebaseLogin = ({ ...others }) => {
   }, []);
 
   async function Verify(e) {
-      e.preventDefault()
+    e.preventDefault();
 
     try {
       await axios.post(config.SERVER_URL + "/verify-email", {
@@ -74,7 +75,7 @@ const FirebaseLogin = ({ ...others }) => {
       navigate("/");
     } catch (error) {
       if (error.response && error.response.status == 403) {
-        navigate('/login')
+        navigate("/login");
       } else if (error.response) {
         setMsg(error.response.data.msg);
       }
@@ -202,8 +203,8 @@ const FirebaseLogin = ({ ...others }) => {
                 name="verify "
                 onBlur={handleBlur}
                 onChange={(e) => {
-                  setVerifyCode(e.target.value)
-                  handleChange(e)
+                  setVerifyCode(e.target.value);
+                  handleChange(e);
                 }}
                 label="Enter your verify code"
                 inputProps={{}}
