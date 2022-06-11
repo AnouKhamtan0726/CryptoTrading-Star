@@ -5,8 +5,13 @@ function Indicator(props) {
   var { width, id, title, buy, sell, neutral } = props;
   const [status, setStatus] = useState("NEUTRAL");
   const [angle, setAngle] = useState(0.5);
-  var height, left, top, radius, pos = [], labels = ["STRONG SELL", "SELL", "NEUTRAL", "BUY", "STRONG BUY"];
-  
+  var height,
+    left,
+    top,
+    radius,
+    pos = [],
+    labels = ["STRONG SELL", "SELL", "NEUTRAL", "BUY", "STRONG BUY"];
+
   width = parseInt(width);
   height = width / 2.2222222 + 30;
   left = (width / 100) * 14 + 6;
@@ -21,10 +26,10 @@ function Indicator(props) {
   }
 
   useEffect(() => {
-      if (buy * sell != 0) {
-        setAngle(buy / (buy + sell));
-        setStatus(labels[Math.floor(buy / (buy + sell) * 5)])
-      }
+    if (buy * sell != 0) {
+      setAngle(buy / (buy + sell));
+      setStatus(labels[Math.floor((buy / (buy + sell)) * 5)]);
+    }
   }, []);
 
   return (
@@ -47,18 +52,18 @@ function Indicator(props) {
         );
       })}
       <div className="jindicator-stats">
-          <div>
-              <label className="jindicator-label sell">{sell}</label>
-              <label className="jindicator-label">SELL</label>
-          </div>
-          <div>
-              <label className="jindicator-label neutral">{neutral}</label>
-              <label className="jindicator-label">NEUTRAL</label>
-          </div>
-          <div>
-              <label className="jindicator-label buy">{buy}</label>
-              <label className="jindicator-label">BUY</label>
-          </div>
+        <div>
+          <label className="jindicator-label sell">{sell}</label>
+          <label className="jindicator-label">SELL</label>
+        </div>
+        <div>
+          <label className="jindicator-label neutral">{neutral}</label>
+          <label className="jindicator-label">NEUTRAL</label>
+        </div>
+        <div>
+          <label className="jindicator-label buy">{buy}</label>
+          <label className="jindicator-label">BUY</label>
+        </div>
       </div>
       <label className="jindicator-label status">{status}</label>
       <div
