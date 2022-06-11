@@ -1,4 +1,4 @@
-import Users from "../models/UserModel.js";
+import AdminUsers from "../models/AdminUserModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
@@ -46,14 +46,14 @@ export const Register = async (req, res) => {
   const hashPassword = await bcrypt.hash(password, salt);
 
   try {
-    const emailExits = await Users.findOne({
+    const emailExits = await AdminUsers.findOne({
       where: {
         email: email,
       },
     });
     if (emailExits) return res.status(400).json({ msg: "Email already exists" });
 
-    await Users.create({
+    await AdminUsers.create({
       name: first_name + ' ' + last_name,
       email: email,
       password: hashPassword,
@@ -67,7 +67,7 @@ export const Register = async (req, res) => {
 
 export const Login = async (req, res) => {
   try {
-    const user = await Users.findAll({
+    const user = await AdminUsers.findAll({
       where: {
         email: req.body.email,
       },
@@ -77,22 +77,15 @@ export const Login = async (req, res) => {
     const userId = user[0].id;
     const name = user[0].name;
     const email = user[0].email;
-    // const accessToken = jwt.sign(
-    //   { userId, name, email },
-    //   process.env.ACCESS_TOKEN_SECRET,
-    //   {
-    //     expiresIn: "15s",
-    //   }
-    // );
     const refreshToken = jwt.sign(
       { userId, name, email },
-      process.env.REFRESH_TOKEN_SECRET,
+      process.env.ADMIN_REFRESH_TOKEN_SECRET,
       {
         expiresIn: "1d",
       }
     );
 
-    await Users.update(
+    await AdminUsers.update(
       {
         refresh_token: refreshToken,
       },
@@ -106,7 +99,7 @@ export const Login = async (req, res) => {
     if (user[0].email_verify_status == false) {
       var code = 100000 + Math.floor(Math.random() * 899999);
 
-      await Users.update(
+      await AdminUsers.update(
         {
           email_verify_code: code,
           email_sent_at: new Date().toISOString().slice(0, 19).replace("T", " "),
@@ -166,14 +159,14 @@ export const Logout = async (req, res) => {
   const refreshToken = authHeader && authHeader.split(" ")[1];
 
   if (!refreshToken) return res.sendStatus(204);
-  const user = await Users.findAll({
+  const user = await AdminUsers.findAll({
     where: {
       refresh_token: refreshToken,
     },
   });
   if (!user[0]) return res.sendStatus(204);
   const userId = user[0].id;
-  await Users.update(
+  await AdminUsers.update(
     { refresh_token: null },
     {
       where: {
@@ -193,10 +186,10 @@ export const LoginStatus = async (req, res) => {
   const token = authHeader && authHeader.split(" ")[1];
 
   if (token == null) return res.sendStatus(401);
-  jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, async (err, decoded) => {
+  jwt.verify(token, process.env.ADMIN_REFRESH_TOKEN_SECRET, async (err, decoded) => {
     if (err) return res.sendStatus(403);
 
-    const user = await Users.findAll({
+    const user = await AdminUsers.findAll({
       where: {
         email: decoded.email,
       },
@@ -216,10 +209,10 @@ export const VerifyEmail = async (req, res) => {
   const { code } = req.body;
 
   if (token == null) return res.sendStatus(401);
-  jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, async (err, decoded) => {
+  jwt.verify(token, process.env.ADMIN_REFRESH_TOKEN_SECRET, async (err, decoded) => {
     if (err) return res.sendStatus(403);
 
-    const user = await Users.findAll({
+    const user = await AdminUsers.findAll({
       where: {
         email: decoded.email,
       },
@@ -233,7 +226,7 @@ export const VerifyEmail = async (req, res) => {
       user[0].email_verify_code == code &&
       convertTimeToGMT(new Date().getTime()) - new Date(user[0].email_sent_at).getTime() <= 60000
     ) {
-      await Users.update(
+      await AdminUsers.update(
         { email_verify_status: true },
         {
           where: {

@@ -25,8 +25,7 @@ function EmailVerification() {
       });
       history.push("/otp-1");
     } catch (error) {
-      console.log(error.response)
-      if (error.response.data.status == 403) {
+      if (error.response && error.response.data.status == 403) {
         history.push('/signin')
       } else if (error.response) {
         setMsg(error.response.data.msg);
