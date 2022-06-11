@@ -3,7 +3,7 @@ import axios from "axios";
 import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { initOnLoad } from "apexcharts";
-import {SERVER_URL} from "../../server";
+import { SERVER_URL } from "../../server";
 // import validator from 'validator'
 
 const Signin = () => {

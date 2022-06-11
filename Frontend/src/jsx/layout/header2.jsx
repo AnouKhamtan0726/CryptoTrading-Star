@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Dropdown } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import {SERVER_URL} from "../../server";
+import { SERVER_URL } from "../../server";
 import { useHistory } from "react-router-dom";
 import { useCookies } from "react-cookie";
 
@@ -101,33 +101,34 @@ function Header2() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const current = new Date();
-  const [cookies, setCookie, removeCookie] = useCookies(['refreshToken']);
+  const [cookies, setCookie, removeCookie] = useCookies(["refreshToken"]);
   const date = `${
     current.getMonth() + 1
   }/${current.getDate()}/${current.getFullYear()} ${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
 
   async function init() {
     try {
-      axios.defaults.headers.common["Authorization"] = "Basic " + cookies.refreshToken;
+      axios.defaults.headers.common["Authorization"] =
+        "Basic " + cookies.refreshToken;
 
-      var res = await axios.post( SERVER_URL + "/login-status");
+      var res = await axios.post(SERVER_URL + "/login-status");
 
       setUsername(res.data.name);
       setEmail(res.data.email);
     } catch (err) {
-      history.push("/")
+      history.push("/");
     }
   }
 
   useEffect(() => {
-    init()
+    init();
   }, []);
 
   const Logout = async () => {
     try {
-      await axios.post( SERVER_URL + "/logout");
+      await axios.post(SERVER_URL + "/logout");
       removeCookie("refreshToken");
-      history.push("/")
+      history.push("/");
     } catch (error) {
       console.log(error);
     }

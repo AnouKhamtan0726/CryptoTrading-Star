@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
-import {SERVER_URL} from "../../server";
-import { useCookies } from 'react-cookie'
+import { SERVER_URL } from "../../server";
+import { useCookies } from "react-cookie";
 
 function EmailVerification() {
   const [verifyCode, setVerifyCode] = useState("");
   const [msg, setMsg] = useState("");
   const history = useHistory();
-  const [cookies, setCookie, removeCookie] = useCookies(['refreshToken']);
+  const [cookies, setCookie, removeCookie] = useCookies(["refreshToken"]);
 
   async function init() {
-    axios.defaults.headers.common["Authorization"] = "Basic " + cookies.refreshToken;
+    axios.defaults.headers.common["Authorization"] =
+      "Basic " + cookies.refreshToken;
   }
 
   useEffect(() => {
@@ -26,7 +27,7 @@ function EmailVerification() {
       history.push("/otp-1");
     } catch (error) {
       if (error.response && error.response.data.status == 403) {
-        history.push('/signin')
+        history.push("/signin");
       } else if (error.response) {
         setMsg(error.response.data.msg);
       }

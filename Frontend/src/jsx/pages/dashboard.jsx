@@ -7,9 +7,11 @@ import Footer2 from "../layout/footer2";
 import Header2 from "../layout/header2";
 import Sidebar from "../layout/sidebar";
 import Chatbot from "../layout/chatbot";
+import Indicator from "../element/indicator";
 
 function Dashboard() {
   let [count, setCount] = useState(5);
+  const [activeTab, setActiveTab] = useState("indicators");
 
   function incrementCount() {
     count = count + 5;
@@ -64,93 +66,140 @@ function Dashboard() {
               </div>
               <div className="col-12">
                 <div className="card">
-                  <div className="card-header">
-                    <h4 className="card-title">Transactions History</h4>
+                  <div className="card-header card-tab-header">
+                    <h4
+                      className={
+                        "card-title card-tab" +
+                        (activeTab == "indicators" ? " active" : "")
+                      }
+                      onClick={(e) => setActiveTab("indicators")}
+                    >
+                      Indicators
+                    </h4>
+                    <h4
+                      className={
+                        "card-title card-tab" +
+                        (activeTab == "transaction" ? " active" : "")
+                      }
+                      onClick={(e) => setActiveTab("transaction")}
+                    >
+                      Transactions History
+                    </h4>
                   </div>
                   <div className="card-body">
-                    <div className="transaction-table">
-                      <div className="table-responsive">
-                        <table className="table table-striped mb-0 table-responsive-sm">
-                          <thead>
-                            <tr>
-                              <th>Transaction ID</th>
-                              <th>Time</th>
-                              <th>Type</th>
-                              <th>Amount</th>
-                              <th>Status</th>
-                              <th>Result</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr>
-                              <td>#565845522</td>
-                              <td>January 10, {new Date().getFullYear()} </td>
-                              <td className="trading-status">
-                                <span className="buy-thumb">
-                                  <i className="mdi mdi-arrow-up"></i>
-                                </span>{" "}
-                                Buy
-                              </td>
-                              <td>0.254782 BTC</td>
-                              <td>Completed</td>
-                              <td>0.125476 BTC</td>
-                            </tr>
-                            <tr>
-                              <td>#565845522</td>
-                              <td>January 10, {new Date().getFullYear()} </td>
-                              <td className="trading-status">
-                                <span className="sold-thumb">
-                                  <i className="mdi mdi-arrow-down"></i>
-                                </span>{" "}
-                                Sell
-                              </td>
-                              <td>0.254782 BTC</td>
-                              <td>Completed</td>
-                              <td>0.125476 BTC</td>
-                            </tr>
-                            <tr>
-                              <td>#565845522</td>
-                              <td>January 10, {new Date().getFullYear()} </td>
-                              <td className="trading-status">
-                                <span className="buy-thumb">
-                                  <i className="mdi mdi-arrow-up"></i>
-                                </span>{" "}
-                                Buy
-                              </td>
-                              <td>0.254782 BTC</td>
-                              <td>Completed</td>
-                              <td>0.125476 BTC</td>
-                            </tr>
-                            <tr>
-                              <td>#565845522</td>
-                              <td>January 10, {new Date().getFullYear()} </td>
-                              <td className="trading-status">
-                                <span className="sold-thumb">
-                                  <i className="mdi mdi-arrow-down"></i>
-                                </span>{" "}
-                                Sell
-                              </td>
-                              <td>0.254782 BTC</td>
-                              <td>Completed</td>
-                              <td>0.125476 BTC</td>
-                            </tr>
-                            <tr>
-                              <td>#565845522</td>
-                              <td>January 10, {new Date().getFullYear()} </td>
-                              <td className="trading-status">
-                                <span className="sold-thumb">
-                                  <i className="mdi mdi-arrow-down"></i>
-                                </span>{" "}
-                                Sell
-                              </td>
-                              <td>0.254782 BTC</td>
-                              <td>Completed</td>
-                              <td>0.125476 BTC</td>
-                            </tr>
-                          </tbody>
-                        </table>
+                    {activeTab == "transaction" && (
+                      <div className="transaction-table">
+                        <div className="table-responsive">
+                          <table className="table table-striped mb-0 table-responsive-sm">
+                            <thead>
+                              <tr>
+                                <th>Transaction ID</th>
+                                <th>Time</th>
+                                <th>Type</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Result</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td>#565845522</td>
+                                <td>January 10, {new Date().getFullYear()} </td>
+                                <td className="trading-status">
+                                  <span className="buy-thumb">
+                                    <i className="mdi mdi-arrow-up"></i>
+                                  </span>{" "}
+                                  Buy
+                                </td>
+                                <td>0.254782 BTC</td>
+                                <td>Completed</td>
+                                <td>0.125476 BTC</td>
+                              </tr>
+                              <tr>
+                                <td>#565845522</td>
+                                <td>January 10, {new Date().getFullYear()} </td>
+                                <td className="trading-status">
+                                  <span className="sold-thumb">
+                                    <i className="mdi mdi-arrow-down"></i>
+                                  </span>{" "}
+                                  Sell
+                                </td>
+                                <td>0.254782 BTC</td>
+                                <td>Completed</td>
+                                <td>0.125476 BTC</td>
+                              </tr>
+                              <tr>
+                                <td>#565845522</td>
+                                <td>January 10, {new Date().getFullYear()} </td>
+                                <td className="trading-status">
+                                  <span className="buy-thumb">
+                                    <i className="mdi mdi-arrow-up"></i>
+                                  </span>{" "}
+                                  Buy
+                                </td>
+                                <td>0.254782 BTC</td>
+                                <td>Completed</td>
+                                <td>0.125476 BTC</td>
+                              </tr>
+                              <tr>
+                                <td>#565845522</td>
+                                <td>January 10, {new Date().getFullYear()} </td>
+                                <td className="trading-status">
+                                  <span className="sold-thumb">
+                                    <i className="mdi mdi-arrow-down"></i>
+                                  </span>{" "}
+                                  Sell
+                                </td>
+                                <td>0.254782 BTC</td>
+                                <td>Completed</td>
+                                <td>0.125476 BTC</td>
+                              </tr>
+                              <tr>
+                                <td>#565845522</td>
+                                <td>January 10, {new Date().getFullYear()} </td>
+                                <td className="trading-status">
+                                  <span className="sold-thumb">
+                                    <i className="mdi mdi-arrow-down"></i>
+                                  </span>{" "}
+                                  Sell
+                                </td>
+                                <td>0.254782 BTC</td>
+                                <td>Completed</td>
+                                <td>0.125476 BTC</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
                       </div>
-                    </div>
+                    )}
+                    {activeTab == "indicators" && (
+                      <div className="indicators-container">
+                        <Indicator
+                          id="indicator-1"
+                          width="200px"
+                          title="Oscillators"
+                          buy={2}
+                          sell={2}
+                          neutral={1}
+                        />
+                        <Indicator
+                          id="indicator-2"
+                          width="300px"
+                          title="Summary"
+                          buy={13}
+                          sell={5}
+                          neutral={1}
+                        />
+                        <Indicator
+                          id="indicator-3"
+                          width="200px"
+                          title="Moving Averages"
+                          buy={11}
+                          sell={1}
+                          neutral={0}
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

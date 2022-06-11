@@ -15,7 +15,7 @@ function Sidebar() {
         <div className="menu">
           <ul>
             <li>
-              <Link to={"./dashboard"} activeClassName="active">
+              <Link to={"./dashboard"} activeclassname="active">
                 <OverlayTrigger placement="right" overlay={home}>
                   <span>
                     <i className="mdi mdi-view-dashboard"></i>
@@ -24,7 +24,7 @@ function Sidebar() {
               </Link>
             </li>
             <li>
-              <Link to={"./exchange"} activeClassName="active">
+              <Link to={"./exchange"} activeclassname="active">
                 <OverlayTrigger placement="right" overlay={exchange}>
                   <span>
                     <i className="mdi mdi-tumblr-reblog"></i>
@@ -33,7 +33,7 @@ function Sidebar() {
               </Link>
             </li>
             <li>
-              <Link to={"./account-overview"} activeClassName="active">
+              <Link to={"./account-overview"} activeclassname="active">
                 <OverlayTrigger placement="right" overlay={accounts}>
                   <span>
                     <i className="mdi mdi-face-profile"></i>
@@ -42,7 +42,7 @@ function Sidebar() {
               </Link>
             </li>
             <li>
-              <Link to={"./data-tbi"} activeClassName="active">
+              <Link to={"./data-tbi"} activeclassname="active">
                 <OverlayTrigger placement="right" overlay={data}>
                   <span>
                     <i className="mdi mdi-database"></i>
@@ -51,7 +51,7 @@ function Sidebar() {
               </Link>
             </li>
             <li>
-              <Link to={"./settings"} activeClassName="active">
+              <Link to={"./settings"} activeclassname="active">
                 <OverlayTrigger placement="right" overlay={settings}>
                   <span>
                     <i className="mdi mdi-settings"></i>

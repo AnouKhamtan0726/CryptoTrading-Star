@@ -15171,3 +15171,123 @@ html {
 }
 
 /*# sourceMappingURL=style.css.map */
+
+.card-tab {
+  display: inline-block;
+  width: fit-content;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.card-tab.active {
+  border-bottom: 3px solid #34d1d6;
+}
+
+.card-tab-header {
+  justify-content: left;
+}
+
+.jindicator {
+  margin: 30px auto 20px;
+  position: relative;
+}
+
+.jindicator-background {
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-image: url(/indicator.svg);
+  position: absolute;
+}
+
+.jindicator > div:last-child {
+  display: flex;
+  z-index: 2;
+  position: absolute;
+}
+
+.jindicator > div:last-child > svg {
+  margin: auto;
+}
+
+.jindicator > div:last-child > svg > g::after {
+  content: "";
+  background-image: url(/indicator.svg);
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.indicators-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.jindicator-title {
+  width: 100%;
+  text-align: center;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  margin: 0px;
+  position: absolute;
+  top: -25px;
+}
+
+.jindicator-label {
+  font-size: 10px;
+  position: absolute;
+  transform-origin: center;
+  width: 50px;
+  line-height: 10px;
+  text-align: center;
+}
+
+.footer {
+  z-index: 100;
+}
+
+.jindicator-label.sell {
+  color: #ef5450;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.jindicator-label.neutral {
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.jindicator-label.buy {
+  color: #31baa0;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.jindicator-label.status {
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  width: fit-content;
+  width: 100%;
+  bottom: 15px;
+}
+
+.jindicator-stats {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  bottom: -20px;
+}
+
+.jindicator-stats > div {
+  text-align: center;
+}
+
+.jindicator-stats .jindicator-label {
+  position: inherit;
+  display: block;
+  margin: 3px 0px;
+}

@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
 import validator from "validator";
 import PasswordChecklist from "react-password-checklist";
-import {SERVER_URL} from "../../server";
+import { SERVER_URL } from "../../server";
 
 const Signup = () => {
   const [name, setName] = useState("");
