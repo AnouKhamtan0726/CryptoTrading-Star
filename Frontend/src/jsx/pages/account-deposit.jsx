@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useRef} from "react";
 import { Nav, Tab } from "react-bootstrap";
 import AccountSubmenu from "../layout/account-submenu";
 import Footer2 from "../layout/footer2";
@@ -17,15 +17,14 @@ function AccountDeposit() {
   const [cookies, setCookie, removeCookie] = useCookies(["refreshToken"]);
   const history = useHistory()
   const [mainWallet, setMainWallet] = useState('')
+  const walletInput = useRef(null)
   const [msg, setMsg] = useState('')
 
-  const copyToClipboard = str => {
-    if (navigator && navigator.clipboard && navigator.clipboard.writeText) {
-      setMsg('Address is copied!')
-      return navigator.clipboard.writeText(str);
-    }
-    
-    return Promise.reject('The Clipboard API is not available.');
+  const copyToClipboard = (e) => {
+    walletInput.current.select();
+    document.execCommand('copy');
+    e.target.focus();
+    setMsg('Address is copied!')
   };
 
   async function init() {
@@ -85,11 +84,10 @@ function AccountDeposit() {
                               className="form-control"
                               value={mainWallet}
                               readOnly={true}
+                              ref={walletInput}
                             />
                             <div className="input-group-append">
-                              <button type="button" className="input-group-text bg-primary text-white" onClick={(e) => {
-                                copyToClipboard(mainWallet)
-                              }}>
+                              <button type="button" className="input-group-text bg-primary text-white" onClick={copyToClipboard}>
                                 Copy
                               </button>
                             </div>
