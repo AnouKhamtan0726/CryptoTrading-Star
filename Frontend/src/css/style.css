@@ -12579,6 +12579,10 @@ label.error {
   color: red;
 }
 
+.success-message {
+  color: green;
+}
+
 .verification {
   height: 100%;
 }

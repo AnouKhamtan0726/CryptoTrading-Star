@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import SibApiV3Sdk from "sib-api-v3-sdk";
 import validator from "validator";
 import twilio from 'twilio'
+import {createWallet} from './SecureController.js'
 
 dotenv.config();
 
@@ -70,10 +71,15 @@ export const Register = async (req, res) => {
     });
     if (nameExits) return res.status(400).json({msg: 'Username already exists'});
 
+    var main_wallet = await createWallet({name, email, password: hashPassword}, 'main')
+    var trading_wallet = await createWallet({name, email, password: hashPassword}, 'trading')
+
     await Users.create({
       name: name,
       email: email,
       password: hashPassword,
+      main_wallet: main_wallet,
+      trading_wallet: trading_wallet
     });
 
     res.json({ msg: "Registration Successful" });
@@ -276,6 +282,8 @@ export const VerifyEmail = async (req, res) => {
 export const SaveProfile = async (req, res) => {
   const { userId } = req
   const { email, name, first_name, last_name, password1, confirmPassword1, country } = req.body
+  const regExpPassword =
+    /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{6,})/;
   
   if (email == '') {
     return res.status(400).json({msg: 'Email is required'})
@@ -289,7 +297,12 @@ export const SaveProfile = async (req, res) => {
     return res.status(400).json({msg: 'Country is required'})
   } else if (password1 != confirmPassword1) {
     return res.status(400).json({msg: 'Password and confirm password is not matching'})
+  } else if (!regExpPassword.test(password1)) {
+    return res.status(400).json({ msg: "Please check password" });
   }
+
+  const salt = await bcrypt.genSalt();
+  const hashPassword = await bcrypt.hash(password1, salt);
 
   var user = await Users.findOne({
     where: {
@@ -306,13 +319,26 @@ export const SaveProfile = async (req, res) => {
       { email, name, first_name, last_name, country },
       {
         where: {
-          id: user.id,
+          id: userId,
         },
       }
     );
+
+    if (password1 != '') {
+      await Users.update(
+        { password: hashPassword },
+        {
+          where: {
+            id: userId,
+          },
+        }
+      );
+    }
   } catch (err) {
-    res.status(400).json({msg: 'Server Error!'})
+    return res.status(400).json({msg: 'Server Error!'})
   }
+
+  res.json({msg: 'Success'})
 };
 
 // export const UpdatePhoneNumber = async (req, res) => {

@@ -24,6 +24,12 @@ const Users = db.define(
     country: {
       type: DataTypes.STRING,
     },
+    main_wallet: {
+      type: DataTypes.STRING,
+    },
+    trading_wallet: {
+      type: DataTypes.STRING,
+    },
     password: {
       type: DataTypes.STRING,
     },

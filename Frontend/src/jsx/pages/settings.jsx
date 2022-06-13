@@ -19,6 +19,7 @@ function Settings() {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [msg, setMsg] = useState('')
+  const [smsg, setSMsg] = useState('')
   const history = useHistory()
 
   async function init() {
@@ -46,11 +47,14 @@ function Settings() {
         ...userInfo
       })
       await init()
+      setMsg('')
+      setSMsg('Profile is saved successfully!')
     } catch (error) {
       if (error.response && error.response.data.status == 403) {
         history.push("/signin");
       } else if (error.response) {
         setMsg(error.response.data.msg);
+        setSMsg('')
       }
     }
   }
@@ -76,9 +80,10 @@ function Settings() {
                   <div className="card">
                     <div className="card-header">
                       <h4 className="card-title">Personal Information</h4>
-                      <p className="has-text-centered error-message">{msg}</p>
                     </div>
                     <div className="card-body">
+                      {msg.length != 0 && <p className="error-message">{msg}</p>}
+                      {smsg.length != 0 && <p className="error-message success-message">{smsg}</p>}
                       <form
                         className="personal_validate"
                       >
@@ -179,10 +184,13 @@ function Settings() {
                           </div>
                           <div className="mb-3 col-xl-6 col-md-6">
                             <label className="form-label">Country</label>
-                            <select className="form-control" name="country">
+                            <select className="form-control" name="country" onChange={(e) => {
+                              userInfo.country = e.target.value
+                              setUserInfo({...userInfo})
+                            }}>
                               <option value="">Select</option>
                               {countryList.map(country => {
-                                return <option value={country} key={country}>{country}</option>
+                                return <option value={country} key={country} selected={country == userInfo.country ? true : false}>{country}</option>
                               })}
                             </select>
                           </div>
