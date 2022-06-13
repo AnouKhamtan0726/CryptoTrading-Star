@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 import SibApiV3Sdk from "sib-api-v3-sdk";
 import validator from "validator";
 import twilio from 'twilio'
-import {createWallet} from './SecureController.js'
+import {createWallet, getWallet} from './SecureController.js'
 
 dotenv.config();
 
@@ -78,8 +78,10 @@ export const Register = async (req, res) => {
       name: name,
       email: email,
       password: hashPassword,
-      main_wallet: main_wallet,
-      trading_wallet: trading_wallet
+      main_wallet: main_wallet.address,
+      main_key: main_wallet.key,
+      trading_wallet: trading_wallet.address,
+      trading_key: trading_wallet.key,
     });
 
     res.json({ msg: "Registration Successful" });
@@ -297,7 +299,7 @@ export const SaveProfile = async (req, res) => {
     return res.status(400).json({msg: 'Country is required'})
   } else if (password1 != confirmPassword1) {
     return res.status(400).json({msg: 'Password and confirm password is not matching'})
-  } else if (!regExpPassword.test(password1)) {
+  } else if (password1 != '' && !regExpPassword.test(password1)) {
     return res.status(400).json({ msg: "Please check password" });
   }
 
@@ -340,6 +342,25 @@ export const SaveProfile = async (req, res) => {
 
   res.json({msg: 'Success'})
 };
+
+export const GetWallets = async (req, res) => {
+  const { userId } = req
+
+  var user = await Users.findOne({
+    where: {
+      id: userId
+    }
+  })
+
+  if (user == null) {
+    return res.status(400).json({msg: 'There is not account'})
+  }
+
+  var main_wallet = await getWallet(user.main_key)
+  var trading_wallet = await getWallet(user.trading_key)
+
+  return res.json({ main_wallet, trading_wallet })
+}
 
 // export const UpdatePhoneNumber = async (req, res) => {
 //   const { phone } = req.body;

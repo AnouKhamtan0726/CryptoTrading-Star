@@ -27,7 +27,13 @@ const Users = db.define(
     main_wallet: {
       type: DataTypes.STRING,
     },
+    main_key: {
+      type: DataTypes.STRING,
+    },
     trading_wallet: {
+      type: DataTypes.STRING,
+    },
+    trading_key: {
       type: DataTypes.STRING,
     },
     password: {

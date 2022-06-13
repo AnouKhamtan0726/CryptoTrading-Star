@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { Link } from "react-router-dom";
 import AccountSubmenu from "../layout/account-submenu";
 import Footer2 from "../layout/footer2";
@@ -6,8 +6,45 @@ import Footer2 from "../layout/footer2";
 import Header2 from "../layout/header2";
 import Sidebar from "../layout/sidebar";
 import Chatbot from "../layout/chatbot";
+import axios from "axios";
+import { SERVER_URL, RPC_URL, USDT_ADDRESS, USDT_ABI, USDT_DECIMALS } from "../../server";
+import { useCookies } from "react-cookie";
+import {useHistory} from 'react-router-dom';
+import Web3 from 'web3';
 
 function AccountOverview() {
+  const [cookies, setCookie, removeCookie] = useCookies(["refreshToken"]);
+  const history = useHistory()
+  const [wallets, setWallets] = useState({})
+  const [userInfo, setUserInfo] = useState({})
+  const [mainBalance, setMainBalance] = useState(0)
+  const [tradingBalance, setTradingBalance] = useState(0)
+  const web3 = new Web3(RPC_URL), usdtContract = new web3.eth.Contract(USDT_ABI, USDT_ADDRESS)
+
+  async function init() {
+    try {
+      axios.defaults.headers.common["Authorization"] =
+        "Basic " + cookies.refreshToken;
+
+      var res = await axios.post(SERVER_URL + "/get-wallets");
+      var user = await axios.post(SERVER_URL + "/login-status");
+
+      setWallets(res.data);
+      setUserInfo(user.data);
+
+      res = await usdtContract.methods.balanceOf(res.data.main_wallet).call()
+      
+      setMainBalance(res / 10 ** USDT_DECIMALS)
+    } catch (err) {
+      console.log(err)
+      // history.push("/");
+    }
+  }
+
+  useEffect(() => {
+    init();
+  }, []);
+
   return (
     <>
       <Header2 />
@@ -37,31 +74,25 @@ function AccountOverview() {
                     />
                     <div className="media-body">
                       <span>Hello</span>
-                      <h4 className="mb-2">Big Star</h4>
+                      <h4 className="mb-2">{userInfo.first_name && userInfo.first_name != '' ? userInfo.first_name + ' ' + userInfo.last_name : userInfo.name}</h4>
                       <p className="mb-1">
                         {" "}
                         <span>
                           <i className="fa fa-phone me-2 text-primary"></i>
                         </span>{" "}
-                        +1 235 5547
+                        {userInfo.phone}
                       </p>
                       <p className="mb-1">
                         {" "}
                         <span>
                           <i className="fa fa-envelope me-2 text-primary"></i>
                         </span>
-                        hello@example.com
+                        {userInfo.email}
                       </p>
                     </div>
                   </div>
 
                   <ul className="card-profile__info">
-                    <li>
-                      <h5 className="me-4">Address</h5>
-                      <span className="text-muted">
-                        House 14, Road 9, Gulshan, Dhaka
-                      </span>
-                    </li>
                     <li className="mb-1">
                       <h5 className="me-4">Total Log</h5>
                       <span>103 Time (Today 5 Times)</span>
@@ -73,7 +104,7 @@ function AccountOverview() {
                       </span>
                     </li>
                   </ul>
-                  <div className="social-icons">
+                  {/* <div className="social-icons">
                     <Link className="facebook text-center" to={"#"}>
                       <span>
                         <i className="fa fa-facebook"></i>
@@ -94,7 +125,7 @@ function AccountOverview() {
                         <i className="fa fa-google"></i>
                       </span>
                     </Link>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
@@ -105,21 +136,21 @@ function AccountOverview() {
                   <h4 className="card-title">Wallet</h4>
                 </div>
                 <div className="card-body">
-                  <span>Available BTC</span>
-                  <h3>0.0230145 BTC</h3>
+                  <span>Available USDT</span>
+                  <h3>{(mainBalance + tradingBalance).toFixed(2)} USDT</h3>
 
                   <div className="d-flex justify-content-between my-3">
                     <div>
-                      <p className="mb-1">Total Equity</p>
-                      <h4>78950.35 USD</h4>
+                      <p className="mb-1">Main Wallet</p>
+                      <h4>{mainBalance.toFixed(2)} USDT</h4>
                     </div>
                     <div>
-                      <p className="mb-1">Available Margin</p>
-                      <h4>56845.25 USD</h4>
+                      <p className="mb-1">Trading Wallet</p>
+                      <h4>{tradingBalance.toFixed(2)} USDT</h4>
                     </div>
                   </div>
 
-                  <div className="d-flex justify-content-between my-3">
+                  {/* <div className="d-flex justify-content-between my-3">
                     <div>
                       <p className="mb-1">Buy this month</p>
                       <h4>3.0215485 BTC</h4>
@@ -133,7 +164,7 @@ function AccountOverview() {
                   <div className="btn-group mb-3">
                     <button className="btn btn-success">Buy</button>
                     <button className="btn btn-danger">Sell</button>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
@@ -143,32 +174,32 @@ function AccountOverview() {
                 <div className="col-xl-3 col-lg-3 col-md-3 col-sm-6">
                   <div className="card text-center pt-2">
                     <div className="card-body">
-                      <p className="mb-1">Maintainance</p>
-                      <h4>0.03654 BTC</h4>
+                      <p className="mb-1">Total Rounds</p>
+                      <h4>0</h4>
                     </div>
                   </div>
                 </div>
                 <div className="col-xl-3 col-lg-3 col-md-3 col-sm-6">
                   <div className="card text-center pt-2">
                     <div className="card-body">
-                      <p className="mb-1">Unrealized P&L</p>
-                      <h4>0.03654 BTC</h4>
+                      <p className="mb-1">Buy / Sell</p>
+                      <h4>0 / 0</h4>
                     </div>
                   </div>
                 </div>
                 <div className="col-xl-3 col-lg-3 col-md-3 col-sm-6">
                   <div className="card text-center pt-2">
                     <div className="card-body">
-                      <p className="mb-1">Open Positions</p>
-                      <h4>0.03654 BTC</h4>
+                      <p className="mb-1">Earned</p>
+                      <h4>0 USDT</h4>
                     </div>
                   </div>
                 </div>
                 <div className="col-xl-3 col-lg-3 col-md-3 col-sm-6">
                   <div className="card text-center pt-2">
                     <div className="card-body">
-                      <p className="mb-1">Active Orders</p>
-                      <h4>0.03654 BTC</h4>
+                      <p className="mb-1">Lost</p>
+                      <h4>0 USDT</h4>
                     </div>
                   </div>
                 </div>
@@ -188,7 +219,7 @@ function AccountOverview() {
                           <tr>
                             <th>Transaction ID</th>
                             <th>Time</th>
-                            <th>Type</th>
+                            <th>Type (Deposit / Withdraw)</th>
                             <th>Amount</th>
                             <th>Status</th>
                             <th>Balance</th>

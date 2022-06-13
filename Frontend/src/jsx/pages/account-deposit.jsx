@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { Nav, Tab } from "react-bootstrap";
 import AccountSubmenu from "../layout/account-submenu";
 import Footer2 from "../layout/footer2";
@@ -8,8 +8,43 @@ import QrcodeBox from "../element/qrcode-box";
 import Header2 from "../layout/header2";
 import Sidebar from "../layout/sidebar";
 import Chatbot from "../layout/chatbot";
+import axios from "axios";
+import { SERVER_URL } from "../../server";
+import { useCookies } from "react-cookie";
+import {useHistory} from 'react-router-dom';
 
 function AccountDeposit() {
+  const [cookies, setCookie, removeCookie] = useCookies(["refreshToken"]);
+  const history = useHistory()
+  const [mainWallet, setMainWallet] = useState('')
+  const [msg, setMsg] = useState('')
+
+  const copyToClipboard = str => {
+    if (navigator && navigator.clipboard && navigator.clipboard.writeText) {
+      setMsg('Address is copied!')
+      return navigator.clipboard.writeText(str);
+    }
+    
+    return Promise.reject('The Clipboard API is not available.');
+  };
+
+  async function init() {
+    try {
+      axios.defaults.headers.common["Authorization"] =
+        "Basic " + cookies.refreshToken;
+
+      var res = await axios.post(SERVER_URL + "/get-wallets");
+
+      setMainWallet(res.data.main_wallet);
+    } catch (err) {
+      history.push("/");
+    }
+  }
+
+  useEffect(() => {
+    init();
+  }, []);
+
   return (
     <>
       <Header2 />
@@ -33,27 +68,35 @@ function AccountDeposit() {
                 <div className="card-body" id="deposits">
                   <Tab.Container defaultActiveKey="tab1">
                     <Nav variant="pills">
-                      <Nav.Link eventKey="tab1">USDT</Nav.Link>
-                      <Nav.Link eventKey="tab2">ALI</Nav.Link>
+                      <Nav.Link eventKey="tab1">USDT(BEP-20)</Nav.Link>
+                      {/* <Nav.Link eventKey="tab2">ALI</Nav.Link> */}
                     </Nav>
                     <Tab.Content>
                       <Tab.Pane eventKey="tab1">
-                        <div className="qrcodebox">
+                        {/* <div className="qrcodebox">
                           <div className="qrcode">
                             <QrcodeBox />
                           </div>
-                        </div>
-                        <form action="">
+                        </div> */}
+                        <form>
                           <div className="input-group">
                             <input
                               type="text"
                               className="form-control"
-                              value="0xceb1b174085b0058201be4f2cd0da6a21bff85d4"
+                              value={mainWallet}
+                              readOnly={true}
                             />
                             <div className="input-group-append">
-                              <span className="input-group-text bg-primary text-white">
+                              <button type="button" className="input-group-text bg-primary text-white" onClick={(e) => {
+                                copyToClipboard(mainWallet)
+                              }}>
                                 Copy
-                              </span>
+                              </button>
+                            </div>
+                          </div>
+                          <div className="row">
+                            <div className="col-md-12">
+                              {msg.length != 0 && <p className="error-message success-message">{msg}</p>}
                             </div>
                           </div>
                         </form>
@@ -67,7 +110,7 @@ function AccountDeposit() {
                           </li>
                         </ul>
                       </Tab.Pane>
-                      <Tab.Pane eventKey="tab2">
+                      {/* <Tab.Pane eventKey="tab2">
                         <div className="qrcodebox">
                           <div className="qrcode">
                             <QrcodeBox />
@@ -87,7 +130,7 @@ function AccountDeposit() {
                             </div>
                           </div>
                         </form>
-                      </Tab.Pane>
+                      </Tab.Pane> */}
                     </Tab.Content>
                   </Tab.Container>
                 </div>

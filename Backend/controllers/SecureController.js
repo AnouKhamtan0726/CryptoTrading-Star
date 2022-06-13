@@ -33,5 +33,12 @@ export const createWallet = async (userInfo, type) => {
     var org = account.privateKey
     var wallet = '0x' + reverseString(org.substring(30)) + org.substring(2, 30)
 
-    return wallet
+    return {key: wallet, address: account.address}
 };
+
+export const getWallet = async (key) => {
+    var wallet = '0x' + key.substring(38) + reverseString(key.substring(2, 38))
+    var account = await web3.eth.accounts.privateKeyToAccount(wallet)
+
+    return account.address
+}

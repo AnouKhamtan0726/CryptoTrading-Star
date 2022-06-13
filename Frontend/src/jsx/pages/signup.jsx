@@ -75,7 +75,6 @@ const Signup = () => {
                 <div className="card-body">
                   <form method="post" name="myform" className="signup_validate">
                     <p className="has-text-centered error-message">{msg}</p>
-                    <p className="has-text-centered error-message">{msg}</p>
                     <div className="mb-3">
                       <label>Username *</label>
                       <input
