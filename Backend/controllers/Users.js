@@ -273,6 +273,48 @@ export const VerifyEmail = async (req, res) => {
   });
 };
 
+export const SaveProfile = async (req, res) => {
+  const { userId } = req
+  const { email, name, first_name, last_name, password1, confirmPassword1, country } = req.body
+  
+  if (email == '') {
+    return res.status(400).json({msg: 'Email is required'})
+  } else if (name == '') {
+    return res.status(400).json({msg: 'Nick name is required'})
+  } else if (first_name == '') {
+    return res.status(400).json({msg: 'First name is required'})
+  } else if (last_name == '') {
+    return res.status(400).json({msg: 'Last name is required'})
+  } else if (country == '') {
+    return res.status(400).json({msg: 'Country is required'})
+  } else if (password1 != confirmPassword1) {
+    return res.status(400).json({msg: 'Password and confirm password is not matching'})
+  }
+
+  var user = await Users.findOne({
+    where: {
+      email: email
+    }
+  })
+
+  if (user && user.id != userId) {
+    return res.status(400).json({msg: 'Someone is using this email'})
+  }
+  
+  try {
+    await Users.update(
+      { email, name, first_name, last_name, country },
+      {
+        where: {
+          id: user.id,
+        },
+      }
+    );
+  } catch (err) {
+    res.status(400).json({msg: 'Server Error!'})
+  }
+};
+
 // export const UpdatePhoneNumber = async (req, res) => {
 //   const { phone } = req.body;
 //   const regExpPhone =

@@ -15291,3 +15291,11 @@ html {
   display: block;
   margin: 3px 0px;
 }
+
+.button-input button {
+  position: absolute;
+  top: 35px;
+  right: 9px;
+  height: 46px;
+  width: 80px;
+}

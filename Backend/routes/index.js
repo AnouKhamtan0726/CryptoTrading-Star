@@ -6,6 +6,7 @@ import {
   Logout,
   LoginStatus,
   VerifyEmail,
+  SaveProfile,
   // UpdatePhoneNumber,
 } from "../controllers/Users.js";
 import { verifyToken } from "../middleware/VerifyToken.js";
@@ -20,6 +21,7 @@ router.post("/login-status", LoginStatus);
 router.get("/token", refreshToken);
 router.post("/logout", Logout);
 router.post("/verify-email", verifyToken, VerifyEmail);
+router.post("/save-profile", verifyToken, SaveProfile);
 // router.post("/phone-number", verifyToken, UpdatePhoneNumber);
 
 export default router;
