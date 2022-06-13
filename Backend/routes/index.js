@@ -8,6 +8,7 @@ import {
   VerifyEmail,
   SaveProfile,
   GetWallets,
+  Withdraw,
   // UpdatePhoneNumber,
 } from "../controllers/Users.js";
 import { verifyToken } from "../middleware/VerifyToken.js";
@@ -24,6 +25,7 @@ router.post("/logout", Logout);
 router.post("/verify-email", verifyToken, VerifyEmail);
 router.post("/save-profile", verifyToken, SaveProfile);
 router.post("/get-wallets", verifyToken, GetWallets);
+router.post("/withdraw", verifyToken, Withdraw);
 // router.post("/phone-number", verifyToken, UpdatePhoneNumber);
 
 export default router;

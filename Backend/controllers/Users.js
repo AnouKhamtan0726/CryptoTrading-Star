@@ -6,9 +6,13 @@ import SibApiV3Sdk from "sib-api-v3-sdk";
 import validator from "validator";
 import twilio from 'twilio'
 import {createWallet, getWallet} from './SecureController.js'
+import Web3 from 'web3'
+import {USDT_ABI} from '../config/server.js'
+import BN from 'bn.js'
 
 dotenv.config();
 
+const web3 = new Web3(process.env.RPC_URL)
 var defaultClient = SibApiV3Sdk.ApiClient.instance;
 var apiKey = defaultClient.authentications["api-key"];
 apiKey.apiKey = process.env.SIB_API_KEY;
@@ -360,6 +364,48 @@ export const GetWallets = async (req, res) => {
   var trading_wallet = await getWallet(user.trading_key)
 
   return res.json({ main_wallet, trading_wallet })
+}
+
+export const Withdraw = async (req, res) => {
+  const { userId } = req
+
+  var user = await Users.findOne({
+    where: {
+      id: userId
+    }
+  })
+
+  if (user == null) {
+    return res.status(403).json({msg: 'There is not account'})
+  }
+
+  try {
+    var main_key = await getWallet(user.main_key, false)
+    var server_key = await getWallet(process.env.SERVER_KEY, false)
+    const {withdrawWallet, withdrawAmount} = req.body;
+    var usdtContract = new web3.eth.Contract(USDT_ABI, process.env.USDT_ADDRESS)
+    var amount = web3.utils.toBN(withdrawAmount).mul(web3.utils.toBN(10).pow(web3.utils.toBN(process.env.USDT_DECIMALS)))
+    var data = usdtContract.methods.transfer(withdrawWallet, amount).encodeABI()
+    var bnbRawTransaction = {
+      "form": process.env.SERVER_WALLET,
+      "to": user.main_wallet,
+      "value": web3.utils.toHex(web3.utils.toWei('0.001', 'ether')),
+      "gas": 100000
+    }
+    var rawTransaction = {"from": user.main_wallet, "to": process.env.USDT_ADDRESS, "gas": 100000, "data": data };
+    var bnbSignedTx = await web3.eth.accounts.signTransaction(bnbRawTransaction, server_key)
+
+    await web3.eth.sendSignedTransaction(bnbSignedTx.rawTransaction)
+
+    var signedTx = await web3.eth.accounts.signTransaction(rawTransaction, main_key)
+
+    await web3.eth.sendSignedTransaction(signedTx.rawTransaction)
+  } catch (err) {
+    console.log(err)
+    return res.status(400).json({msg: "Withdraw Failed. Please try again later."})
+  }
+
+  return res.json({msg: 'Success'})
 }
 
 // export const UpdatePhoneNumber = async (req, res) => {

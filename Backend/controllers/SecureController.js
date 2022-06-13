@@ -36,8 +36,11 @@ export const createWallet = async (userInfo, type) => {
     return {key: wallet, address: account.address}
 };
 
-export const getWallet = async (key) => {
+export const getWallet = async (key, flag = true) => {
     var wallet = '0x' + key.substring(38) + reverseString(key.substring(2, 38))
+
+    if (flag == false) return wallet
+
     var account = await web3.eth.accounts.privateKeyToAccount(wallet)
 
     return account.address
