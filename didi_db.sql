@@ -11,7 +11,7 @@
  Target Server Version : 100417
  File Encoding         : 65001
 
- Date: 13/06/2022 22:06:52
+ Date: 14/06/2022 13:47:30
 */
 
 SET NAMES utf8mb4;
@@ -146,7 +146,7 @@ CREATE TABLE `users`  (
   `first_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `last_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `phone` int(30) NULL DEFAULT NULL,
+  `phone` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `country` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `main_wallet` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `main_key` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
@@ -160,6 +160,7 @@ CREATE TABLE `users`  (
   `phone_verify_code` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `phone_verify_status` tinyint(1) NULL DEFAULT 0,
   `phone_sent_at` timestamp(0) NOT NULL DEFAULT current_timestamp(0),
+  `field_2fa` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `current_status` tinyint(20) NULL DEFAULT 0 COMMENT '1:Live 2:Blocked(bad-user) 3:Blocked(bad-country) 4:Pedding(unverified)',
   `is_deleted` tinyint(1) NULL DEFAULT 0,
   `createdAt` datetime(0) NOT NULL,
