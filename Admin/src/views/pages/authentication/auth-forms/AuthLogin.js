@@ -84,7 +84,7 @@ const FirebaseLogin = ({ ...others }) => {
         navigate("/");
       }
     } catch (error) {
-      if (error.response) {
+      if (error.response && error.response.data) {
         setMsg(error.response.data.msg);
       }
     }

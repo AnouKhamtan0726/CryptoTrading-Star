@@ -101,7 +101,7 @@ const FirebaseRegister = ({ ...others }) => {
       });
       navigate("/login");
     } catch (error) {
-      if (error.response) {
+      if (error.response && error.response.data) {
         setMsg(error.response.data.msg);
       }
     }
@@ -240,7 +240,7 @@ const FirebaseRegister = ({ ...others }) => {
               sx={{ ...theme.typography.customInput }}
             >
               <InputLabel htmlFor="outlined-adornment-email-register">
-                Email Address / Username
+                Email Address
               </InputLabel>
               <OutlinedInput
                 id="outlined-adornment-email-register"
@@ -263,7 +263,8 @@ const FirebaseRegister = ({ ...others }) => {
                 </FormHelperText>
               )}
             </FormControl>
-
+            
+            <p style={{marginBottom: '0px', color: 'white'}}>Password must contains at least 8 letters, 1 uppercase, 1 number, 1 special character.</p>
             <FormControl
               fullWidth
               error={Boolean(touched.password && errors.password)}
@@ -369,6 +370,7 @@ const FirebaseRegister = ({ ...others }) => {
             <Box sx={{ mt: 2 }}>
               <AnimateButton>
                 <Button
+                  className="register-button"
                   disableElevation
                   disabled={!checked}
                   fullWidth

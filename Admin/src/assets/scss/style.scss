@@ -146,3 +146,9 @@
 .error-message {
   color: red;
 }
+
+.register-button:disabled {
+  background-color: #673ab7;
+  color: white;
+  opacity: 0.7;
+}

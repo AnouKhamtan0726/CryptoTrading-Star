@@ -76,7 +76,7 @@ const FirebaseLogin = ({ ...others }) => {
     } catch (error) {
       if (error.response && error.response.status == 403) {
         navigate("/login");
-      } else if (error.response) {
+      } else if (error.response && error.response.data) {
         setMsg(error.response.data.msg);
       }
     }

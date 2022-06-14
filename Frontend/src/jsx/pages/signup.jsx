@@ -49,7 +49,7 @@ const Signup = () => {
       });
       history.push("/signin");
     } catch (error) {
-      if (error.response) {
+      if (error.response && error.response.data) {
         setMsg(error.response.data.msg);
       }
     }
