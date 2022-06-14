@@ -233,7 +233,7 @@ function AccountOverview() {
                             <th>Type (Deposit / Withdraw)</th>
                             <th>Amount</th>
                             <th>Status</th>
-                            <th>Balance</th>
+                            <th>Commission</th>
                           </tr>
                         </thead>
                         <tbody>

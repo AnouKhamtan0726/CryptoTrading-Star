@@ -8,7 +8,6 @@ import twilio from 'twilio'
 import {createWallet, getWallet} from './SecureController.js'
 import Web3 from 'web3'
 import {USDT_ABI} from '../config/server.js'
-import BN from 'bn.js'
 
 dotenv.config();
 
