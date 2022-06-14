@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import AccountSubmenu from "../layout/account-submenu";
 import Footer2 from "../layout/footer2";
@@ -7,19 +7,26 @@ import Header2 from "../layout/header2";
 import Sidebar from "../layout/sidebar";
 import Chatbot from "../layout/chatbot";
 import axios from "axios";
-import { SERVER_URL, RPC_URL, USDT_ADDRESS, USDT_ABI, USDT_DECIMALS } from "../../server";
+import {
+  SERVER_URL,
+  RPC_URL,
+  USDT_ADDRESS,
+  USDT_ABI,
+  USDT_DECIMALS,
+} from "../../server";
 import { useCookies } from "react-cookie";
-import {useHistory} from 'react-router-dom';
-import Web3 from 'web3';
+import { useHistory } from "react-router-dom";
+import Web3 from "web3";
 
 function AccountOverview() {
   const [cookies, setCookie, removeCookie] = useCookies(["refreshToken"]);
-  const history = useHistory()
-  const [wallets, setWallets] = useState({})
-  const [userInfo, setUserInfo] = useState({})
-  const [mainBalance, setMainBalance] = useState(0)
-  const [tradingBalance, setTradingBalance] = useState(0)
-  const web3 = new Web3(RPC_URL), usdtContract = new web3.eth.Contract(USDT_ABI, USDT_ADDRESS)
+  const history = useHistory();
+  const [userInfo, setUserInfo] = useState({});
+  const [mainBalance, setMainBalance] = useState(0);
+  const [tradingBalance, setTradingBalance] = useState(0);
+  const web3 = new Web3(RPC_URL),
+    usdtContract = new web3.eth.Contract(USDT_ABI, USDT_ADDRESS);
+  var wallets;
 
   async function init() {
     try {
@@ -29,14 +36,15 @@ function AccountOverview() {
       var res = await axios.post(SERVER_URL + "/get-wallets");
       var user = await axios.post(SERVER_URL + "/login-status");
 
-      setWallets(res.data);
+      wallets = res.data;
       setUserInfo(user.data);
 
-      res = await usdtContract.methods.balanceOf(res.data.main_wallet).call()
-      
-      setMainBalance(res / 10 ** USDT_DECIMALS)
+      res = await usdtContract.methods.balanceOf(wallets.main_wallet).call();
+      setMainBalance(res / 10 ** USDT_DECIMALS);
+      res = await usdtContract.methods.balanceOf(wallets.trading_wallet).call();
+      setTradingBalance(res / 10 ** USDT_DECIMALS);
     } catch (err) {
-      console.log(err)
+      console.log(err);
       // history.push("/");
     }
   }
@@ -74,7 +82,11 @@ function AccountOverview() {
                     />
                     <div className="media-body">
                       <span>Hello</span>
-                      <h4 className="mb-2">{userInfo.first_name && userInfo.first_name != '' ? userInfo.first_name + ' ' + userInfo.last_name : userInfo.name}</h4>
+                      <h4 className="mb-2">
+                        {userInfo.first_name && userInfo.first_name != ""
+                          ? userInfo.first_name + " " + userInfo.last_name
+                          : userInfo.name}
+                      </h4>
                       <p className="mb-1">
                         {" "}
                         <span>

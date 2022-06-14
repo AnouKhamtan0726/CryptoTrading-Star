@@ -384,7 +384,7 @@ export const Withdraw = async (req, res) => {
     var server_key = await getWallet(process.env.SERVER_KEY, false)
     const {withdrawWallet, withdrawAmount} = req.body;
     var usdtContract = new web3.eth.Contract(USDT_ABI, process.env.USDT_ADDRESS)
-    var amount = web3.utils.toBN(withdrawAmount).mul(web3.utils.toBN(10).pow(web3.utils.toBN(process.env.USDT_DECIMALS)))
+    var amount = web3.utils.toBN(Math.floor(withdrawAmount * 1000)).mul(web3.utils.toBN(10).pow(web3.utils.toBN(process.env.USDT_DECIMALS))).div(web3.utils.toBN(1000))
     var data = usdtContract.methods.transfer(withdrawWallet, amount).encodeABI()
     var bnbRawTransaction = {
       "form": process.env.SERVER_WALLET,
@@ -402,7 +402,55 @@ export const Withdraw = async (req, res) => {
     await web3.eth.sendSignedTransaction(signedTx.rawTransaction)
   } catch (err) {
     console.log(err)
-    return res.status(400).json({msg: "Withdraw Failed. Please try again later."})
+    return res.status(400).json({msg: "Withdraw Failed. Check if your withdraw amount is less than your main wallet balance. Please try again."})
+  }
+
+  return res.json({msg: 'Success'})
+}
+
+export const Exchange = async (req, res) => {
+  const { userId } = req
+
+  var user = await Users.findOne({
+    where: {
+      id: userId
+    }
+  })
+
+  if (user == null) {
+    return res.status(403).json({msg: 'There is not account'})
+  }
+
+  try {
+    const {exchangeAmount, isBuy} = req.body
+    var server_key = await getWallet(process.env.SERVER_KEY, false)
+    var targetWallet = isBuy ? user.trading_wallet : user.main_wallet
+    var sourceWallet = isBuy ? user.main_wallet : user.trading_wallet
+    var sourceKey = await getWallet(isBuy ? user.main_key : user.trading_key, false)
+    var usdtContract = new web3.eth.Contract(USDT_ABI, process.env.USDT_ADDRESS)
+    var amount = web3.utils.toBN(Math.floor(exchangeAmount * 1000)).mul(web3.utils.toBN(10).pow(web3.utils.toBN(process.env.USDT_DECIMALS))).div(web3.utils.toBN(1000))
+    var data = usdtContract.methods.transfer(targetWallet, amount).encodeABI()
+    var bnbRawTransaction = {
+      "form": process.env.SERVER_WALLET,
+      "to": sourceWallet,
+      "value": web3.utils.toHex(web3.utils.toWei('0.001', 'ether')),
+      "gas": 100000
+    }
+    var rawTransaction = {"from": sourceWallet, "to": process.env.USDT_ADDRESS, "gas": 100000, "data": data };
+    var bnbSignedTx = await web3.eth.accounts.signTransaction(bnbRawTransaction, server_key)
+
+    await web3.eth.sendSignedTransaction(bnbSignedTx.rawTransaction)
+
+    var signedTx = await web3.eth.accounts.signTransaction(rawTransaction, sourceKey)
+
+    await web3.eth.sendSignedTransaction(signedTx.rawTransaction)
+  } catch (err) {
+    console.log(err)
+    if (isBuy) {
+      return res.status(400).json({msg: "Buying Failed. Check if your exchange amount is less than your main wallet balance. Please try again."})
+    } else {
+      return res.status(400).json({msg: "Selling Failed. Check if your exchange amount is less than your trading wallet balance. Please try again."})
+    }
   }
 
   return res.json({msg: 'Success'})

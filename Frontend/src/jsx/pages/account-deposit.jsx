@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Nav, Tab } from "react-bootstrap";
 import AccountSubmenu from "../layout/account-submenu";
 import Footer2 from "../layout/footer2";
@@ -11,20 +11,20 @@ import Chatbot from "../layout/chatbot";
 import axios from "axios";
 import { SERVER_URL } from "../../server";
 import { useCookies } from "react-cookie";
-import {useHistory} from 'react-router-dom';
+import { useHistory } from "react-router-dom";
 
 function AccountDeposit() {
   const [cookies, setCookie, removeCookie] = useCookies(["refreshToken"]);
-  const history = useHistory()
-  const [mainWallet, setMainWallet] = useState('')
-  const walletInput = useRef(null)
-  const [msg, setMsg] = useState('')
+  const history = useHistory();
+  const [mainWallet, setMainWallet] = useState("");
+  const walletInput = useRef(null);
+  const [msg, setMsg] = useState("");
 
   const copyToClipboard = (e) => {
     walletInput.current.select();
-    document.execCommand('copy');
+    document.execCommand("copy");
     e.target.focus();
-    setMsg('Address is copied!')
+    setMsg("Address is copied!");
   };
 
   async function init() {
@@ -87,14 +87,22 @@ function AccountDeposit() {
                               ref={walletInput}
                             />
                             <div className="input-group-append">
-                              <button type="button" className="input-group-text bg-primary text-white" onClick={copyToClipboard}>
+                              <button
+                                type="button"
+                                className="input-group-text bg-primary text-white"
+                                onClick={copyToClipboard}
+                              >
                                 Copy
                               </button>
                             </div>
                           </div>
                           <div className="row">
                             <div className="col-md-12">
-                              {msg.length != 0 && <p className="error-message success-message">{msg}</p>}
+                              {msg.length != 0 && (
+                                <p className="error-message success-message">
+                                  {msg}
+                                </p>
+                              )}
                             </div>
                           </div>
                         </form>

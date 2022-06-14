@@ -9,18 +9,18 @@ import SettingsSubmenu from "../layout/settings-submenu";
 import Sidebar from "../layout/sidebar";
 import Chatbot from "../layout/chatbot";
 import { useCookies } from "react-cookie";
-import axios from 'axios';
+import axios from "axios";
 import { SERVER_URL } from "../../server";
-import countryList from "../element/country-list"
+import countryList from "../element/country-list";
 
 function Settings() {
   const [cookies, setCookie, removeCookie] = useCookies(["refreshToken"]);
-  const [userInfo, setUserInfo] = useState({})
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-  const [msg, setMsg] = useState('')
-  const [smsg, setSMsg] = useState('')
-  const history = useHistory()
+  const [userInfo, setUserInfo] = useState({});
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [msg, setMsg] = useState("");
+  const [smsg, setSMsg] = useState("");
+  const history = useHistory();
 
   async function init() {
     try {
@@ -29,7 +29,7 @@ function Settings() {
 
       var res = await axios.post(SERVER_URL + "/login-status");
 
-      setUserInfo({...res.data})
+      setUserInfo({ ...res.data });
     } catch (err) {
       history.push("/");
     }
@@ -44,21 +44,21 @@ function Settings() {
       await axios.post(SERVER_URL + "/save-profile", {
         password1: password,
         confirmPassword1: confirmPassword,
-        ...userInfo
-      })
-      await init()
-      setMsg('')
-      setSMsg('Profile is saved successfully!')
+        ...userInfo,
+      });
+      await init();
+      setMsg("");
+      setSMsg("Profile is saved successfully!");
     } catch (error) {
       if (error.response && error.response.data.status == 403) {
         history.push("/signin");
       } else if (error.response) {
         setMsg(error.response.data.msg);
-        setSMsg('')
+        setSMsg("");
       }
     }
   }
-  
+
   return (
     <>
       <Header2 />
@@ -82,11 +82,13 @@ function Settings() {
                       <h4 className="card-title">Personal Information</h4>
                     </div>
                     <div className="card-body">
-                      {msg.length != 0 && <p className="error-message">{msg}</p>}
-                      {smsg.length != 0 && <p className="error-message success-message">{smsg}</p>}
-                      <form
-                        className="personal_validate"
-                      >
+                      {msg.length != 0 && (
+                        <p className="error-message">{msg}</p>
+                      )}
+                      {smsg.length != 0 && (
+                        <p className="error-message success-message">{smsg}</p>
+                      )}
+                      <form className="personal_validate">
                         <div className="row">
                           {/* <div className="mb-3 col-xl-6 col-md-6 col-xs-12">
                             <label className="form-label">Email</label>
@@ -107,11 +109,16 @@ function Settings() {
                                 name="email"
                                 value={userInfo.email}
                                 onChange={(e) => {
-                                  userInfo.email = e.target.value
-                                  setUserInfo({...userInfo})
+                                  userInfo.email = e.target.value;
+                                  setUserInfo({ ...userInfo });
                                 }}
                               />
-                              <button type="button" className="btn btn-info text-white">Verify</button>
+                              <button
+                                type="button"
+                                className="btn btn-info text-white"
+                              >
+                                Verify
+                              </button>
                             </div>
                           </div>
                           <div className="mb-3 col-xl-6 col-md-6 col-xs-12">
@@ -123,8 +130,8 @@ function Settings() {
                               name="nickname"
                               value={userInfo.name}
                               onChange={(e) => {
-                                userInfo.name = e.target.value
-                                setUserInfo({...userInfo})
+                                userInfo.name = e.target.value;
+                                setUserInfo({ ...userInfo });
                               }}
                             />
                           </div>
@@ -137,8 +144,8 @@ function Settings() {
                               name="firstname"
                               value={userInfo.first_name}
                               onChange={(e) => {
-                                userInfo.first_name = e.target.value
-                                setUserInfo({...userInfo})
+                                userInfo.first_name = e.target.value;
+                                setUserInfo({ ...userInfo });
                               }}
                             />
                             <p className="small-text text-danger">
@@ -154,8 +161,8 @@ function Settings() {
                               name="lastname"
                               value={userInfo.last_name}
                               onChange={(e) => {
-                                userInfo.last_name = e.target.value
-                                setUserInfo({...userInfo})
+                                userInfo.last_name = e.target.value;
+                                setUserInfo({ ...userInfo });
                               }}
                             />
                             <p className="small-text text-danger">
@@ -173,33 +180,58 @@ function Settings() {
                             />
                           </div>
                           <div className="mb-3 col-xl-3 col-xs-3">
-                            <label className="form-label">Confirm Password</label>
+                            <label className="form-label">
+                              Confirm Password
+                            </label>
                             <input
                               type="password"
                               className="form-control"
                               placeholder="**********"
                               value={confirmPassword}
-                              onChange={(e) => setConfirmPassword(e.target.value)}
+                              onChange={(e) =>
+                                setConfirmPassword(e.target.value)
+                              }
                             />
                           </div>
                           <div className="mb-3 col-xl-6 col-md-6">
                             <label className="form-label">Country</label>
-                            <select className="form-control" name="country" onChange={(e) => {
-                              userInfo.country = e.target.value
-                              setUserInfo({...userInfo})
-                            }}>
+                            <select
+                              className="form-control"
+                              name="country"
+                              onChange={(e) => {
+                                userInfo.country = e.target.value;
+                                setUserInfo({ ...userInfo });
+                              }}
+                            >
                               <option value="">Select</option>
-                              {countryList.map(country => {
-                                return <option value={country} key={country} selected={country == userInfo.country ? true : false}>{country}</option>
+                              {countryList.map((country) => {
+                                return (
+                                  <option
+                                    value={country}
+                                    key={country}
+                                    selected={
+                                      country == userInfo.country ? true : false
+                                    }
+                                  >
+                                    {country}
+                                  </option>
+                                );
                               })}
                             </select>
                           </div>
                           <div className="mb-3 col-xl-6 col-md-6">
-                            <p class="small-text text-danger">* Password must contain uppercase, special character and number for secure</p>
+                            <p class="small-text text-danger">
+                              * Password must contain uppercase, special
+                              character and number for secure
+                            </p>
                           </div>
 
                           <div className="mb-3 col-12">
-                            <button type="button" className="btn btn-success px-4" onClick={saveProfile}>
+                            <button
+                              type="button"
+                              className="btn btn-success px-4"
+                              onClick={saveProfile}
+                            >
                               Save
                             </button>
                           </div>

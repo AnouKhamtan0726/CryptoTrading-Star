@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import AccountSubmenu from "../layout/account-submenu";
 import Footer2 from "../layout/footer2";
 // import { Link } from 'react-router-dom';
@@ -9,15 +9,15 @@ import Chatbot from "../layout/chatbot";
 import axios from "axios";
 import { SERVER_URL } from "../../server";
 import { useCookies } from "react-cookie";
-import {useHistory} from 'react-router-dom';
+import { useHistory } from "react-router-dom";
 
 function AccountWithdraw() {
   const [cookies, setCookie, removeCookie] = useCookies(["refreshToken"]);
-  const history = useHistory()
-  const [withdrawWallet, setWithdrawWallet] = useState('')
-  const [withdrawAmount, setWithdrawAmount] = useState(0)
-  const [msg, setMsg] = useState('')
-  const [smsg, setSMsg] = useState('')
+  const history = useHistory();
+  const [withdrawWallet, setWithdrawWallet] = useState("");
+  const [withdrawAmount, setWithdrawAmount] = useState(0);
+  const [msg, setMsg] = useState("");
+  const [smsg, setSMsg] = useState("");
 
   async function init() {
     try {
@@ -34,17 +34,19 @@ function AccountWithdraw() {
     try {
       var res = await axios.post(SERVER_URL + "/withdraw", {
         withdrawWallet,
-        withdrawAmount
+        withdrawAmount,
       });
 
-      setSMsg('Your withdraw is confirmed. Please check your wallet about 5 mins later.')
-      setMsg('')
+      setSMsg(
+        "Your withdraw is confirmed. Please check your wallet about 5 mins later."
+      );
+      setMsg("");
     } catch (error) {
       if (error.response && error.response.data.status == 403) {
         history.push("/signin");
       } else if (error.response) {
         setMsg(error.response.data.msg);
-        setSMsg('')
+        setSMsg("");
       }
     }
   }
@@ -75,10 +77,16 @@ function AccountWithdraw() {
                 </div>
                 <div className="card-body">
                   <div className="row justify-content-center">
-                    <div className="col-xl-8">  
+                    <div className="col-xl-8">
                       <div className="col-xl-12">
-                        {msg.length != 0 && <p className="error-message">{msg}</p>}
-                        {smsg.length != 0 && <p className="error-message success-message">{smsg}</p>}
+                        {msg.length != 0 && (
+                          <p className="error-message">{msg}</p>
+                        )}
+                        {smsg.length != 0 && (
+                          <p className="error-message success-message">
+                            {smsg}
+                          </p>
+                        )}
                       </div>
                       <form action="#" className="py-5">
                         <div className="mb-3 row align-items-center">
@@ -95,7 +103,9 @@ function AccountWithdraw() {
                                 type="text"
                                 className="form-control"
                                 placeholder="0xcf96178161586b8C9c5096E35Ac2Ef3Ad1fAd2A7"
-                                onChange={(e) => setWithdrawWallet(e.target.value)}
+                                onChange={(e) =>
+                                  setWithdrawWallet(e.target.value)
+                                }
                               />
                             </div>
                           </div>
@@ -106,21 +116,27 @@ function AccountWithdraw() {
                             <label for="inputEmail3" className="col-form-label">
                               Amount USDT
                               <br />
-                              <small>Available amount<br/>(only main wallet amount)</small>
+                              <small>
+                                Available amount
+                                <br />
+                                (only main wallet amount)
+                              </small>
                             </label>
                           </div>
                           <div className="col-sm-8">
                             <div className="input-group mb-3">
                               <div className="input-group-prepend">
                                 <label className="input-group-text bg-primary text-white">
-                                  $
+                                  USDT
                                 </label>
                               </div>
                               <input
                                 type="text"
                                 className="form-control text-end"
-                                placeholder="5000 USD"
-                                onChange={(e) => setWithdrawAmount(e.target.value)}
+                                placeholder="5000 USDT"
+                                onChange={(e) =>
+                                  setWithdrawAmount(e.target.value)
+                                }
                               />
                             </div>
                           </div>
@@ -132,7 +148,8 @@ function AccountWithdraw() {
                               Binance Smart Chain Network Fee (BNB)
                               <br />
                               <small>
-                                Transactions on the BSC network are priorirized by fees
+                                Transactions on the BSC network are priorirized
+                                by fees
                               </small>
                             </label>
                           </div>
@@ -142,7 +159,11 @@ function AccountWithdraw() {
                         </div>
 
                         <div className="text-end">
-                          <button type="button" onClick={onWithdraw} className="btn btn-primary text-white">
+                          <button
+                            type="button"
+                            onClick={onWithdraw}
+                            className="btn btn-primary text-white"
+                          >
                             Withdraw Now
                           </button>
                         </div>
