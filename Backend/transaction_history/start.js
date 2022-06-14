@@ -69,6 +69,7 @@ async function getPastLogs() {
                 commission: 0.01,
                 status: 2,
             }
+            var flag = false
 
             if (main_wallets[fromAddress] && trading_wallets[toAddress] && main_wallets[fromAddress] == trading_wallets[toAddress]) {
                 var block = await web3.eth.getBlock(logs[i].blockNumber)
@@ -76,27 +77,33 @@ async function getPastLogs() {
                 transaction.user_id = main_wallets[fromAddress]
                 transaction.type = 3
                 transaction.transaction_at = new Date(block.timestamp * 1000).toISOString().slice(0, 19).replace("T", " ")
+                flag = true
             } else if (main_wallets[toAddress] && trading_wallets[fromAddress] && main_wallets[toAddress] == trading_wallets[fromAddress]) {
                 var block = await web3.eth.getBlock(logs[i].blockNumber)
                 
                 transaction.user_id = main_wallets[toAddress]
                 transaction.type = 4
                 transaction.transaction_at = new Date(block.timestamp * 1000).toISOString().slice(0, 19).replace("T", " ")
+                flag = true
             } else if (main_wallets[toAddress] || trading_wallets[toAddress]) {
                 var block = await web3.eth.getBlock(logs[i].blockNumber)
                 
                 transaction.user_id = main_wallets[toAddress] ?  main_wallets[toAddress] : trading_wallets[toAddress]
                 transaction.type = 1
                 transaction.transaction_at = new Date(block.timestamp * 1000).toISOString().slice(0, 19).replace("T", " ")
+                flag = true
             } else if (main_wallets[fromAddress] || trading_wallets[fromAddress]) {
                 var block = await web3.eth.getBlock(logs[i].blockNumber)
                 
                 transaction.user_id = main_wallets[fromAddress] ?  main_wallets[fromAddress] : trading_wallets[fromAddress]
                 transaction.type = 2
                 transaction.transaction_at = new Date(block.timestamp * 1000).toISOString().slice(0, 19).replace("T", " ")
+                flag = true
             }
 
-            await Transactions.create(transaction);
+            if (flag) {
+                await Transactions.create(transaction);
+            }
         }
 
         startBlockNumber = endBlockNumber + 1
