@@ -8,6 +8,8 @@ import twilio from 'twilio'
 import {createWallet, getWallet} from './SecureController.js'
 import Web3 from 'web3'
 import {USDT_ABI} from '../config/server.js'
+import Transactions from '../models/WalletTransactionModel.js'
+import { Sequelize } from "sequelize";
 
 dotenv.config();
 
@@ -20,6 +22,8 @@ var apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 // const accountSid = process.env.TWILLO_SID;
 // const authToken = process.env.TWILLO_TOKEN;
 // const client = twilio(accountSid, authToken);
+
+const op = Sequelize.Op
 
 function convertTimeToGMT(time) {
   return new Date(
@@ -571,6 +575,73 @@ export const Request2FA = async (req, res) => {
         console.error(error);
       }
     );
+  } catch (err) {
+    console.log(err)
+    return res.status(400).json({msg: "Failed"})
+  }
+
+  return res.json({msg: 'Success'})
+}
+
+export const GetWalletTransactions = async (req, res) => {
+  const { userId } = req
+  const {type} = req.body
+
+  var user = await Users.findOne({
+    where: {
+      id: userId
+    }
+  })
+
+  if (user == null) {
+    return res.status(403).json({msg: 'There is not account'})
+  }
+
+  try {
+    var condition = {}
+
+    if (type == 'exchange') {
+      condition = {
+        user_id: userId,
+        [op.or]: [
+          {
+            type: {
+              [op.eq]: 3
+            }
+          },
+          {
+            type: {
+              [op.eq]: 4
+            }
+          }
+        ]
+      }
+    } else {
+      condition = {
+        user_id: userId,
+        [op.or]: [
+          {
+            type: {
+              [op.eq]: 1
+            }
+          },
+          {
+            type: {
+              [op.eq]: 2
+            }
+          }
+        ]
+      }
+    }
+
+    var trans = await Transactions.findAll({
+      where: condition,
+      order: [
+        ['id', 'DESC'],
+      ],
+    })
+
+    return res.json(trans)
   } catch (err) {
     console.log(err)
     return res.status(400).json({msg: "Failed"})

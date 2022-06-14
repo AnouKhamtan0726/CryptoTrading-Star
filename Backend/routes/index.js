@@ -11,6 +11,7 @@ import {
   Withdraw,
   Exchange,
   Request2FA,
+  GetWalletTransactions,
   // UpdatePhoneNumber,
 } from "../controllers/Users.js";
 import { verifyToken } from "../middleware/VerifyToken.js";
@@ -30,6 +31,7 @@ router.post("/get-wallets", verifyToken, GetWallets);
 router.post("/withdraw", verifyToken, Withdraw);
 router.post("/exchange", verifyToken, Exchange);
 router.post("/request-2fa", verifyToken, Request2FA);
+router.post("/get-wallet-transactions", verifyToken, GetWalletTransactions);
 // router.post("/phone-number", verifyToken, UpdatePhoneNumber);
 
 export default router;

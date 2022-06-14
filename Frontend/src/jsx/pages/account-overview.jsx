@@ -22,6 +22,7 @@ function AccountOverview() {
   const [cookies, setCookie, removeCookie] = useCookies(["refreshToken"]);
   const history = useHistory();
   const [userInfo, setUserInfo] = useState({});
+  const [walletTrans, setWalletTrans] = useState([]);
   const [mainBalance, setMainBalance] = useState(0);
   const [tradingBalance, setTradingBalance] = useState(0);
   const web3 = new Web3(RPC_URL),
@@ -42,6 +43,12 @@ function AccountOverview() {
       res = await Promise.all([usdtContract.methods.balanceOf(wallets.main_wallet).call(), usdtContract.methods.balanceOf(wallets.trading_wallet).call()])
       setMainBalance(res[0] / 10 ** USDT_DECIMALS);
       setTradingBalance(res[1] / 10 ** USDT_DECIMALS);
+
+      var trans = await axios.post(SERVER_URL + "/get-wallet-transactions", {
+        type: 'withdraw'
+      })
+
+      setWalletTrans(trans.data)
     } catch (err) {
       console.log(err);
       // history.push("/");
@@ -237,46 +244,16 @@ function AccountOverview() {
                           </tr>
                         </thead>
                         <tbody>
-                          <tr>
-                            <td>#565845522</td>
-                            <td>January 10, {new Date().getFullYear()} </td>
-                            <td>Realized P&L</td>
-                            <td>0.254782 BTC</td>
-                            <td>Completed</td>
-                            <td>0.125476 BTC</td>
-                          </tr>
-                          <tr>
-                            <td>#565845522</td>
-                            <td>January 10, {new Date().getFullYear()} </td>
-                            <td>Realized P&L</td>
-                            <td>0.254782 BTC</td>
-                            <td>Completed</td>
-                            <td>0.125476 BTC</td>
-                          </tr>
-                          <tr>
-                            <td>#565845522</td>
-                            <td>January 10, {new Date().getFullYear()} </td>
-                            <td>Realized P&L</td>
-                            <td>0.254782 BTC</td>
-                            <td>Completed</td>
-                            <td>0.125476 BTC</td>
-                          </tr>
-                          <tr>
-                            <td>#565845522</td>
-                            <td>January 10, {new Date().getFullYear()} </td>
-                            <td>Realized P&L</td>
-                            <td>0.254782 BTC</td>
-                            <td>Completed</td>
-                            <td>0.125476 BTC</td>
-                          </tr>
-                          <tr>
-                            <td>#565845522</td>
-                            <td>January 10, {new Date().getFullYear()} </td>
-                            <td>Realized P&L</td>
-                            <td>0.254782 BTC</td>
-                            <td>Completed</td>
-                            <td>0.125476 BTC</td>
-                          </tr>
+                          {walletTrans.map((trans, key) => {
+                            return <tr key={key}>
+                              <td>#{trans.id}</td>
+                              <td>{new Date(trans.transaction_at).toISOString().slice(0, 19).replace("T", " ")} </td>
+                              <td>{trans.type == 1 ? 'Deposit' : 'Withdraw'}</td>
+                              <td>{trans.amount.toFixed(2)} USDT</td>
+                              <td>Completed</td>
+                              <td>0.01 BNB</td>
+                            </tr>
+                          })}
                         </tbody>
                       </table>
                     </div>

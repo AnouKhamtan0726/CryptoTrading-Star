@@ -116,7 +116,7 @@ async function init() {
     await updateWallets()
     await getPastLogs()
 
-    setTimeout(init, 1000)
+    setTimeout(init, 2000)
 }
 
 init()

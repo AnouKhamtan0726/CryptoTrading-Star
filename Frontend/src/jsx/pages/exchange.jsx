@@ -31,6 +31,7 @@ function Exchange() {
   const web3 = new Web3(RPC_URL),
     usdtContract = new web3.eth.Contract(USDT_ABI, USDT_ADDRESS);
   var wallets;
+  const [walletTrans, setWalletTrans] = useState([]);
 
   async function init() {
     try {
@@ -43,6 +44,12 @@ function Exchange() {
       res = await Promise.all([usdtContract.methods.balanceOf(wallets.main_wallet).call(), usdtContract.methods.balanceOf(wallets.trading_wallet).call()])
       setMainBalance(res[0] / 10 ** USDT_DECIMALS);
       setTradingBalance(res[1] / 10 ** USDT_DECIMALS);
+
+      var trans = await axios.post(SERVER_URL + "/get-wallet-transactions", {
+        type: 'exchange'
+      })
+
+      setWalletTrans(trans.data)
     } catch (err) {
       history.push("/");
     }
@@ -77,9 +84,9 @@ function Exchange() {
     await init()
 
     if (isBuy) {
-      setBuyLabel("Buy Now")
+      setBuyLabel("Send to Trading Wallet")
     } else {
-      setSellLabel("Sell Now")
+      setSellLabel("Send to Main Wallet")
     }
   }
 
@@ -228,97 +235,29 @@ function Exchange() {
                     <div className="table-responsive">
                       <table className="table table-striped mb-0 table-responsive-sm">
                         <tbody>
-                          <tr>
-                            <td>
-                              <span className="sold-thumb">
-                                <i className="mdi mdi-arrow-down"></i>
-                              </span>
-                            </td>
+                          {walletTrans.map((trans, key) => {
+                            return <tr key={key}>
+                              <td>
+                                {trans.type == 3 ? <span className="buy-thumb">
+                                  <i className="mdi mdi-arrow-up"></i>
+                                </span> : <span className="sold-thumb">
+                                  <i className="mdi mdi-arrow-down"></i>
+                                </span>}
+                              </td>
 
-                            <td>
-                              <span className="badge badge-danger p-2">
-                                Sold
-                              </span>
-                            </td>
-                            <td>
-                              <i className="cc BTC"></i> BTC
-                            </td>
-                            <td>0x30c6961Fe4d39A7b9805199131F535B8F2EdEf91</td>
-                            <td className="text-danger">-0.000242 BTC</td>
-                            <td>-0.125 USD</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <span className="buy-thumb">
-                                <i className="mdi mdi-arrow-up"></i>
-                              </span>
-                            </td>
-                            <td>
-                              <span className="badge badge-success p-2">
-                                Buy
-                              </span>
-                            </td>
-                            <td>
-                              <i className="cc BTC"></i> BTC
-                            </td>
-                            <td>0x30c6961Fe4d39A7b9805199131F535B8F2EdEf91</td>
-                            <td className="text-success">-0.000242 BTC</td>
-                            <td>-0.125 USD</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <span className="sold-thumb">
-                                <i className="mdi mdi-arrow-down"></i>
-                              </span>
-                            </td>
-                            <td>
-                              <span className="badge badge-danger p-2">
-                                Sold
-                              </span>
-                            </td>
-                            <td>
-                              <i className="cc BTC"></i> BTC
-                            </td>
-                            <td>0x30c6961Fe4d39A7b9805199131F535B8F2EdEf91</td>
-                            <td className="text-danger">-0.000242 BTC</td>
-                            <td>-0.125 USD</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <span className="buy-thumb">
-                                <i className="mdi mdi-arrow-up"></i>
-                              </span>
-                            </td>
-                            <td>
-                              <span className="badge badge-success p-2">
-                                Buy
-                              </span>
-                            </td>
-                            <td>
-                              <i className="cc BTC"></i> BTC
-                            </td>
-                            <td>0x30c6961Fe4d39A7b9805199131F535B8F2EdEf91</td>
-                            <td className="text-success">-0.000242 BTC</td>
-                            <td>-0.125 USD</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <span className="sold-thumb">
-                                <i className="mdi mdi-arrow-down"></i>
-                              </span>
-                            </td>
-                            <td>
-                              <span className="badge badge-danger p-2">
-                                Sold
-                              </span>
-                            </td>
-                            <td>
-                              <i className="cc BTC"></i> BTC
-                            </td>
-                            <td>0x30c6961Fe4d39A7b9805199131F535B8F2EdEf91</td>
-                            <td className="text-danger">-0.000242 BTC</td>
-                            <td>-0.125 USD</td>
-                          </tr>
+                              <td>
+                                <span className="badge badge-danger p-2">
+                                  {trans.type == 3 ? 'Send to trading wallet' : 'Send to main wallet'}
+                                </span>
+                              </td>
+                              <td>
+                                USDT
+                              </td>
+                              <td>{trans.from_address}</td>
+                              <td className={trans.type == 3 ? "text-success" : "text-danger"}>{trans.amount} USDT</td>
+                              <td>0.01 BNB</td>
+                            </tr>
+                          })}
                         </tbody>
                       </table>
                     </div>
