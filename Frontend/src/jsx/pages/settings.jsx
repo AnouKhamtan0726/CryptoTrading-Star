@@ -17,6 +17,7 @@ function Settings() {
   const [cookies, setCookie, removeCookie] = useCookies(["refreshToken"]);
   const [userInfo, setUserInfo] = useState({});
   const [password, setPassword] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [msg, setMsg] = useState("");
   const [smsg, setSMsg] = useState("");
@@ -44,6 +45,7 @@ function Settings() {
       await axios.post(SERVER_URL + "/save-profile", {
         password1: password,
         confirmPassword1: confirmPassword,
+        currentPassword,
         ...userInfo,
       });
       await init();
@@ -148,7 +150,7 @@ function Settings() {
                                 setUserInfo({ ...userInfo });
                               }}
                             />
-                            <p className="small-text text-danger">
+                            <p className="small-text text-danger m-b-0">
                               * You must enable 2FA to modify this field
                             </p>
                           </div>
@@ -165,32 +167,22 @@ function Settings() {
                                 setUserInfo({ ...userInfo });
                               }}
                             />
-                            <p className="small-text text-danger">
+                            <p className="small-text text-danger m-b-0">
                               * You must enable 2FA to modify this field
                             </p>
                           </div>
-                          <div className="mb-3 col-xl-3 col-xs-3">
-                            <label className="form-label">New Password</label>
+                          <div className="mb-3 col-xl-6 col-md-6">
+                            <label className="form-label">Phone</label>
                             <input
-                              type="password"
+                              type="text"
                               className="form-control"
-                              placeholder="**********"
-                              value={password}
-                              onChange={(e) => setPassword(e.target.value)}
-                            />
-                          </div>
-                          <div className="mb-3 col-xl-3 col-xs-3">
-                            <label className="form-label">
-                              Confirm Password
-                            </label>
-                            <input
-                              type="password"
-                              className="form-control"
-                              placeholder="**********"
-                              value={confirmPassword}
-                              onChange={(e) =>
-                                setConfirmPassword(e.target.value)
-                              }
+                              placeholder="+1 1234567890"
+                              name="phonenumber"
+                              value={userInfo.phone}
+                              onChange={(e) => {
+                                userInfo.phone = e.target.value;
+                                setUserInfo({ ...userInfo });
+                              }}
                             />
                           </div>
                           <div className="mb-3 col-xl-6 col-md-6">
@@ -219,10 +211,47 @@ function Settings() {
                               })}
                             </select>
                           </div>
-                          <div className="mb-3 col-xl-6 col-md-6">
+                          <div className="mb-3 col-xl-4 col-xs-4">
+                            <label className="form-label">
+                              Current Password
+                            </label>
+                            <input
+                              type="password"
+                              className="form-control"
+                              placeholder="**********"
+                              value={currentPassword}
+                              onChange={(e) =>
+                                setCurrentPassword(e.target.value)
+                              }
+                            />
+                          </div>
+                          <div className="mb-3 col-xl-4 col-xs-4">
+                            <label className="form-label">New Password</label>
+                            <input
+                              type="password"
+                              className="form-control"
+                              placeholder="**********"
+                              value={password}
+                              onChange={(e) => setPassword(e.target.value)}
+                            />
+                          </div>
+                          <div className="mb-3 col-xl-4 col-xs-4">
+                            <label className="form-label">
+                              Confirm Password
+                            </label>
+                            <input
+                              type="password"
+                              className="form-control"
+                              placeholder="**********"
+                              value={confirmPassword}
+                              onChange={(e) =>
+                                setConfirmPassword(e.target.value)
+                              }
+                            />
+                          </div>
+                          <div className="mb-3 col-xl-12 col-md-12">
                             <p class="small-text text-danger">
-                              * Password must contain uppercase, special
-                              character and number for secure
+                              * Password must contain at least 8 letters, 1 uppercase, 1 special character and 1 number for secure
                             </p>
                           </div>
 

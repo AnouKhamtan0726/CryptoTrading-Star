@@ -287,7 +287,7 @@ export const VerifyEmail = async (req, res) => {
 
 export const SaveProfile = async (req, res) => {
   const { userId } = req
-  const { email, name, first_name, last_name, password1, confirmPassword1, country } = req.body
+  const { email, name, first_name, last_name, password1, confirmPassword1, country, currentPassword, phone } = req.body
   const regExpPassword =
     /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{6,})/;
   
@@ -319,10 +319,19 @@ export const SaveProfile = async (req, res) => {
   if (user && user.id != userId) {
     return res.status(400).json({msg: 'Someone is using this email'})
   }
+
+  if (password1 == '' && currentPassword != '') {
+    return res.status(400).json({ msg: "If you don't want to change password, please empty current password field" });
+  }
+
+  if (currentPassword != '') {
+    const match = await bcrypt.compare(currentPassword, user.password);
+    if (!match) return res.status(400).json({ msg: "Current password is wrong" });
+  }
   
   try {
     await Users.update(
-      { email, name, first_name, last_name, country },
+      { email, name, first_name, last_name, country, phone },
       {
         where: {
           id: userId,

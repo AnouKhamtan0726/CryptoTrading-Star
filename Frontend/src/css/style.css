@@ -15307,3 +15307,7 @@ html {
 .profile_card {
   height: 224px;
 }
+
+.m-b-0 {
+  margin-bottom: 0px;
+}

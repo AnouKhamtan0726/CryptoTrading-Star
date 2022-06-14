@@ -19,7 +19,7 @@ const Users = db.define(
       type: DataTypes.STRING,
     },
     phone: {
-      type: DataTypes.INTEGER(30),
+      type: DataTypes.STRING,
     },
     country: {
       type: DataTypes.STRING,
