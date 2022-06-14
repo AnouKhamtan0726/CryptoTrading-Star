@@ -26,8 +26,8 @@ function Exchange() {
   const [tradingBalance, setTradingBalance] = useState(0);
   const [msg, setMsg] = useState("");
   const [smsg, setSMsg] = useState("");
-  const [buyLabel, setBuyLabel] = useState("Buy Now")
-  const [sellLabel, setSellLabel] = useState("Sell Now")
+  const [buyLabel, setBuyLabel] = useState("Send to Trading Wallet")
+  const [sellLabel, setSellLabel] = useState("Send to Main Wallet")
   const web3 = new Web3(RPC_URL),
     usdtContract = new web3.eth.Contract(USDT_ABI, USDT_ADDRESS);
   var wallets;
@@ -150,7 +150,7 @@ function Exchange() {
                         type="button"
                         className="btn btn-success btn-block"
                         onClick={(e) => onExchange(true)}
-                        disabled={buyLabel != 'Buy Now'}
+                        disabled={buyLabel != 'Send to Trading Wallet'}
                       >
                         {buyLabel}
                       </button>
@@ -208,7 +208,7 @@ function Exchange() {
                         type="button"
                         className="btn btn-danger btn-block"
                         onClick={(e) => onExchange(false)}
-                        disabled={sellLabel != 'Sell Now'}
+                        disabled={sellLabel != 'Send to Main Wallet'}
                       >
                         {sellLabel}
                       </button>

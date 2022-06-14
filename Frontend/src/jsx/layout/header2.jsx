@@ -115,10 +115,6 @@ function Header2() {
 
       setUsername(res.data.name);
       setEmail(res.data.email);
-
-      if (res.data.field_2fa == "withdraw") {
-        return history.push('/account-withdraw')
-      }
     } catch (err) {
       history.push("/");
     }

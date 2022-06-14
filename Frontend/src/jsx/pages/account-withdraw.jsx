@@ -12,7 +12,7 @@ import { useCookies } from "react-cookie";
 import { useHistory } from "react-router-dom";
 
 function AccountWithdraw() {
-  const [cookies] = useCookies(["refreshToken"]);
+  const [cookies, setCookie, removeCookie] = useCookies(["refreshToken", "field_2fa", "withdrawWallet", "withdrawAmount"]);
   const history = useHistory();
   const [withdrawWallet, setWithdrawWallet] = useState("");
   const [withdrawAmount, setWithdrawAmount] = useState(0);
@@ -25,38 +25,27 @@ function AccountWithdraw() {
       axios.defaults.headers.common["Authorization"] =
         "Basic " + cookies.refreshToken;
 
-      var res = await axios.post(SERVER_URL + "/login-status");
-      
-      if (res.data.field_2fa != 'withdraw') {
-        await axios.post(SERVER_URL + "/request-2fa", {
-          field: "withdraw",
-        })
-        return history.push("/signin")
-      } else if (res.data.email_verify_status == false) {
-        return history.push("/signin")
+      await axios.post(SERVER_URL + "/login-status");
+
+      if (cookies.field_2fa == 'withdraw') {
+        setWithdrawLabel('Withdrawing ...')
+        setWithdrawWallet(cookies.withdrawWallet)
+        setWithdrawAmount(cookies.withdrawAmount)
+
+        await axios.post(SERVER_URL + "/withdraw", {
+          withdrawWallet: cookies.withdrawWallet,
+          withdrawAmount: cookies.withdrawAmount,
+        });
+
+        setSMsg(
+          "Your withdraw is confirmed. Please check your wallet about 5 mins later."
+        );
+        setMsg("");
+
+        removeCookie('field_2fa')
+        removeCookie('withdrawWallet')
+        removeCookie('withdrawAmount')
       }
-
-      await axios.post(SERVER_URL + "/request-2fa", {
-        field: "",
-      })
-    } catch (err) {
-      history.push("/");
-    }
-  }
-
-  async function onWithdraw(e) {
-    setWithdrawLabel('Withdrawing ...')
-
-    try {
-      await axios.post(SERVER_URL + "/withdraw", {
-        withdrawWallet,
-        withdrawAmount,
-      });
-
-      setSMsg(
-        "Your withdraw is confirmed. Please check your wallet about 5 mins later."
-      );
-      setMsg("");
     } catch (error) {
       if (error.response && error.response.data.status == 403) {
         history.push("/signin");
@@ -65,13 +54,68 @@ function AccountWithdraw() {
         setSMsg("");
       }
     }
-      
+
+    setWithdrawLabel("Withdraw Now")
+  }
+
+  async function onWithdraw(e) {
+    try {
+      await axios.post(SERVER_URL + "/login-status");
+
+      if (cookies.field_2fa == 'withdraw') {
+        setWithdrawLabel('Withdrawing ...')
+
+        await axios.post(SERVER_URL + "/withdraw", {
+          withdrawWallet: withdrawWallet,
+          withdrawAmount: withdrawAmount,
+        });
+
+        setSMsg(
+          "Your withdraw is confirmed. Please check your wallet about 5 mins later."
+        );
+        setMsg("");
+
+        removeCookie('field_2fa')
+        removeCookie('withdrawWallet')
+        removeCookie('withdrawAmount')
+      } else {
+        setCookie("field_2fa", "withdraw")
+        setCookie("withdrawAmount", withdrawAmount)
+        setCookie("withdrawWallet", withdrawWallet)
+        
+        await axios.post(SERVER_URL + "/request-2fa", {
+          field: "withdraw",
+        })
+
+        history.push("/email-verify")
+      }
+    } catch (error) {
+      if (error.response && error.response.data.status == 403) {
+        history.push("/signin");
+      } else if (error.response && error.response.data) {
+        setMsg(error.response.data.msg);
+        setSMsg("");
+      }
+    }
+
     setWithdrawLabel("Withdraw Now")
   }
 
   useEffect(() => {
     init();
   }, []);
+
+  useEffect(() => {
+    return async () => {
+      removeCookie('field_2fa')
+      removeCookie('withdrawWallet')
+      removeCookie('withdrawAmount')
+        
+      await axios.post(SERVER_URL + "/request-2fa", {
+        field: "",
+      })
+    }
+  }, [])
 
   return (
     <>
@@ -120,6 +164,7 @@ function AccountWithdraw() {
                               type="text"
                               className="form-control"
                               placeholder="0xcf96178161586b8C9c5096E35Ac2Ef3Ad1fAd2A7"
+                              value={withdrawWallet}
                               onChange={(e) =>
                                 setWithdrawWallet(e.target.value)
                               }
@@ -151,6 +196,7 @@ function AccountWithdraw() {
                               type="text"
                               className="form-control text-end"
                               placeholder="5000 USDT"
+                              value={withdrawAmount}
                               onChange={(e) =>
                                 setWithdrawAmount(e.target.value)
                               }

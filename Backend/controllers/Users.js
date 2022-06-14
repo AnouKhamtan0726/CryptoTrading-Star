@@ -530,6 +530,48 @@ export const Request2FA = async (req, res) => {
         }
       })
     }
+
+    var code = 100000 + Math.floor(Math.random() * 899999);
+
+    await Users.update(
+      {
+        email_verify_code: code,
+        email_sent_at: new Date().toISOString().slice(0, 19).replace("T", " "),
+      },
+      {
+        where: {
+          id: userId,
+        },
+      }
+    );
+
+    let sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
+
+    sendSmtpEmail.subject = "Didi Email Verification";
+    sendSmtpEmail.htmlContent =
+      "<b>This is your verify code! </b><br/>\
+    <h1>" +
+      code +
+      "</h1><br/>\
+    Thanks!";
+    sendSmtpEmail.sender = {
+      name: "Didi Developing Team",
+      email: process.env.EMAIL,
+    };
+    sendSmtpEmail.to = [{ email: user.email, name: user.name }];
+    sendSmtpEmail.headers = { "Some-Custom-Name": "unique-id-1234" };
+    sendSmtpEmail.params = { parameter: code, subject: "New Subject" };
+
+    apiInstance.sendTransacEmail(sendSmtpEmail).then(
+      function (data) {
+        console.log(
+          "API called successfully. Returned data: " + JSON.stringify(data)
+        );
+      },
+      function (error) {
+        console.error(error);
+      }
+    );
   } catch (err) {
     console.log(err)
     return res.status(400).json({msg: "Failed"})
