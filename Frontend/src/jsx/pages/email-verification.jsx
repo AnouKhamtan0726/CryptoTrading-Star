@@ -8,7 +8,7 @@ function EmailVerification() {
   const [verifyCode, setVerifyCode] = useState("");
   const [msg, setMsg] = useState("");
   const history = useHistory();
-  const [cookies, setCookie, removeCookie] = useCookies(["refreshToken"]);
+  const [cookies] = useCookies(["refreshToken"]);
 
   async function init() {
     axios.defaults.headers.common["Authorization"] =

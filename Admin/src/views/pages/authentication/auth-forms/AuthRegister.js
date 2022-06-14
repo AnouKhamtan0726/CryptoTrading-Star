@@ -263,8 +263,11 @@ const FirebaseRegister = ({ ...others }) => {
                 </FormHelperText>
               )}
             </FormControl>
-            
-            <p style={{marginBottom: '0px', color: 'white'}}>Password must contains at least 8 letters, 1 uppercase, 1 number, 1 special character.</p>
+
+            <p style={{ marginBottom: "0px", color: "white" }}>
+              Password must contains at least 8 letters, 1 uppercase, 1 number,
+              1 special character.
+            </p>
             <FormControl
               fullWidth
               error={Boolean(touched.password && errors.password)}

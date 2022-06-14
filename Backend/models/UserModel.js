@@ -64,6 +64,9 @@ const Users = db.define(
       type: "TIMESTAMP",
       defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
     },
+    field_2fa: {
+      type: DataTypes.STRING,
+    },
     current_status: {
       type: DataTypes.TINYINT(20),
       defaultValue: 0,

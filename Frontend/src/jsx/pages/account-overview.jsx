@@ -39,10 +39,9 @@ function AccountOverview() {
       wallets = res.data;
       setUserInfo(user.data);
 
-      res = await usdtContract.methods.balanceOf(wallets.main_wallet).call();
-      setMainBalance(res / 10 ** USDT_DECIMALS);
-      res = await usdtContract.methods.balanceOf(wallets.trading_wallet).call();
-      setTradingBalance(res / 10 ** USDT_DECIMALS);
+      res = await Promise.all([usdtContract.methods.balanceOf(wallets.main_wallet).call(), usdtContract.methods.balanceOf(wallets.trading_wallet).call()])
+      setMainBalance(res[0] / 10 ** USDT_DECIMALS);
+      setTradingBalance(res[1] / 10 ** USDT_DECIMALS);
     } catch (err) {
       console.log(err);
       // history.push("/");

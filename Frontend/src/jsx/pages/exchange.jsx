@@ -26,6 +26,8 @@ function Exchange() {
   const [tradingBalance, setTradingBalance] = useState(0);
   const [msg, setMsg] = useState("");
   const [smsg, setSMsg] = useState("");
+  const [buyLabel, setBuyLabel] = useState("Buy Now")
+  const [sellLabel, setSellLabel] = useState("Sell Now")
   const web3 = new Web3(RPC_URL),
     usdtContract = new web3.eth.Contract(USDT_ABI, USDT_ADDRESS);
   var wallets;
@@ -38,16 +40,21 @@ function Exchange() {
       var res = await axios.post(SERVER_URL + "/get-wallets");
 
       wallets = res.data;
-      res = await usdtContract.methods.balanceOf(wallets.main_wallet).call();
-      setMainBalance(res / 10 ** USDT_DECIMALS);
-      res = await usdtContract.methods.balanceOf(wallets.trading_wallet).call();
-      setTradingBalance(res / 10 ** USDT_DECIMALS);
+      res = await Promise.all([usdtContract.methods.balanceOf(wallets.main_wallet).call(), usdtContract.methods.balanceOf(wallets.trading_wallet).call()])
+      setMainBalance(res[0] / 10 ** USDT_DECIMALS);
+      setTradingBalance(res[1] / 10 ** USDT_DECIMALS);
     } catch (err) {
       history.push("/");
     }
   }
 
   async function onExchange(isBuy) {
+    if (isBuy) {
+      setBuyLabel("Buying ...")
+    } else {
+      setSellLabel("Selling ...")
+    }
+
     try {
       await axios.post(SERVER_URL + "/exchange", {
         exchangeAmount: isBuy ? buyAmount : sellAmount,
@@ -65,6 +72,14 @@ function Exchange() {
         setMsg(error.response.data.msg);
         setSMsg("");
       }
+    }
+
+    await init()
+
+    if (isBuy) {
+      setBuyLabel("Buy Now")
+    } else {
+      setSellLabel("Sell Now")
     }
   }
 
@@ -135,8 +150,9 @@ function Exchange() {
                         type="button"
                         className="btn btn-success btn-block"
                         onClick={(e) => onExchange(true)}
+                        disabled={buyLabel != 'Buy Now'}
                       >
-                        Buy Now
+                        {buyLabel}
                       </button>
                     </form>
                   </div>
@@ -192,8 +208,9 @@ function Exchange() {
                         type="button"
                         className="btn btn-danger btn-block"
                         onClick={(e) => onExchange(false)}
+                        disabled={sellLabel != 'Sell Now'}
                       >
-                        Sell Now
+                        {sellLabel}
                       </button>
                     </form>
                   </div>

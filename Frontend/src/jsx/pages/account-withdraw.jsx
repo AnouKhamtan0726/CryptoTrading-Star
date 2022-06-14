@@ -12,12 +12,13 @@ import { useCookies } from "react-cookie";
 import { useHistory } from "react-router-dom";
 
 function AccountWithdraw() {
-  const [cookies, setCookie, removeCookie] = useCookies(["refreshToken"]);
+  const [cookies] = useCookies(["refreshToken"]);
   const history = useHistory();
   const [withdrawWallet, setWithdrawWallet] = useState("");
   const [withdrawAmount, setWithdrawAmount] = useState(0);
   const [msg, setMsg] = useState("");
   const [smsg, setSMsg] = useState("");
+  const [withdrawLabel, setWithdrawLabel] = useState("Withdraw Now")
 
   async function init() {
     try {
@@ -25,14 +26,29 @@ function AccountWithdraw() {
         "Basic " + cookies.refreshToken;
 
       var res = await axios.post(SERVER_URL + "/login-status");
+      
+      if (res.data.field_2fa != 'withdraw') {
+        await axios.post(SERVER_URL + "/request-2fa", {
+          field: "withdraw",
+        })
+        return history.push("/signin")
+      } else if (res.data.email_verify_status == false) {
+        return history.push("/signin")
+      }
+
+      await axios.post(SERVER_URL + "/request-2fa", {
+        field: "",
+      })
     } catch (err) {
       history.push("/");
     }
   }
 
   async function onWithdraw(e) {
+    setWithdrawLabel('Withdrawing ...')
+
     try {
-      var res = await axios.post(SERVER_URL + "/withdraw", {
+      await axios.post(SERVER_URL + "/withdraw", {
         withdrawWallet,
         withdrawAmount,
       });
@@ -49,6 +65,8 @@ function AccountWithdraw() {
         setSMsg("");
       }
     }
+      
+    setWithdrawLabel("Withdraw Now")
   }
 
   useEffect(() => {
@@ -88,86 +106,85 @@ function AccountWithdraw() {
                           </p>
                         )}
                       </div>
-                      <form action="#" className="py-5">
-                        <div className="mb-3 row align-items-center">
-                          <div className="col-sm-4">
-                            <label for="inputEmail3" className="col-form-label">
-                              Withdraw Address
-                              <br />
-                              <small>Please double check this address</small>
-                            </label>
+                      <div className="mb-3 row align-items-center">
+                        <div className="col-sm-4">
+                          <label for="inputEmail3" className="col-form-label">
+                            Withdraw Address
+                            <br />
+                            <small>Please double check this address</small>
+                          </label>
+                        </div>
+                        <div className="col-sm-8">
+                          <div className="input-group mb-3">
+                            <input
+                              type="text"
+                              className="form-control"
+                              placeholder="0xcf96178161586b8C9c5096E35Ac2Ef3Ad1fAd2A7"
+                              onChange={(e) =>
+                                setWithdrawWallet(e.target.value)
+                              }
+                            />
                           </div>
-                          <div className="col-sm-8">
-                            <div className="input-group mb-3">
-                              <input
-                                type="text"
-                                className="form-control"
-                                placeholder="0xcf96178161586b8C9c5096E35Ac2Ef3Ad1fAd2A7"
-                                onChange={(e) =>
-                                  setWithdrawWallet(e.target.value)
-                                }
-                              />
+                        </div>
+                      </div>
+
+                      <div className="mb-3 row align-items-center">
+                        <div className="col-sm-4">
+                          <label for="inputEmail3" className="col-form-label">
+                            Amount USDT
+                            <br />
+                            <small>
+                              Available amount
+                              <br />
+                              (only main wallet amount)
+                            </small>
+                          </label>
+                        </div>
+                        <div className="col-sm-8">
+                          <div className="input-group mb-3">
+                            <div className="input-group-prepend">
+                              <label className="input-group-text bg-primary text-white">
+                                USDT
+                              </label>
                             </div>
+                            <input
+                              type="text"
+                              className="form-control text-end"
+                              placeholder="5000 USDT"
+                              onChange={(e) =>
+                                setWithdrawAmount(e.target.value)
+                              }
+                            />
                           </div>
                         </div>
+                      </div>
 
-                        <div className="mb-3 row align-items-center">
-                          <div className="col-sm-4">
-                            <label for="inputEmail3" className="col-form-label">
-                              Amount USDT
-                              <br />
-                              <small>
-                                Available amount
-                                <br />
-                                (only main wallet amount)
-                              </small>
-                            </label>
-                          </div>
-                          <div className="col-sm-8">
-                            <div className="input-group mb-3">
-                              <div className="input-group-prepend">
-                                <label className="input-group-text bg-primary text-white">
-                                  USDT
-                                </label>
-                              </div>
-                              <input
-                                type="text"
-                                className="form-control text-end"
-                                placeholder="5000 USDT"
-                                onChange={(e) =>
-                                  setWithdrawAmount(e.target.value)
-                                }
-                              />
-                            </div>
-                          </div>
+                      <div className="mb-3 row align-items-center">
+                        <div className="col-sm-6">
+                          <label for="inputEmail3" className="col-form-label">
+                            Binance Smart Chain Network Fee (BNB)
+                            <br />
+                            <small>
+                              Transactions on the BSC network are priorirized
+                              by fees
+                            </small>
+                          </label>
                         </div>
+                        <div className="col-sm-6">
+                          <h4 className="text-end">0.01</h4>
+                        </div>
+                      </div>
 
-                        <div className="mb-3 row align-items-center">
-                          <div className="col-sm-6">
-                            <label for="inputEmail3" className="col-form-label">
-                              Binance Smart Chain Network Fee (BNB)
-                              <br />
-                              <small>
-                                Transactions on the BSC network are priorirized
-                                by fees
-                              </small>
-                            </label>
-                          </div>
-                          <div className="col-sm-6">
-                            <h4 className="text-end">0.01</h4>
-                          </div>
-                        </div>
-
-                        <div className="text-end">
-                          <button
-                            type="button"
-                            onClick={onWithdraw}
-                            className="btn btn-primary text-white"
-                          >
-                            Withdraw Now
-                          </button>
-                        </div>
-                      </form>
+                      <div className="text-end">
+                        <button
+                          type="button"
+                          onClick={onWithdraw}
+                          className="btn btn-primary text-white"
+                          disabled={withdrawLabel != 'Withdraw Now'}
+                        >
+                          {withdrawLabel}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>

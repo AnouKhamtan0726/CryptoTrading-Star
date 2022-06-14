@@ -117,7 +117,7 @@ export const Login = async (req, res) => {
       { userId, name, email },
       process.env.REFRESH_TOKEN_SECRET,
       {
-        expiresIn: "1d",
+        expiresIn: "1800s",
       }
     );
 
@@ -377,6 +377,8 @@ export const GetWallets = async (req, res) => {
 
 export const Withdraw = async (req, res) => {
   const { userId } = req
+  const regExpFloat =
+    /[+-]?([0-9]*[.])?[0-9]+/;
 
   var user = await Users.findOne({
     where: {
@@ -391,10 +393,22 @@ export const Withdraw = async (req, res) => {
   try {
     var main_key = await getWallet(user.main_key, false)
     var server_key = await getWallet(process.env.SERVER_KEY, false)
-    const {withdrawWallet, withdrawAmount} = req.body;
+    var {withdrawWallet, withdrawAmount} = req.body;
+
+    if (withdrawWallet.length != 42) {
+      return res.status(400).json({msg: 'Check your withdraw wallet'})
+    }
+    
+    if (withdrawAmount.length == 0 || !regExpFloat.test(withdrawAmount)) {
+      return res.status(400).json({msg: 'Check your withdraw amount'})
+    }
+    
     var usdtContract = new web3.eth.Contract(USDT_ABI, process.env.USDT_ADDRESS)
     var amount = web3.utils.toBN(Math.floor(withdrawAmount * 1000)).mul(web3.utils.toBN(10).pow(web3.utils.toBN(process.env.USDT_DECIMALS))).div(web3.utils.toBN(1000))
     var data = usdtContract.methods.transfer(withdrawWallet, amount).encodeABI()
+    
+    await usdtContract.methods.transfer(withdrawWallet, amount).estimateGas({from: user.main_wallet})
+
     var bnbRawTransaction = {
       "form": process.env.SERVER_WALLET,
       "to": user.main_wallet,
@@ -409,8 +423,15 @@ export const Withdraw = async (req, res) => {
     var signedTx = await web3.eth.accounts.signTransaction(rawTransaction, main_key)
 
     await web3.eth.sendSignedTransaction(signedTx.rawTransaction)
+    await Users.update({
+      field_2fa: ''
+    }, {
+      where: {
+        id: userId
+      }
+    })
   } catch (err) {
-    console.log(err)
+    console.log(err.message)
     return res.status(400).json({msg: "Withdraw Failed. Check if your withdraw amount is less than your main wallet balance. Please try again."})
   }
 
@@ -419,6 +440,8 @@ export const Withdraw = async (req, res) => {
 
 export const Exchange = async (req, res) => {
   const { userId } = req
+  const regExpFloat =
+    /[+-]?([0-9]*[.])?[0-9]+/;
 
   var user = await Users.findOne({
     where: {
@@ -432,6 +455,11 @@ export const Exchange = async (req, res) => {
 
   try {
     const {exchangeAmount, isBuy} = req.body
+
+    if (exchangeAmount.length == 0 || !regExpFloat.test(exchangeAmount)) {
+      return res.status(400).json({msg: 'Check your exchange amount'})
+    }
+
     var server_key = await getWallet(process.env.SERVER_KEY, false)
     var targetWallet = isBuy ? user.trading_wallet : user.main_wallet
     var sourceWallet = isBuy ? user.main_wallet : user.trading_wallet
@@ -439,6 +467,9 @@ export const Exchange = async (req, res) => {
     var usdtContract = new web3.eth.Contract(USDT_ABI, process.env.USDT_ADDRESS)
     var amount = web3.utils.toBN(Math.floor(exchangeAmount * 1000)).mul(web3.utils.toBN(10).pow(web3.utils.toBN(process.env.USDT_DECIMALS))).div(web3.utils.toBN(1000))
     var data = usdtContract.methods.transfer(targetWallet, amount).encodeABI()
+
+    await usdtContract.methods.transfer(targetWallet, amount).estimateGas({from: sourceWallet})
+
     var bnbRawTransaction = {
       "form": process.env.SERVER_WALLET,
       "to": sourceWallet,
@@ -454,12 +485,54 @@ export const Exchange = async (req, res) => {
 
     await web3.eth.sendSignedTransaction(signedTx.rawTransaction)
   } catch (err) {
-    console.log(err)
+    console.log(err.message)
     if (isBuy) {
       return res.status(400).json({msg: "Buying Failed. Check if your exchange amount is less than your main wallet balance. Please try again."})
     } else {
       return res.status(400).json({msg: "Selling Failed. Check if your exchange amount is less than your trading wallet balance. Please try again."})
     }
+  }
+
+  return res.json({msg: 'Success'})
+}
+
+export const Request2FA = async (req, res) => {
+  const { userId } = req
+  const {field} = req.body
+
+  var user = await Users.findOne({
+    where: {
+      id: userId
+    }
+  })
+
+  if (user == null) {
+    return res.status(403).json({msg: 'There is not account'})
+  }
+
+  try {
+    if (field == '') {
+      await Users.update({
+        field_2fa: field
+      }, {
+        where: {
+          id: userId
+        }
+      })
+    } else {
+      await Users.update({
+        email_verify_status: 0,
+        phone_verify_status: 0,
+        field_2fa: field
+      }, {
+        where: {
+          id: userId
+        }
+      })
+    }
+  } catch (err) {
+    console.log(err)
+    return res.status(400).json({msg: "Failed"})
   }
 
   return res.json({msg: 'Success'})

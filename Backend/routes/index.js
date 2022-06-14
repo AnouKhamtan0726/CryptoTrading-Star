@@ -10,6 +10,7 @@ import {
   GetWallets,
   Withdraw,
   Exchange,
+  Request2FA,
   // UpdatePhoneNumber,
 } from "../controllers/Users.js";
 import { verifyToken } from "../middleware/VerifyToken.js";
@@ -28,6 +29,7 @@ router.post("/save-profile", verifyToken, SaveProfile);
 router.post("/get-wallets", verifyToken, GetWallets);
 router.post("/withdraw", verifyToken, Withdraw);
 router.post("/exchange", verifyToken, Exchange);
+router.post("/request-2fa", verifyToken, Request2FA);
 // router.post("/phone-number", verifyToken, UpdatePhoneNumber);
 
 export default router;

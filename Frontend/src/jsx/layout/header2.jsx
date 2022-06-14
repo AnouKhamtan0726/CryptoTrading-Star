@@ -101,7 +101,7 @@ function Header2() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const current = new Date();
-  const [cookies, setCookie, removeCookie] = useCookies(["refreshToken"]);
+  const [cookies, removeCookie] = useCookies(["refreshToken"]);
   const date = `${
     current.getMonth() + 1
   }/${current.getDate()}/${current.getFullYear()} ${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
@@ -115,6 +115,10 @@ function Header2() {
 
       setUsername(res.data.name);
       setEmail(res.data.email);
+
+      if (res.data.field_2fa == "withdraw") {
+        return history.push('/account-withdraw')
+      }
     } catch (err) {
       history.push("/");
     }
