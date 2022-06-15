@@ -11,7 +11,7 @@
  Target Server Version : 100417
  File Encoding         : 65001
 
- Date: 14/06/2022 13:47:30
+ Date: 15/06/2022 23:11:07
 */
 
 SET NAMES utf8mb4;
@@ -166,6 +166,25 @@ CREATE TABLE `users`  (
   `createdAt` datetime(0) NOT NULL,
   `updatedAt` datetime(0) NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 32 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for wallet_transactions
+-- ----------------------------
+DROP TABLE IF EXISTS `wallet_transactions`;
+CREATE TABLE `wallet_transactions`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(30) NULL DEFAULT 0,
+  `type` tinyint(20) NULL DEFAULT 0 COMMENT '1:Deposit 2:Withdraw 3:Send_To_Trading_Wallet 4:Send_To_Main_Wallet',
+  `from_address` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0',
+  `to_address` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '0',
+  `transaction_at` timestamp(0) NOT NULL DEFAULT current_timestamp(0),
+  `amount` double NULL DEFAULT 0,
+  `status` tinyint(20) NULL DEFAULT 0 COMMENT '1:Pending 2:Completed',
+  `commission` double NULL DEFAULT 0,
+  `createdAt` datetime(0) NOT NULL,
+  `updatedAt` datetime(0) NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 233 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;
