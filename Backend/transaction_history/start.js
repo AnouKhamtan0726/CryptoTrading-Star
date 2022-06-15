@@ -14,7 +14,7 @@ const myLogger = new Console({
 });
 
 const web3 = new Web3(RPC_URL)
-var startBlockNumber = 20175500
+var startBlockNumber = 20214185
 var main_wallets = []
 var trading_wallets = []
 
