@@ -8,24 +8,31 @@ const AdminUsers = db.define(
   {
     name: {
       type: DataTypes.STRING,
+      defaultValue: "",
     },
     first_name: {
       type: DataTypes.STRING,
+      defaultValue: "",
     },
     last_name: {
       type: DataTypes.STRING,
+      defaultValue: "",
     },
     email: {
       type: DataTypes.STRING,
+      defaultValue: "",
     },
     phone: {
-      type: DataTypes.INTEGER(30),
+      type: DataTypes.STRING,
+      defaultValue: "",
     },
     password: {
       type: DataTypes.STRING,
+      defaultValue: "",
     },
     refresh_token: {
       type: DataTypes.TEXT,
+      defaultValue: "",
     },
     role: {
       type: DataTypes.TINYINT(20),
@@ -39,6 +46,7 @@ const AdminUsers = db.define(
     },
     email_verify_code: {
       type: DataTypes.STRING,
+      defaultValue: "",
     },
     email_verify_status: {
       type: DataTypes.BOOLEAN,
@@ -50,6 +58,7 @@ const AdminUsers = db.define(
     },
     phone_verify_code: {
       type: DataTypes.STRING,
+      defaultValue: "",
     },
     phone_verify_status: {
       type: DataTypes.BOOLEAN,
