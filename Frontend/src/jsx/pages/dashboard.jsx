@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "react-perfect-scrollbar/dist/css/styles.css";
 import "react-rangeslider/lib/index.css";
 import TradingViewWidget, { Themes } from "react-tradingview-widget";
@@ -8,10 +8,94 @@ import Header2 from "../layout/header2";
 import Sidebar from "../layout/sidebar";
 import Chatbot from "../layout/chatbot";
 import Indicator from "../element/indicator";
+import ReactHighcharts from "react-highcharts";
+import ReactHighstock from "react-highcharts/ReactHighstock";
+import DarkUnica from 'highcharts/themes/dark-blue';
+import axios from "axios";
 
 function Dashboard() {
   let [count, setCount] = useState(5);
   const [activeTab, setActiveTab] = useState("indicators");
+  const chartRef = useRef(null)
+  const [chartConfig, setChartConfig] = useState({
+    colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
+        '#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
+
+    chart: {
+        spacingRight: 50,
+        plotBackgroundImage: 'https://didi.biz/img/world_map.6aaf3347.svg',
+        height: 600,
+        backgroundColor: '#131722',
+    },
+
+    credits: {
+        enabled: false
+    },
+
+    exporting: {
+        enabled: false
+    },
+
+    scrollbar: {
+        enabled: false
+    },
+
+    navigator: {
+        enabled: false
+    },
+
+    rangeSelector: {
+        enabled: false
+    },
+
+    xAxis: [{
+        lineWidth: 1,
+        tickWidth: 0,
+        minorTickWidth: 50,
+    }, {
+        lineWidth: 0,
+        tickWidth: 0,
+        minorTickWidth: 50,
+    }],
+
+    yAxis: [{
+        labels: {
+            align: 'right',
+            x: 30
+        },
+        height: '85%',
+        lineWidth: 0,
+        gridLineDashStyle: 'longdash',
+        gridLineWidth: 1
+    }, {
+        labels: {
+            enabled: false
+        },
+        top: '85%',
+        height: '15%',
+        lineWidth: 0,
+        gridLineWidth: 0,
+        tickWidth: 0,
+    }],
+
+    tooltip: {
+        split: true,
+        outside: true,
+        useHTML: true, 
+        shadow: false,
+        borderWidth: 0,
+        backgroundColor: 'none'
+    },
+
+    plotOptions: {
+      candlestick: {
+          color: '#FC5F5F',
+          upColor: '#31BAA0',
+          lineColor: '#FC5F5F',
+          upLineColor: '#31BAA0',
+      }
+    }
+  })
 
   function incrementCount() {
     count = count + 5;
@@ -35,6 +119,71 @@ function Dashboard() {
       setCount(count);
     }
   }
+
+  async function init() {
+    if (!chartRef || !chartRef.current || !chartRef.current.chart) return
+
+    var response = await axios.get("https://demo-live-data.highcharts.com/aapl-ohlcv.json")
+    var data = response.data
+    var ohlc = [],
+      volume = [],
+      volumeColors = [],
+      dataLength = data.length,
+      i = 0;
+    
+    data[dataLength - 1][4] = data[dataLength - 1][4] + (Math.random() * 20 - 10)
+
+    for (i = dataLength - 70; i < dataLength; i += 1) {
+      ohlc.push([
+          data[i][0], // the date
+          data[i][1], // open
+          data[i][2], // high
+          data[i][3], // low
+          data[i][4] // close
+      ]);
+
+      volume.push([
+          data[i][0], // the date
+          data[i][5], // the volume
+      ]);
+
+      volumeColors.push(data[i][1] < data[i][4] ? "#31BAA0" : "#FC5F5F")
+    }
+
+    if (chartRef.current && chartRef.current.chart.series.length == 0) {
+      chartRef.current.chart.addSeries({
+        type: 'candlestick',
+        name: 'AAPL',
+        data: ohlc,
+        // dataGrouping: {
+        //     units: groupingUnits
+        // }
+      })
+  
+      chartRef.current.chart.addSeries({
+        type: 'column',
+        name: 'Volume',
+        data: volume,
+        yAxis: 1,
+        colorByPoint: true,
+        colors: volumeColors
+        // dataGrouping: {
+        //     units: groupingUnits
+        // }
+      })
+    } else if (chartRef.current) {
+      chartRef.current.chart.series[0].update({
+        data: ohlc
+      })
+    }
+
+    setTimeout(init, 1000);
+  }
+
+  useEffect(() => {
+    init()
+  }, [])
+
   return (
     <>
       <Header2 />
@@ -50,7 +199,7 @@ function Dashboard() {
                   className="tradingview-widget-container card"
                   style={{ height: "600px" }}
                 >
-                  <TradingViewWidget
+                  {/* <TradingViewWidget
                     symbol="COINBASE:BTCUSD"
                     theme={Themes.DARK}
                     hide_top_toolbar={true}
@@ -60,7 +209,8 @@ function Dashboard() {
                     interval="1"
                     details={true}
                     autosize
-                  />
+                  /> */}
+                  <ReactHighstock config={chartConfig} ref={chartRef} />
                 </div>
                 {/* <!-- TradingView Widget END --> */}
               </div>
