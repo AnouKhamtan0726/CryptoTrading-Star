@@ -225,14 +225,10 @@ function Dashboard() {
         var data = chartRef.current.chart.series[1].data
 
         for (var i = 0; i < data.length; i ++) {
-          if (i == data.length - 1) {
-            data[i].color = ohlc[i][1] < ohlc[i][4] ? "#31BAA0" : "#FC5F5F"
-            data[i].graphic.attr({
-              fill: ohlc[i][1] < ohlc[i][4] ? "#31BAA0" : "#FC5F5F"
-            })
-
-            console.log(data[i])
-          }
+          data[i].color = ohlc[i][1] < ohlc[i][4] ? "#31BAA0" : "#FC5F5F"
+          data[i].graphic.attr({
+            fill: ohlc[i][1] < ohlc[i][4] ? "#31BAA0" : "#FC5F5F"
+          })
         }
 
         chartRef.current.chart.series[1].redraw()
