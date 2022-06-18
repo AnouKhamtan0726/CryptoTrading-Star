@@ -251,7 +251,9 @@ function Settings() {
                           </div>
                           <div className="mb-3 col-xl-12 col-md-12">
                             <p class="small-text text-danger">
-                              * Password must contain at least 8 letters, 1 uppercase, 1 special character and 1 number for secure
+                              * Password must contain at least 8 letters, 1
+                              uppercase, 1 special character and 1 number for
+                              secure
                             </p>
                           </div>
 

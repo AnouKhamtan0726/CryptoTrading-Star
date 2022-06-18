@@ -10,165 +10,151 @@ import Chatbot from "../layout/chatbot";
 import Indicator from "../element/indicator";
 import ReactHighcharts from "react-highcharts";
 import ReactHighstock from "react-highcharts/ReactHighstock";
-import DarkUnica from 'highcharts/themes/dark-blue';
+import DarkUnica from "highcharts/themes/dark-blue";
 import axios from "axios";
 import { SERVER_URL } from "../../server";
 import { useHistory } from "react-router";
 import { useCookies } from "react-cookie";
 
-function Dashboard() {
+const PriceChart = React.memo((props) => {
   const history = useHistory();
-  const [cookies, removeCookie] = useCookies(["refreshToken"]);
-  let [count, setCount] = useState(5);
-  const [activeTab, setActiveTab] = useState("indicators");
-  const chartRef = useRef(null)
-  const [chartConfig, setChartConfig] = useState({
-    colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
-        '#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
+  const chartRef = useRef(null);
+  const chartConfig = {
+    colors: [
+      "#2b908f",
+      "#90ee7e",
+      "#f45b5b",
+      "#7798BF",
+      "#aaeeee",
+      "#ff0066",
+      "#eeaaee",
+      "#55BF3B",
+      "#DF5353",
+      "#7798BF",
+      "#aaeeee",
+    ],
 
     chart: {
-        spacingRight: 60,
-        plotBackgroundImage: 'https://didi.biz/img/world_map.6aaf3347.svg',
-        height: 600,
-        backgroundColor: '#131722',
+      spacingRight: 60,
+      plotBackgroundImage: "/world_map.svg",
+      height: 600,
+      backgroundColor: "#131722",
     },
 
     credits: {
-        enabled: false
+      enabled: false,
     },
 
     exporting: {
-        enabled: false
+      enabled: false,
     },
 
     scrollbar: {
-        enabled: false
+      enabled: false,
     },
 
     navigator: {
-        enabled: false
+      enabled: false,
     },
 
     rangeSelector: {
-        enabled: false
+      enabled: false,
     },
 
-    xAxis: [{
+    xAxis: [
+      {
         lineWidth: 1,
         tickWidth: 0,
         minorTickWidth: 50,
         labels: {
-            style: {
-              color: 'white'
-            }
+          style: {
+            color: "white",
+          },
         },
-    }, {
+      },
+      {
         lineWidth: 0,
         tickWidth: 0,
         minorTickWidth: 50,
         labels: {
-            style: {
-              color: 'white'
-            }
+          style: {
+            color: "white",
+          },
         },
-    }],
+      },
+    ],
 
-    yAxis: [{
+    yAxis: [
+      {
         labels: {
-            align: 'right',
-            x: 40,
-            style: {
-              color: 'white'
-            }
+          align: "right",
+          x: 40,
+          style: {
+            color: "white",
+          },
         },
-        height: '85%',
+        height: "85%",
         lineWidth: 0,
-        gridLineDashStyle: 'longdash',
-        gridLineWidth: 1
-    }, {
+        gridLineDashStyle: "longdash",
+        gridLineWidth: 1,
+      },
+      {
         labels: {
-            enabled: false,
-            style: {
-              color: 'white'
-            }
+          enabled: false,
+          style: {
+            color: "white",
+          },
         },
-        top: '85%',
-        height: '15%',
+        top: "85%",
+        height: "15%",
         lineWidth: 0,
         gridLineWidth: 0,
         tickWidth: 0,
-    }],
+      },
+    ],
 
     tooltip: {
-        split: true,
-        outside: true,
-        useHTML: true, 
-        shadow: false,
-        borderWidth: 0,
-        backgroundColor: 'none',
-        formatter: function () {
-          var arr = []
+      split: true,
+      outside: true,
+      useHTML: true,
+      shadow: false,
+      borderWidth: 0,
+      backgroundColor: "none",
+      formatter: function () {
+        var arr = [];
 
-          arr[0] = `<h3>BTC/USDT</h3>`
+        arr[0] = `<h3>BTC/USDT</h3>`;
 
-          if (!(this.points && this.points.length == 2)) return arr
+        if (!(this.points && this.points.length == 2)) return arr;
 
-          var point = this.points[0].point
-          var v = Math.round(this.points[1].y / 10000) / 100.0
-          arr[0] += `<b>O: ${point.open.toFixed(2)}</b>`
-          arr[0] += `<b>C: ${point.close.toFixed(2)}</b><br/>`
-          arr[0] += `<b>H: ${point.high.toFixed(2)}</b>`
-          arr[0] += `<b>L: ${point.low.toFixed(2)}</b>`
-          arr[0] += `<b>V: ${v}M</b>`
+        var point = this.points[0].point;
+        var v = Math.round(this.points[1].y / 10000) / 100.0;
+        arr[0] += `<b>O: ${point.open.toFixed(2)}</b>`;
+        arr[0] += `<b>C: ${point.close.toFixed(2)}</b><br/>`;
+        arr[0] += `<b>H: ${point.high.toFixed(2)}</b>`;
+        arr[0] += `<b>L: ${point.low.toFixed(2)}</b>`;
+        arr[0] += `<b>V: ${v}M</b>`;
 
-          return arr
+        return arr;
       },
     },
 
     plotOptions: {
       candlestick: {
-          color: '#FC5F5F',
-          upColor: '#31BAA0',
-          lineColor: '#FC5F5F',
-          upLineColor: '#31BAA0',
-      }
-    }
-  })
+        color: "#FC5F5F",
+        upColor: "#31BAA0",
+        lineColor: "#FC5F5F",
+        upLineColor: "#31BAA0",
+      },
+    },
+  };
 
-  function incrementCount() {
-    count = count + 5;
-    setCount(count);
-  }
-  function incrementCount10() {
-    count = count + 10;
-    setCount(count);
-  }
-  function incrementCount50() {
-    count = count + 50;
-    setCount(count);
-  }
-  function incrementCount100() {
-    count = count + 100;
-    setCount(count);
-  }
-  function decrementCount() {
-    if (count > 0) {
-      count = count - 5;
-      setCount(count);
-    }
-  }
-
-  async function init() {
+  async function updateGraph() {
     try {
-      if (!chartRef || !chartRef.current || !chartRef.current.chart) return
+      if (!chartRef || !chartRef.current || !chartRef.current.chart) return;
 
-      axios.defaults.headers.common["Authorization"] =
-        "Basic " + cookies.refreshToken;
-
-      await axios.post(SERVER_URL + "/login-status");
-
-      var response = await axios.post(SERVER_URL + "/get-rounds-info")
-      var data = response.data
+      var response = await axios.post(SERVER_URL + "/get-rounds-info");
+      var data = response.data;
       var ohlc = [],
         volume = [],
         volumeColors = [],
@@ -177,74 +163,245 @@ function Dashboard() {
 
       for (i = 0; i < dataLength; i += 1) {
         ohlc.push([
-            data[i][0], // the date
-            data[i][1], // open
-            data[i][2], // high
-            data[i][3], // low
-            data[i][4] // close
+          data[i][0], // the date
+          data[i][1], // open
+          data[i][2], // high
+          data[i][3], // low
+          data[i][4], // close
         ]);
 
         volume.push([
-            data[i][0], // the date
-            data[i][5], // the volume
+          data[i][0], // the date
+          data[i][5], // the volume
         ]);
 
-        volumeColors.push(data[i][1] < data[i][4] ? "#31BAA0" : "#FC5F5F")
+        volumeColors.push(data[i][1] < data[i][4] ? "#31BAA0" : "#FC5F5F");
       }
 
       if (chartRef.current && chartRef.current.chart.series.length == 0) {
         chartRef.current.chart.addSeries({
-          type: 'candlestick',
-          name: 'AAPL',
+          type: "candlestick",
+          name: "AAPL",
           data: ohlc,
           // dataGrouping: {
           //     units: groupingUnits
           // }
-        })
-    
+        });
+
         chartRef.current.chart.addSeries({
-          type: 'column',
-          name: 'Volume',
+          type: "column",
+          name: "Volume",
           data: volume,
           yAxis: 1,
           colorByPoint: true,
-          colors: volumeColors
+          colors: volumeColors,
           // dataGrouping: {
           //     units: groupingUnits
           // }
-        })
+        });
       } else if (chartRef.current) {
         chartRef.current.chart.series[0].update({
-          data: ohlc
-        })
+          data: ohlc,
+        });
 
         chartRef.current.chart.series[1].update({
-          data: volume
-        })
+          data: volume,
+        });
 
-        var data = chartRef.current.chart.series[1].data
+        var data = chartRef.current.chart.series[1].data;
 
-        for (var i = 0; i < data.length; i ++) {
-          data[i].color = ohlc[i][1] < ohlc[i][4] ? "#31BAA0" : "#FC5F5F"
+        for (var i = 0; i < data.length; i++) {
+          data[i].color = ohlc[i][1] < ohlc[i][4] ? "#31BAA0" : "#FC5F5F";
           data[i].graphic.attr({
-            fill: ohlc[i][1] < ohlc[i][4] ? "#31BAA0" : "#FC5F5F"
-          })
+            fill: ohlc[i][1] < ohlc[i][4] ? "#31BAA0" : "#FC5F5F",
+          });
         }
 
-        chartRef.current.chart.series[1].redraw()
+        chartRef.current.chart.series[1].redraw();
       }
+
+      setTimeout(updateGraph, 1000);
+    } catch (error) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.status == 403
+      ) {
+        history.push("/signin");
+      }
+    }
+  }
+
+  useEffect(() => {
+    updateGraph();
+  }, []);
+
+  return <ReactHighstock config={chartConfig} ref={chartRef} />;
+});
+
+const Indicators = React.memo((props) => {
+  return (
+    <div className="indicators-container">
+      <Indicator
+        id="indicator-1"
+        width="200px"
+        title="Oscillators"
+        buy={2}
+        sell={2}
+        neutral={1}
+      />
+      <Indicator
+        id="indicator-2"
+        width="300px"
+        title="Summary"
+        buy={13}
+        sell={5}
+        neutral={1}
+      />
+      <Indicator
+        id="indicator-3"
+        width="200px"
+        title="Moving Averages"
+        buy={11}
+        sell={1}
+        neutral={0}
+      />
+    </div>
+  );
+});
+
+function Dashboard() {
+  const history = useHistory();
+  const [cookies, removeCookie] = useCookies([
+    "refreshToken",
+    "liveAmount",
+    "demoAmount",
+    "isLive",
+  ]);
+  let [count, setCount] = useState(5);
+  const [activeTab, setActiveTab] = useState("indicators");
+  const [timeLeft, setTimeLeft] = useState(30);
+  const [roundInfo, setRoundInfo] = useState(null);
+
+  function incrementCount() {
+    count = count + 5;
+
+    var maxVal =
+      cookies.isLive == "true" ? cookies.liveAmount : cookies.demoAmount;
+
+    if (count > maxVal) count = maxVal;
+
+    setCount(count);
+  }
+  function incrementCount10() {
+    count = count + 10;
+
+    var maxVal =
+      cookies.isLive == "true" ? cookies.liveAmount : cookies.demoAmount;
+
+    if (count > maxVal) count = maxVal;
+    setCount(count);
+  }
+  function incrementCount50() {
+    count = count + 50;
+
+    var maxVal =
+      cookies.isLive == "true" ? cookies.liveAmount : cookies.demoAmount;
+
+    if (count > maxVal) count = maxVal;
+    setCount(count);
+  }
+  function incrementCount100() {
+    count = count + 100;
+
+    var maxVal =
+      cookies.isLive == "true" ? cookies.liveAmount : cookies.demoAmount;
+
+    if (count > maxVal) count = maxVal;
+    setCount(count);
+  }
+  function decrementCount() {
+    if (count > 0) {
+      count = count - 5;
+      setCount(count);
+    }
+  }
+  function onHalfClick(e) {
+    var maxVal =
+      cookies.isLive == "true" ? cookies.liveAmount : cookies.demoAmount;
+
+    setCount(maxVal / 2);
+  }
+  function onAllClick(e) {
+    var maxVal =
+      cookies.isLive == "true" ? cookies.liveAmount : cookies.demoAmount;
+
+    setCount(maxVal);
+  }
+  function onCountChange(e) {
+    try {
+      var maxVal =
+        cookies.isLive == "true" ? cookies.liveAmount : cookies.demoAmount;
+      count = parseFloat(e.target.value);
+
+      if (!count) count = 0;
+      if (count < 0) count = 0;
+      if (count > maxVal) count = maxVal;
+
+      setCount(count);
+    } catch (err) {}
+  }
+
+  async function getCurrentRound() {
+    try {
+      var res = await axios.post(SERVER_URL + "/get-current-round");
+
+      res = res.data;
+      setTimeLeft(res.timeLeft);
+      setRoundInfo(res.round);
+    } catch (error) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.status == 403
+      ) {
+        history.push("/signin");
+      }
+    }
+  }
+
+  async function onPredict(betTo) {
+    try {
+      await axios.post(SERVER_URL + "/predict-round", {
+        roundId: roundInfo.id + 1,
+        betTo: betTo,
+        betAmount: count,
+        isLive: cookies.isLive == "true",
+      });
     } catch (error) {
       if (error.response && error.response.data.status == 403) {
         history.push("/signin");
       }
     }
+  }
 
-    setTimeout(init, 1000);
+  async function init() {
+    try {
+      axios.defaults.headers.common["Authorization"] =
+        "Basic " + cookies.refreshToken;
+
+      await axios.post(SERVER_URL + "/login-status");
+      setInterval(getCurrentRound, 1000);
+    } catch (error) {
+      if (error.response && error.response.data.status == 403) {
+        history.push("/signin");
+      }
+    }
   }
 
   useEffect(() => {
-    init()
-  }, [])
+    init();
+  }, []);
 
   return (
     <>
@@ -272,7 +429,7 @@ function Dashboard() {
                     details={true}
                     autosize
                   /> */}
-                  <ReactHighstock config={chartConfig} ref={chartRef} />
+                  <PriceChart />
                 </div>
                 {/* <!-- TradingView Widget END --> */}
               </div>
@@ -384,34 +541,7 @@ function Dashboard() {
                         </div>
                       </div>
                     )}
-                    {activeTab == "indicators" && (
-                      <div className="indicators-container">
-                        <Indicator
-                          id="indicator-1"
-                          width="200px"
-                          title="Oscillators"
-                          buy={2}
-                          sell={2}
-                          neutral={1}
-                        />
-                        <Indicator
-                          id="indicator-2"
-                          width="300px"
-                          title="Summary"
-                          buy={13}
-                          sell={5}
-                          neutral={1}
-                        />
-                        <Indicator
-                          id="indicator-3"
-                          width="200px"
-                          title="Moving Averages"
-                          buy={11}
-                          sell={1}
-                          neutral={0}
-                        />
-                      </div>
-                    )}
+                    {activeTab == "indicators" && <Indicators />}
                   </div>
                 </div>
               </div>
@@ -432,8 +562,10 @@ function Dashboard() {
                         <span className="dollar-symbol">$</span>
                         <input
                           className="inde-input form-control"
-                          type="text"
+                          type="number"
+                          step="0.01"
                           value={count}
+                          onChange={onCountChange}
                         />
                       </div>
                       <button
@@ -465,10 +597,16 @@ function Dashboard() {
                         </button>
                       </div>
                       <div>
-                        <button className="col-5 inde-btn btn btn-success btn-block">
+                        <button
+                          className="col-5 inde-btn btn btn-success btn-block"
+                          onClick={onHalfClick}
+                        >
                           Half
                         </button>
-                        <button className="col-5 inde-btn btn btn-success btn-block">
+                        <button
+                          className="col-5 inde-btn btn btn-success btn-block"
+                          onClick={onAllClick}
+                        >
                           All
                         </button>
                       </div>
@@ -483,13 +621,15 @@ function Dashboard() {
                     <h3 className="profit-amount">95%</h3>
                   </div>
                   <div className="card-body">
-                    <h2 className="trading-amount text-center">+$ 95</h2>
+                    <h2 className="trading-amount text-center">
+                      +$ {(count * 0.95).toFixed(2)}
+                    </h2>
                     <div className="trading-progressbar text-center">
                       <p className="progressbar-title text-center">
                         Traders sentiments
                       </p>
                       <div className="progressbar-body text-center">
-                        <ProgressBar animated variant="success" now={45} />
+                        <ProgressBar animated variant="success" now={70} />
                       </div>
                     </div>
                   </div>
@@ -499,13 +639,27 @@ function Dashboard() {
                 <div className="card buysell-box">
                   <div className="card-header">Buy / Sell</div>
                   <div className="card-body">
-                    <button className="mt-2 col-12 inde-btn btn btn-success btn-block">
+                    <button
+                      className="mt-2 col-12 inde-btn btn btn-success btn-block"
+                      disabled={roundInfo && roundInfo.id % 2 ? true : false}
+                      onClick={(e) => onPredict(1)}
+                    >
                       BUY
                     </button>
-                    <button className="mt-2 col-12 inde-btn btn btn-info btn-block">
-                      Wait Time
+                    <button
+                      className="mt-2 col-12 inde-btn btn btn-info btn-block time-button"
+                      disabled
+                    >
+                      {roundInfo && roundInfo.id % 2
+                        ? "Wait Time"
+                        : "Trade Please"}
+                      ({timeLeft}s)
                     </button>
-                    <button className="mt-2 col-12 inde-btn btn btn-danger btn-block">
+                    <button
+                      className="mt-2 col-12 inde-btn btn btn-danger btn-block"
+                      disabled={roundInfo && roundInfo.id % 2 ? true : false}
+                      onClick={(e) => onPredict(2)}
+                    >
                       SELL
                     </button>
                   </div>

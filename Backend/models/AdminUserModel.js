@@ -54,7 +54,7 @@ const AdminUsers = db.define(
     },
     email_sent_at: {
       type: "TIMESTAMP",
-      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
     },
     phone_verify_code: {
       type: DataTypes.STRING,
@@ -66,12 +66,13 @@ const AdminUsers = db.define(
     },
     phone_sent_at: {
       type: "TIMESTAMP",
-      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
     },
     current_status: {
       type: DataTypes.TINYINT(20),
       defaultValue: 0,
-      comment: "1:Live 2:Blocked(bad-user) 3:Blocked(bad-country) 4:Pedding(unverified)",
+      comment:
+        "1:Live 2:Blocked(bad-user) 3:Blocked(bad-country) 4:Pedding(unverified)",
     },
     is_deleted: {
       type: DataTypes.BOOLEAN,

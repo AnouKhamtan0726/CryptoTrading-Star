@@ -2,9 +2,16 @@ import React, { useEffect, useState } from "react";
 import { Dropdown } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { SERVER_URL } from "../../server";
+import {
+  SERVER_URL,
+  RPC_URL,
+  USDT_ADDRESS,
+  USDT_ABI,
+  USDT_DECIMALS,
+} from "../../server";
 import { useHistory } from "react-router-dom";
 import { useCookies } from "react-cookie";
+import Web3 from "web3";
 
 const ProfileToggle = React.forwardRef(({ children, onClick }, ref) => (
   <div
@@ -42,28 +49,34 @@ const AlertToggle = React.forwardRef(({ children, onClick }, ref) => (
   </div>
 ));
 
-const AccountToggle = React.forwardRef(({ children, onClick }, ref) => (
-  <div
-    ref={ref}
-    onClick={(e) => {
-      e.preventDefault();
-      onClick(e);
-    }}
-  >
-    {children}
-    <div className="account-select">
-      <div className="select-pointer d-flex justify-content-between align-items-center px-2">
-        <div className="px-2">
-          <p className="mb-0 text-white">Live Account</p>
-          <span className="text-white">$0</span>
+const AccountToggle = React.forwardRef(
+  ({ children, onClick, isLive, amount }, ref) => {
+    return (
+      <div
+        ref={ref}
+        onClick={(e) => {
+          e.preventDefault();
+          onClick(e);
+        }}
+      >
+        {children}
+        <div className="account-select">
+          <div className="select-pointer d-flex justify-content-between align-items-center px-2">
+            <div className="px-2">
+              <p className="mb-0 text-white">
+                {isLive == true ? "Live Account" : "Demo Account"}
+              </p>
+              <span className="text-white">${amount.toFixed(2)}</span>
+            </div>
+            <span className="arrow px-2">
+              <i className="la la-angle-down"></i>
+            </span>
+          </div>
         </div>
-        <span className="arrow px-2">
-          <i className="la la-angle-down"></i>
-        </span>
       </div>
-    </div>
-  </div>
-));
+    );
+  }
+);
 
 const QuickDeposit = React.forwardRef(({ children, onClick }, ref) => (
   <div
@@ -100,11 +113,40 @@ function Header2() {
   const history = useHistory();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  const [liveAmount, setLiveAmount] = useState(0);
+  const [demoAmount, setDemoAmount] = useState(0);
+  const [isLive, setIsLive] = useState(false);
   const current = new Date();
-  const [cookies, removeCookie] = useCookies(["refreshToken"]);
+  const [cookies, setCookie, removeCookie] = useCookies([
+    "refreshToken",
+    "liveAmount",
+    "demoAmount",
+    "isLive",
+  ]);
   const date = `${
     current.getMonth() + 1
   }/${current.getDate()}/${current.getFullYear()} ${current.getHours()}:${current.getMinutes()}:${current.getSeconds()}`;
+  var wallets;
+  const web3 = new Web3(RPC_URL),
+    usdtContract = new web3.eth.Contract(USDT_ABI, USDT_ADDRESS);
+
+  async function getWalletAmounts() {
+    try {
+      var res = await usdtContract.methods
+        .balanceOf(wallets.trading_wallet)
+        .call();
+      var res1 = await axios.post(SERVER_URL + "/login-status");
+
+      setCookie("liveAmount", res / 10 ** USDT_DECIMALS);
+      setCookie("demoAmount", res1.data.demo_amount);
+      setLiveAmount(res / 10 ** USDT_DECIMALS);
+      setDemoAmount(parseFloat(res1.data.demo_amount));
+    } catch (error) {
+      if (error.response && error.response.data.status == 403) {
+        history.push("/signin");
+      }
+    }
+  }
 
   async function init() {
     try {
@@ -112,16 +154,31 @@ function Header2() {
         "Basic " + cookies.refreshToken;
 
       var res = await axios.post(SERVER_URL + "/login-status");
+      wallets = await axios.post(SERVER_URL + "/get-wallets");
+      wallets = wallets.data;
 
       setUsername(res.data.name);
       setEmail(res.data.email);
-    } catch (err) {
-      history.push("/");
+
+      if (!cookies.liveAmount) {
+        setCookie("liveAmount", 0);
+        setCookie("demoAmount", 0);
+        setCookie("isLive", false);
+      }
+
+      setIsLive(cookies.isLive == "true");
+      setLiveAmount(parseFloat(cookies.liveAmount));
+      setDemoAmount(parseFloat(cookies.demoAmount));
+    } catch (error) {
+      if (error.response && error.response.data.status == 403) {
+        history.push("/signin");
+      }
     }
   }
 
   useEffect(() => {
     init();
+    setInterval(getWalletAmounts, 5000);
   }, []);
 
   const Logout = async () => {
@@ -163,12 +220,22 @@ function Header2() {
                   </div>
                   <div className="account-change">
                     <Dropdown className="account-select">
-                      <Dropdown.Toggle as={AccountToggle} />
+                      <Dropdown.Toggle
+                        as={AccountToggle}
+                        isLive={isLive}
+                        amount={isLive ? liveAmount : demoAmount}
+                      />
                       <Dropdown.Menu size="sm" title="">
-                        <div className="live-account d-flex align-items-center justify-content-between py-1 px-3">
+                        <div
+                          className="live-account d-flex align-items-center justify-content-between py-1 px-3"
+                          onClick={(e) => {
+                            setIsLive(true);
+                            setCookie("isLive", true);
+                          }}
+                        >
                           <div className="live-left">
                             <p className="mb-0">Live Account</p>
-                            <span>$0</span>
+                            <span>${liveAmount.toFixed(2)}</span>
                           </div>
                           <div className="live-modal">
                             <svg
@@ -223,7 +290,7 @@ function Header2() {
                                       d="M15.692,7.459H1V6.123H14.079L10.072,2.116l.945-.944,5.147,5.147a.668.668,0,0,1-.472,1.14Z"
                                       transform="translate(-1 -1.172)"
                                       stroke=""
-                                      class="fill-color"
+                                      className="fill-color"
                                     ></path>
                                     <path
                                       data-v-b495ff56=""
@@ -232,7 +299,7 @@ function Header2() {
                                       d="M6.342,34.287,1.2,29.14A.668.668,0,0,1,1.668,28H16.359v1.336H3.28l4.007,4.007Z"
                                       transform="translate(-1 -19.042)"
                                       stroke=""
-                                      class="fill-color"
+                                      className="fill-color"
                                     ></path>
                                   </g>
                                 </g>
@@ -240,10 +307,16 @@ function Header2() {
                             </svg>
                           </div>
                         </div>
-                        <div className="demo-account d-flex align-items-center justify-content-between py-1 px-3">
+                        <div
+                          className="demo-account d-flex align-items-center justify-content-between py-1 px-3"
+                          onClick={(e) => {
+                            setIsLive(false);
+                            setCookie("isLive", false);
+                          }}
+                        >
                           <div className="demo-left">
                             <p className="mb-0">Demo Account</p>
-                            <span>$0</span>
+                            <span>${demoAmount.toFixed(2)}</span>
                           </div>
                           <div className="demo-recharge">
                             <svg
@@ -492,15 +565,21 @@ function Header2() {
                                 <span className="box-title text-bold">
                                   Streak Challenge Result Summary
                                 </span>
-                                <p class="notification-item-text mb-1">
+                                <p className="notification-item-text mb-1">
                                   There are
-                                  <b class="textnote-notidesc"> 97 </b>
+                                  <b className="textnote-notidesc"> 97 </b>
                                   users who hit the Jackpot of total
-                                  <b class="textnote-notidesc"> $12,083.45 </b>
+                                  <b className="textnote-notidesc">
+                                    {" "}
+                                    $12,083.45{" "}
+                                  </b>
                                   and
-                                  <b class="textnote-notidesc"> Stevepham </b>
+                                  <b className="textnote-notidesc">
+                                    {" "}
+                                    Stevepham{" "}
+                                  </b>
                                   account who won the Mega prize of total
-                                  <b class="textnote-notidesc"> $420.62 </b>
+                                  <b className="textnote-notidesc"> $420.62 </b>
                                   yesterday.
                                 </p>
                                 <span className="box-date">{date}</span>
@@ -515,15 +594,21 @@ function Header2() {
                                 <span className="box-title text-white">
                                   Streak Challenge Result Summary
                                 </span>
-                                <p class="notification-item-text mb-1">
+                                <p className="notification-item-text mb-1">
                                   There are
-                                  <b class="textnote-notidesc"> 97 </b>
+                                  <b className="textnote-notidesc"> 97 </b>
                                   users who hit the Jackpot of total
-                                  <b class="textnote-notidesc"> $12,083.45 </b>
+                                  <b className="textnote-notidesc">
+                                    {" "}
+                                    $12,083.45{" "}
+                                  </b>
                                   and
-                                  <b class="textnote-notidesc"> Stevepham </b>
+                                  <b className="textnote-notidesc">
+                                    {" "}
+                                    Stevepham{" "}
+                                  </b>
                                   account who won the Mega prize of total
-                                  <b class="textnote-notidesc"> $420.62 </b>
+                                  <b className="textnote-notidesc"> $420.62 </b>
                                   yesterday.
                                 </p>
                                 <span className="box-date">{date}</span>
@@ -538,15 +623,21 @@ function Header2() {
                                 <span className="box-title text-white">
                                   Streak Challenge Result Summary
                                 </span>
-                                <p class="notification-item-text mb-1">
+                                <p className="notification-item-text mb-1">
                                   There are
-                                  <b class="textnote-notidesc"> 97 </b>
+                                  <b className="textnote-notidesc"> 97 </b>
                                   users who hit the Jackpot of total
-                                  <b class="textnote-notidesc"> $12,083.45 </b>
+                                  <b className="textnote-notidesc">
+                                    {" "}
+                                    $12,083.45{" "}
+                                  </b>
                                   and
-                                  <b class="textnote-notidesc"> Stevepham </b>
+                                  <b className="textnote-notidesc">
+                                    {" "}
+                                    Stevepham{" "}
+                                  </b>
                                   account who won the Mega prize of total
-                                  <b class="textnote-notidesc"> $420.62 </b>
+                                  <b className="textnote-notidesc"> $420.62 </b>
                                   yesterday.
                                 </p>
                                 <span className="box-date">{date}</span>
@@ -561,15 +652,21 @@ function Header2() {
                                 <span className="box-title text-white">
                                   Streak Challenge Result Summary
                                 </span>
-                                <p class="notification-item-text mb-1">
+                                <p className="notification-item-text mb-1">
                                   There are
-                                  <b class="textnote-notidesc"> 97 </b>
+                                  <b className="textnote-notidesc"> 97 </b>
                                   users who hit the Jackpot of total
-                                  <b class="textnote-notidesc"> $12,083.45 </b>
+                                  <b className="textnote-notidesc">
+                                    {" "}
+                                    $12,083.45{" "}
+                                  </b>
                                   and
-                                  <b class="textnote-notidesc"> Stevepham </b>
+                                  <b className="textnote-notidesc">
+                                    {" "}
+                                    Stevepham{" "}
+                                  </b>
                                   account who won the Mega prize of total
-                                  <b class="textnote-notidesc"> $420.62 </b>
+                                  <b className="textnote-notidesc"> $420.62 </b>
                                   yesterday.
                                 </p>
                                 <span className="box-date">{date}</span>

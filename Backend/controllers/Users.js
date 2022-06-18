@@ -5,16 +5,17 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import SibApiV3Sdk from "sib-api-v3-sdk";
 import validator from "validator";
-import twilio from 'twilio'
-import {createWallet, getWallet} from './SecureController.js'
-import Web3 from 'web3'
-import {USDT_ABI} from '../config/server.js'
-import Transactions from '../models/WalletTransactionModel.js'
+import twilio from "twilio";
+import { createWallet, getWallet } from "./SecureController.js";
+import Web3 from "web3";
+import { USDT_ABI } from "../config/server.js";
+import Transactions from "../models/WalletTransactionModel.js";
+import RoundTransactions from "../models/TransactionModel.js";
 import { Sequelize } from "sequelize";
 
 dotenv.config();
 
-const web3 = new Web3(process.env.RPC_URL)
+const web3 = new Web3(process.env.RPC_URL);
 var defaultClient = SibApiV3Sdk.ApiClient.instance;
 var apiKey = defaultClient.authentications["api-key"];
 apiKey.apiKey = process.env.SIB_API_KEY;
@@ -24,9 +25,13 @@ var apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 // const authToken = process.env.TWILLO_TOKEN;
 // const client = twilio(accountSid, authToken);
 
-const op = Sequelize.Op
+const op = Sequelize.Op;
 
-function convertTimeToGMT(time) {
+function convertTimeToGMT(time, flag = false) {
+  if (flag) {
+    return new Date(time).toISOString().slice(0, 19).replace("T", " ");
+  }
+
   return new Date(
     new Date(time).toISOString().slice(0, 19).replace("T", " ")
   ).getTime();
@@ -71,16 +76,24 @@ export const Register = async (req, res) => {
         email: email,
       },
     });
-    if (emailExits) return res.status(400).json({ msg: "Email already exists" });
+    if (emailExits)
+      return res.status(400).json({ msg: "Email already exists" });
     const nameExits = await Users.findOne({
       where: {
         name: name,
       },
     });
-    if (nameExits) return res.status(400).json({msg: 'Username already exists'});
+    if (nameExits)
+      return res.status(400).json({ msg: "Username already exists" });
 
-    var main_wallet = await createWallet({name, email, password: hashPassword}, 'main')
-    var trading_wallet = await createWallet({name, email, password: hashPassword}, 'trading')
+    var main_wallet = await createWallet(
+      { name, email, password: hashPassword },
+      "main"
+    );
+    var trading_wallet = await createWallet(
+      { name, email, password: hashPassword },
+      "trading"
+    );
 
     await Users.create({
       name: name,
@@ -121,7 +134,7 @@ export const Login = async (req, res) => {
       { userId, name, email },
       process.env.REFRESH_TOKEN_SECRET,
       {
-        expiresIn: "1800s",
+        expiresIn: "1d",
       }
     );
 
@@ -142,7 +155,10 @@ export const Login = async (req, res) => {
       await Users.update(
         {
           email_verify_code: code,
-          email_sent_at: new Date().toISOString().slice(0, 19).replace("T", " "),
+          email_sent_at: new Date()
+            .toISOString()
+            .slice(0, 19)
+            .replace("T", " "),
         },
         {
           where: {
@@ -264,7 +280,9 @@ export const VerifyEmail = async (req, res) => {
 
     if (
       user[0].email_verify_code == code &&
-      convertTimeToGMT(new Date().getTime()) - new Date(user[0].email_sent_at).getTime() <= 60000
+      convertTimeToGMT(new Date().getTime()) -
+        new Date(user[0].email_sent_at).getTime() <=
+        60000
     ) {
       await Users.update(
         { email_verify_status: true },
@@ -290,24 +308,36 @@ export const VerifyEmail = async (req, res) => {
 };
 
 export const SaveProfile = async (req, res) => {
-  const { userId } = req
-  const { email, name, first_name, last_name, password1, confirmPassword1, country, currentPassword, phone } = req.body
+  const { userId } = req;
+  const {
+    email,
+    name,
+    first_name,
+    last_name,
+    password1,
+    confirmPassword1,
+    country,
+    currentPassword,
+    phone,
+  } = req.body;
   const regExpPassword =
     /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{6,})/;
-  
-  if (email == '') {
-    return res.status(400).json({msg: 'Email is required'})
-  } else if (name == '') {
-    return res.status(400).json({msg: 'Nick name is required'})
-  } else if (first_name == '') {
-    return res.status(400).json({msg: 'First name is required'})
-  } else if (last_name == '') {
-    return res.status(400).json({msg: 'Last name is required'})
-  } else if (country == '') {
-    return res.status(400).json({msg: 'Country is required'})
+
+  if (email == "") {
+    return res.status(400).json({ msg: "Email is required" });
+  } else if (name == "") {
+    return res.status(400).json({ msg: "Nick name is required" });
+  } else if (first_name == "") {
+    return res.status(400).json({ msg: "First name is required" });
+  } else if (last_name == "") {
+    return res.status(400).json({ msg: "Last name is required" });
+  } else if (country == "") {
+    return res.status(400).json({ msg: "Country is required" });
   } else if (password1 != confirmPassword1) {
-    return res.status(400).json({msg: 'Password and confirm password is not matching'})
-  } else if (password1 != '' && !regExpPassword.test(password1)) {
+    return res
+      .status(400)
+      .json({ msg: "Password and confirm password is not matching" });
+  } else if (password1 != "" && !regExpPassword.test(password1)) {
     return res.status(400).json({ msg: "Please check password" });
   }
 
@@ -316,23 +346,26 @@ export const SaveProfile = async (req, res) => {
 
   var user = await Users.findOne({
     where: {
-      email: email
-    }
-  })
+      email: email,
+    },
+  });
 
   if (user && user.id != userId) {
-    return res.status(400).json({msg: 'Someone is using this email'})
+    return res.status(400).json({ msg: "Someone is using this email" });
   }
 
-  if (password1 == '' && currentPassword != '') {
-    return res.status(400).json({ msg: "If you don't want to change password, please empty current password field" });
+  if (password1 == "" && currentPassword != "") {
+    return res.status(400).json({
+      msg: "If you don't want to change password, please empty current password field",
+    });
   }
 
-  if (currentPassword != '') {
+  if (currentPassword != "") {
     const match = await bcrypt.compare(currentPassword, user.password);
-    if (!match) return res.status(400).json({ msg: "Current password is wrong" });
+    if (!match)
+      return res.status(400).json({ msg: "Current password is wrong" });
   }
-  
+
   try {
     await Users.update(
       { email, name, first_name, last_name, country, phone },
@@ -343,7 +376,7 @@ export const SaveProfile = async (req, res) => {
       }
     );
 
-    if (password1 != '') {
+    if (password1 != "") {
       await Users.update(
         { password: hashPassword },
         {
@@ -354,185 +387,241 @@ export const SaveProfile = async (req, res) => {
       );
     }
   } catch (err) {
-    return res.status(400).json({msg: 'Server Error!'})
+    return res.status(400).json({ msg: "Server Error!" });
   }
 
-  res.json({msg: 'Success'})
+  res.json({ msg: "Success" });
 };
 
 export const GetWallets = async (req, res) => {
-  const { userId } = req
+  const { userId } = req;
 
   var user = await Users.findOne({
     where: {
-      id: userId
-    }
-  })
+      id: userId,
+    },
+  });
 
   if (user == null) {
-    return res.status(400).json({msg: 'There is not account'})
+    return res.status(400).json({ msg: "There is not account" });
   }
 
-  var main_wallet = await getWallet(user.main_key)
-  var trading_wallet = await getWallet(user.trading_key)
+  var main_wallet = await getWallet(user.main_key);
+  var trading_wallet = await getWallet(user.trading_key);
 
-  return res.json({ main_wallet, trading_wallet })
-}
+  return res.json({ main_wallet, trading_wallet });
+};
 
 export const Withdraw = async (req, res) => {
-  const { userId } = req
-  const regExpFloat =
-    /[+-]?([0-9]*[.])?[0-9]+/;
+  const { userId } = req;
+  const regExpFloat = /[+-]?([0-9]*[.])?[0-9]+/;
 
   var user = await Users.findOne({
     where: {
-      id: userId
-    }
-  })
+      id: userId,
+    },
+  });
 
   if (user == null) {
-    return res.status(403).json({msg: 'There is not account'})
+    return res.status(403).json({ msg: "There is not account" });
   }
 
   try {
-    var main_key = await getWallet(user.main_key, false)
-    var server_key = await getWallet(process.env.SERVER_KEY, false)
-    var {withdrawWallet, withdrawAmount} = req.body;
+    var main_key = await getWallet(user.main_key, false);
+    var server_key = await getWallet(process.env.SERVER_KEY, false);
+    var { withdrawWallet, withdrawAmount } = req.body;
 
     if (withdrawWallet.length != 42) {
-      return res.status(400).json({msg: 'Check your withdraw wallet'})
+      return res.status(400).json({ msg: "Check your withdraw wallet" });
     }
-    
+
     if (withdrawAmount.length == 0 || !regExpFloat.test(withdrawAmount)) {
-      return res.status(400).json({msg: 'Check your withdraw amount'})
+      return res.status(400).json({ msg: "Check your withdraw amount" });
     }
-    
-    var usdtContract = new web3.eth.Contract(USDT_ABI, process.env.USDT_ADDRESS)
-    var amount = web3.utils.toBN(Math.floor(withdrawAmount * 1000)).mul(web3.utils.toBN(10).pow(web3.utils.toBN(process.env.USDT_DECIMALS))).div(web3.utils.toBN(1000))
-    var data = usdtContract.methods.transfer(withdrawWallet, amount).encodeABI()
-    
-    await usdtContract.methods.transfer(withdrawWallet, amount).estimateGas({from: user.main_wallet})
+
+    var usdtContract = new web3.eth.Contract(
+      USDT_ABI,
+      process.env.USDT_ADDRESS
+    );
+    var amount = web3.utils
+      .toBN(Math.floor(withdrawAmount * 1000))
+      .mul(web3.utils.toBN(10).pow(web3.utils.toBN(process.env.USDT_DECIMALS)))
+      .div(web3.utils.toBN(1000));
+    var data = usdtContract.methods
+      .transfer(withdrawWallet, amount)
+      .encodeABI();
+
+    await usdtContract.methods
+      .transfer(withdrawWallet, amount)
+      .estimateGas({ from: user.main_wallet });
 
     var bnbRawTransaction = {
-      "form": process.env.SERVER_WALLET,
-      "to": user.main_wallet,
-      "value": web3.utils.toHex(web3.utils.toWei('0.001', 'ether')),
-      "gas": 100000
-    }
-    var rawTransaction = {"from": user.main_wallet, "to": process.env.USDT_ADDRESS, "gas": 100000, "data": data };
-    var bnbSignedTx = await web3.eth.accounts.signTransaction(bnbRawTransaction, server_key)
+      form: process.env.SERVER_WALLET,
+      to: user.main_wallet,
+      value: web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
+      gas: 100000,
+    };
+    var rawTransaction = {
+      from: user.main_wallet,
+      to: process.env.USDT_ADDRESS,
+      gas: 100000,
+      data: data,
+    };
+    var bnbSignedTx = await web3.eth.accounts.signTransaction(
+      bnbRawTransaction,
+      server_key
+    );
 
-    await web3.eth.sendSignedTransaction(bnbSignedTx.rawTransaction)
+    await web3.eth.sendSignedTransaction(bnbSignedTx.rawTransaction);
 
-    var signedTx = await web3.eth.accounts.signTransaction(rawTransaction, main_key)
+    var signedTx = await web3.eth.accounts.signTransaction(
+      rawTransaction,
+      main_key
+    );
 
-    await web3.eth.sendSignedTransaction(signedTx.rawTransaction)
-    await Users.update({
-      field_2fa: ''
-    }, {
-      where: {
-        id: userId
+    await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+    await Users.update(
+      {
+        field_2fa: "",
+      },
+      {
+        where: {
+          id: userId,
+        },
       }
-    })
+    );
   } catch (err) {
-    console.log(err.message)
-    return res.status(400).json({msg: "Withdraw Failed. Check if your withdraw amount is less than your main wallet balance. Please try again."})
+    console.log(err.message);
+    return res.status(400).json({
+      msg: "Withdraw Failed. Check if your withdraw amount is less than your main wallet balance. Please try again.",
+    });
   }
 
-  return res.json({msg: 'Success'})
-}
+  return res.json({ msg: "Success" });
+};
 
 export const Exchange = async (req, res) => {
-  const { userId } = req
-  const regExpFloat =
-    /[+-]?([0-9]*[.])?[0-9]+/;
+  const { userId } = req;
+  const regExpFloat = /[+-]?([0-9]*[.])?[0-9]+/;
 
   var user = await Users.findOne({
     where: {
-      id: userId
-    }
-  })
+      id: userId,
+    },
+  });
 
   if (user == null) {
-    return res.status(403).json({msg: 'There is not account'})
+    return res.status(403).json({ msg: "There is not account" });
   }
 
   try {
-    const {exchangeAmount, isBuy} = req.body
+    const { exchangeAmount, isBuy } = req.body;
 
     if (exchangeAmount.length == 0 || !regExpFloat.test(exchangeAmount)) {
-      return res.status(400).json({msg: 'Check your exchange amount'})
+      return res.status(400).json({ msg: "Check your exchange amount" });
     }
 
-    var server_key = await getWallet(process.env.SERVER_KEY, false)
-    var targetWallet = isBuy ? user.trading_wallet : user.main_wallet
-    var sourceWallet = isBuy ? user.main_wallet : user.trading_wallet
-    var sourceKey = await getWallet(isBuy ? user.main_key : user.trading_key, false)
-    var usdtContract = new web3.eth.Contract(USDT_ABI, process.env.USDT_ADDRESS)
-    var amount = web3.utils.toBN(Math.floor(exchangeAmount * 1000)).mul(web3.utils.toBN(10).pow(web3.utils.toBN(process.env.USDT_DECIMALS))).div(web3.utils.toBN(1000))
-    var data = usdtContract.methods.transfer(targetWallet, amount).encodeABI()
+    var server_key = await getWallet(process.env.SERVER_KEY, false);
+    var targetWallet = isBuy ? user.trading_wallet : user.main_wallet;
+    var sourceWallet = isBuy ? user.main_wallet : user.trading_wallet;
+    var sourceKey = await getWallet(
+      isBuy ? user.main_key : user.trading_key,
+      false
+    );
+    var usdtContract = new web3.eth.Contract(
+      USDT_ABI,
+      process.env.USDT_ADDRESS
+    );
+    var amount = web3.utils
+      .toBN(Math.floor(exchangeAmount * 1000))
+      .mul(web3.utils.toBN(10).pow(web3.utils.toBN(process.env.USDT_DECIMALS)))
+      .div(web3.utils.toBN(1000));
+    var data = usdtContract.methods.transfer(targetWallet, amount).encodeABI();
 
-    await usdtContract.methods.transfer(targetWallet, amount).estimateGas({from: sourceWallet})
+    await usdtContract.methods
+      .transfer(targetWallet, amount)
+      .estimateGas({ from: sourceWallet });
 
     var bnbRawTransaction = {
-      "form": process.env.SERVER_WALLET,
-      "to": sourceWallet,
-      "value": web3.utils.toHex(web3.utils.toWei('0.001', 'ether')),
-      "gas": 100000
-    }
-    var rawTransaction = {"from": sourceWallet, "to": process.env.USDT_ADDRESS, "gas": 100000, "data": data };
-    var bnbSignedTx = await web3.eth.accounts.signTransaction(bnbRawTransaction, server_key)
+      form: process.env.SERVER_WALLET,
+      to: sourceWallet,
+      value: web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
+      gas: 100000,
+    };
+    var rawTransaction = {
+      from: sourceWallet,
+      to: process.env.USDT_ADDRESS,
+      gas: 100000,
+      data: data,
+    };
+    var bnbSignedTx = await web3.eth.accounts.signTransaction(
+      bnbRawTransaction,
+      server_key
+    );
 
-    await web3.eth.sendSignedTransaction(bnbSignedTx.rawTransaction)
+    await web3.eth.sendSignedTransaction(bnbSignedTx.rawTransaction);
 
-    var signedTx = await web3.eth.accounts.signTransaction(rawTransaction, sourceKey)
+    var signedTx = await web3.eth.accounts.signTransaction(
+      rawTransaction,
+      sourceKey
+    );
 
-    await web3.eth.sendSignedTransaction(signedTx.rawTransaction)
+    await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
   } catch (err) {
-    console.log(err.message)
+    console.log(err.message);
     if (isBuy) {
-      return res.status(400).json({msg: "Buying Failed. Check if your exchange amount is less than your main wallet balance. Please try again."})
+      return res.status(400).json({
+        msg: "Buying Failed. Check if your exchange amount is less than your main wallet balance. Please try again.",
+      });
     } else {
-      return res.status(400).json({msg: "Selling Failed. Check if your exchange amount is less than your trading wallet balance. Please try again."})
+      return res.status(400).json({
+        msg: "Selling Failed. Check if your exchange amount is less than your trading wallet balance. Please try again.",
+      });
     }
   }
 
-  return res.json({msg: 'Success'})
-}
+  return res.json({ msg: "Success" });
+};
 
 export const Request2FA = async (req, res) => {
-  const { userId } = req
-  const {field} = req.body
+  const { userId } = req;
+  const { field } = req.body;
 
   var user = await Users.findOne({
     where: {
-      id: userId
-    }
-  })
+      id: userId,
+    },
+  });
 
   if (user == null) {
-    return res.status(403).json({msg: 'There is not account'})
+    return res.status(403).json({ msg: "There is not account" });
   }
 
   try {
-    if (field == '') {
-      await Users.update({
-        field_2fa: field
-      }, {
-        where: {
-          id: userId
+    if (field == "") {
+      await Users.update(
+        {
+          field_2fa: field,
+        },
+        {
+          where: {
+            id: userId,
+          },
         }
-      })
+      );
     } else {
-      await Users.update({
-        email_verify_status: 0,
-        phone_verify_status: 0,
-        field_2fa: field
-      }, {
-        where: {
-          id: userId
+      await Users.update(
+        {
+          email_verify_status: 0,
+          phone_verify_status: 0,
+          field_2fa: field,
+        },
+        {
+          where: {
+            id: userId,
+          },
         }
-      })
+      );
     }
 
     var code = 100000 + Math.floor(Math.random() * 899999);
@@ -577,111 +666,107 @@ export const Request2FA = async (req, res) => {
       }
     );
   } catch (err) {
-    console.log(err)
-    return res.status(400).json({msg: "Failed"})
+    console.log(err);
+    return res.status(400).json({ msg: "Failed" });
   }
 
-  return res.json({msg: 'Success'})
-}
+  return res.json({ msg: "Success" });
+};
 
 export const GetWalletTransactions = async (req, res) => {
-  const { userId } = req
-  const {type} = req.body
+  const { userId } = req;
+  const { type } = req.body;
 
   var user = await Users.findOne({
     where: {
-      id: userId
-    }
-  })
+      id: userId,
+    },
+  });
 
   if (user == null) {
-    return res.status(403).json({msg: 'There is not account'})
+    return res.status(403).json({ msg: "There is not account" });
   }
 
   try {
-    var condition = {}
+    var condition = {};
 
-    if (type == 'exchange') {
+    if (type == "exchange") {
       condition = {
         user_id: userId,
         [op.or]: [
           {
             type: {
-              [op.eq]: 3
-            }
+              [op.eq]: 3,
+            },
           },
           {
             type: {
-              [op.eq]: 4
-            }
-          }
-        ]
-      }
+              [op.eq]: 4,
+            },
+          },
+        ],
+      };
     } else {
       condition = {
         user_id: userId,
         [op.or]: [
           {
             type: {
-              [op.eq]: 1
-            }
+              [op.eq]: 1,
+            },
           },
           {
             type: {
-              [op.eq]: 2
-            }
-          }
-        ]
-      }
+              [op.eq]: 2,
+            },
+          },
+        ],
+      };
     }
 
     var trans = await Transactions.findAll({
       where: condition,
-      order: [
-        ['id', 'DESC'],
-      ],
-    })
+      order: [["id", "DESC"]],
+    });
 
-    return res.json(trans)
+    return res.json(trans);
   } catch (err) {
-    console.log(err)
-    return res.status(400).json({msg: "Failed"})
+    console.log(err);
+    return res.status(400).json({ msg: "Failed" });
   }
 
-  return res.json({msg: 'Success'})
-}
+  return res.json({ msg: "Success" });
+};
 
 export const GetRoundInfos = async (req, res) => {
-  const { userId } = req
+  const { userId } = req;
 
   var user = await Users.findOne({
     where: {
-      id: userId
-    }
-  })
+      id: userId,
+    },
+  });
 
   if (user == null) {
-    return res.status(403).json({msg: 'There is not account'})
+    return res.status(403).json({ msg: "There is not account" });
   }
 
   try {
     var rounds = await RoundInfos.findAll({
-      order: [
-        ['id', 'DESC'],
-      ],
+      order: [["id", "DESC"]],
 
       where: {
         volume: {
-          [op.not]: '0'
-        }
+          [op.not]: "0",
+        },
       },
 
-      limit: 100
-    })
+      limit: 100,
+    });
 
-    var data = []
+    var data = [];
 
-    for (var i = rounds.length - 1; i >= 0; i --) {
+    for (var i = rounds.length - 1; i >= 0; i--) {
       data.push([
         new Date(rounds[i].start_at).getTime(),
         rounds[i].open,
@@ -689,16 +774,139 @@ export const GetRoundInfos = async (req, res) => {
         rounds[i].low,
         rounds[i].close,
         rounds[i].volume,
-      ])
+      ]);
     }
 
-    return res.json(data)
+    return res.json(data);
   } catch (err) {
-    console.log(err)
-    return res.status(400).json({msg: "Failed"})
+    console.log(err);
+    return res.status(400).json({ msg: "Failed" });
   }
+};
+
+export const GetCurrentRound = async (req, res) => {
+  const { userId } = req;
+
+  var user = await Users.findOne({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (user == null) {
+    return res.status(403).json({ msg: "There is not account" });
+  }
+
+  var cur = new Date().getTime();
+
+  try {
+    var round = await RoundInfos.findOne({
+      where: {
+        start_at: {
+          [op.lte]: convertTimeToGMT(cur, true),
+        },
+        end_at: {
+          [op.gt]: convertTimeToGMT(cur, true),
+        },
+      },
+    });
+
+    return res.json({
+      round,
+      timeLeft: Math.floor((new Date(round.end_at).getTime() - cur) / 1000),
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({ msg: "Failed" });
+  }
+};
+
+async function reduceWallet(userId, amount, isLive) {
+  try {
+    if (isLive == false) {
+      var user = await Users.findOne({
+        where: {
+          id: userId,
+        },
+      });
+
+      if (amount > user.demo_amount) return false;
+
+      await Users.update(
+        {
+          demo_amount: user.demo_amount - amount,
+        },
+        {
+          where: {
+            id: userId,
+          },
+        }
+      );
+    }
+  } catch (err) {
+    return false;
+  }
+
+  return true;
 }
 
+export const PredictRound = async (req, res) => {
+  const { userId } = req;
+  const { roundId, betTo, betAmount, isLive } = req.body;
+
+  var user = await Users.findOne({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (user == null) {
+    return res.status(403).json({ msg: "There is not account" });
+  }
+
+  var cur = new Date().getTime();
+
+  try {
+    var trans = await RoundTransactions.findOne({
+      where: {
+        round_id: roundId,
+        user_id: userId,
+      },
+    });
+
+    if (trans != null) {
+      return res
+        .status(400)
+        .json({ msg: "You already predict for this round" });
+    }
+
+    if (roundId % 2 == 0) {
+      return res.status(400).json({ msg: "This round is trade time round" });
+    }
+
+    await RoundTransactions.create({
+      round_id: roundId,
+      user_id: userId,
+      bet_to: betTo,
+      bet_amount: betAmount,
+      bet_at: convertTimeToGMT(cur, true),
+      is_live: isLive,
+    });
+
+    var ret = reduceWallet(userId, betAmount, isLive);
+
+    if (ret == false) {
+      return res
+        .status(400)
+        .json({ msg: "Your prediction is failed. Please check your wallet!" });
+    }
+
+    return res.json({ msg: "Success" });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({ msg: "Failed" });
+  }
+};
 // export const UpdatePhoneNumber = async (req, res) => {
 //   const { phone } = req.body;
 //   const regExpPhone =

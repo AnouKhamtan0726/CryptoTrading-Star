@@ -13,6 +13,8 @@ import {
   Request2FA,
   GetWalletTransactions,
   GetRoundInfos,
+  GetCurrentRound,
+  PredictRound,
   // UpdatePhoneNumber,
 } from "../controllers/Users.js";
 import { verifyToken } from "../middleware/VerifyToken.js";
@@ -34,6 +36,8 @@ router.post("/exchange", verifyToken, Exchange);
 router.post("/request-2fa", verifyToken, Request2FA);
 router.post("/get-wallet-transactions", verifyToken, GetWalletTransactions);
 router.post("/get-rounds-info", verifyToken, GetRoundInfos);
+router.post("/get-current-round", verifyToken, GetCurrentRound);
+router.post("/predict-round", verifyToken, PredictRound);
 // router.post("/phone-number", verifyToken, UpdatePhoneNumber);
 
 export default router;

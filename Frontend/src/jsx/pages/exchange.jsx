@@ -26,8 +26,8 @@ function Exchange() {
   const [tradingBalance, setTradingBalance] = useState(0);
   const [msg, setMsg] = useState("");
   const [smsg, setSMsg] = useState("");
-  const [buyLabel, setBuyLabel] = useState("Send to Trading Wallet")
-  const [sellLabel, setSellLabel] = useState("Send to Main Wallet")
+  const [buyLabel, setBuyLabel] = useState("Send to Trading Wallet");
+  const [sellLabel, setSellLabel] = useState("Send to Main Wallet");
   const web3 = new Web3(RPC_URL),
     usdtContract = new web3.eth.Contract(USDT_ABI, USDT_ADDRESS);
   var wallets;
@@ -41,15 +41,18 @@ function Exchange() {
       var res = await axios.post(SERVER_URL + "/get-wallets");
 
       wallets = res.data;
-      res = await Promise.all([usdtContract.methods.balanceOf(wallets.main_wallet).call(), usdtContract.methods.balanceOf(wallets.trading_wallet).call()])
+      res = await Promise.all([
+        usdtContract.methods.balanceOf(wallets.main_wallet).call(),
+        usdtContract.methods.balanceOf(wallets.trading_wallet).call(),
+      ]);
       setMainBalance(res[0] / 10 ** USDT_DECIMALS);
       setTradingBalance(res[1] / 10 ** USDT_DECIMALS);
 
       var trans = await axios.post(SERVER_URL + "/get-wallet-transactions", {
-        type: 'exchange'
-      })
+        type: "exchange",
+      });
 
-      setWalletTrans(trans.data)
+      setWalletTrans(trans.data);
     } catch (err) {
       history.push("/");
     }
@@ -57,9 +60,9 @@ function Exchange() {
 
   async function onExchange(isBuy) {
     if (isBuy) {
-      setBuyLabel("Buying ...")
+      setBuyLabel("Buying ...");
     } else {
-      setSellLabel("Selling ...")
+      setSellLabel("Selling ...");
     }
 
     try {
@@ -81,12 +84,12 @@ function Exchange() {
       }
     }
 
-    await init()
+    await init();
 
     if (isBuy) {
-      setBuyLabel("Send to Trading Wallet")
+      setBuyLabel("Send to Trading Wallet");
     } else {
-      setSellLabel("Send to Main Wallet")
+      setSellLabel("Send to Main Wallet");
     }
   }
 
@@ -157,7 +160,7 @@ function Exchange() {
                         type="button"
                         className="btn btn-success btn-block"
                         onClick={(e) => onExchange(true)}
-                        disabled={buyLabel != 'Send to Trading Wallet'}
+                        disabled={buyLabel != "Send to Trading Wallet"}
                       >
                         {buyLabel}
                       </button>
@@ -215,7 +218,7 @@ function Exchange() {
                         type="button"
                         className="btn btn-danger btn-block"
                         onClick={(e) => onExchange(false)}
-                        disabled={sellLabel != 'Send to Main Wallet'}
+                        disabled={sellLabel != "Send to Main Wallet"}
                       >
                         {sellLabel}
                       </button>
@@ -236,27 +239,41 @@ function Exchange() {
                       <table className="table table-striped mb-0 table-responsive-sm">
                         <tbody>
                           {walletTrans.map((trans, key) => {
-                            return <tr key={key}>
-                              <td>
-                                {trans.type == 3 ? <span className="buy-thumb">
-                                  <i className="mdi mdi-arrow-up"></i>
-                                </span> : <span className="sold-thumb">
-                                  <i className="mdi mdi-arrow-down"></i>
-                                </span>}
-                              </td>
+                            return (
+                              <tr key={key}>
+                                <td>
+                                  {trans.type == 3 ? (
+                                    <span className="buy-thumb">
+                                      <i className="mdi mdi-arrow-up"></i>
+                                    </span>
+                                  ) : (
+                                    <span className="sold-thumb">
+                                      <i className="mdi mdi-arrow-down"></i>
+                                    </span>
+                                  )}
+                                </td>
 
-                              <td>
-                                <span className="badge badge-danger p-2">
-                                  {trans.type == 3 ? 'Send to trading wallet' : 'Send to main wallet'}
-                                </span>
-                              </td>
-                              <td>
-                                USDT
-                              </td>
-                              <td>{trans.from_address}</td>
-                              <td className={trans.type == 3 ? "text-success" : "text-danger"}>{trans.amount} USDT</td>
-                              <td>0.01 BNB</td>
-                            </tr>
+                                <td>
+                                  <span className="badge badge-danger p-2">
+                                    {trans.type == 3
+                                      ? "Send to trading wallet"
+                                      : "Send to main wallet"}
+                                  </span>
+                                </td>
+                                <td>USDT</td>
+                                <td>{trans.from_address}</td>
+                                <td
+                                  className={
+                                    trans.type == 3
+                                      ? "text-success"
+                                      : "text-danger"
+                                  }
+                                >
+                                  {trans.amount} USDT
+                                </td>
+                                <td>0.01 BNB</td>
+                              </tr>
+                            );
                           })}
                         </tbody>
                       </table>

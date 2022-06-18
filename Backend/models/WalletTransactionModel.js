@@ -13,23 +13,24 @@ const WalletTransactions = db.define(
     type: {
       type: DataTypes.TINYINT(20),
       defaultValue: 0,
-      comment: "1:Deposit 2:Withdraw 3:Send_To_Trading_Wallet 4:Send_To_Main_Wallet",
+      comment:
+        "1:Deposit 2:Withdraw 3:Send_To_Trading_Wallet 4:Send_To_Main_Wallet",
     },
     from_address: {
       type: DataTypes.STRING,
-      defaultValue: 0
+      defaultValue: 0,
     },
     to_address: {
       type: DataTypes.STRING,
-      defaultValue: 0
+      defaultValue: 0,
     },
     transaction_at: {
       type: "TIMESTAMP",
-      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
     },
     amount: {
       type: DataTypes.DOUBLE,
-      defaultValue: 0
+      defaultValue: 0,
     },
     status: {
       type: DataTypes.TINYINT(20),
@@ -38,7 +39,7 @@ const WalletTransactions = db.define(
     },
     commission: {
       type: DataTypes.DOUBLE,
-      defaultValue: 0
+      defaultValue: 0,
     },
   },
   {

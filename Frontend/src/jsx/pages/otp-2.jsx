@@ -3,16 +3,16 @@ import { Link, useHistory } from "react-router-dom";
 import { useCookies } from "react-cookie";
 
 function Otp2() {
-  const history = useHistory()
+  const history = useHistory();
   const [cookies, setCookie, removeCookie] = useCookies(["field_2fa"]);
 
   function onVerify(e) {
-    if (cookies.field_2fa == 'withdraw') {
-      history.push('/account-withdraw')
-      return
+    if (cookies.field_2fa == "withdraw") {
+      history.push("/account-withdraw");
+      return;
     }
 
-    history.push('/dashboard')
+    history.push("/dashboard");
   }
 
   return (

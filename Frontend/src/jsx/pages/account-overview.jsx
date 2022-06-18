@@ -40,15 +40,18 @@ function AccountOverview() {
       wallets = res.data;
       setUserInfo(user.data);
 
-      res = await Promise.all([usdtContract.methods.balanceOf(wallets.main_wallet).call(), usdtContract.methods.balanceOf(wallets.trading_wallet).call()])
+      res = await Promise.all([
+        usdtContract.methods.balanceOf(wallets.main_wallet).call(),
+        usdtContract.methods.balanceOf(wallets.trading_wallet).call(),
+      ]);
       setMainBalance(res[0] / 10 ** USDT_DECIMALS);
       setTradingBalance(res[1] / 10 ** USDT_DECIMALS);
 
       var trans = await axios.post(SERVER_URL + "/get-wallet-transactions", {
-        type: 'withdraw'
-      })
+        type: "withdraw",
+      });
 
-      setWalletTrans(trans.data)
+      setWalletTrans(trans.data);
     } catch (err) {
       console.log(err);
       // history.push("/");
@@ -245,14 +248,23 @@ function AccountOverview() {
                         </thead>
                         <tbody>
                           {walletTrans.map((trans, key) => {
-                            return <tr key={key}>
-                              <td>#{trans.id}</td>
-                              <td>{new Date(trans.transaction_at).toISOString().slice(0, 19).replace("T", " ")} </td>
-                              <td>{trans.type == 1 ? 'Deposit' : 'Withdraw'}</td>
-                              <td>{trans.amount.toFixed(2)} USDT</td>
-                              <td>Completed</td>
-                              <td>0.01 BNB</td>
-                            </tr>
+                            return (
+                              <tr key={key}>
+                                <td>#{trans.id}</td>
+                                <td>
+                                  {new Date(trans.transaction_at)
+                                    .toISOString()
+                                    .slice(0, 19)
+                                    .replace("T", " ")}{" "}
+                                </td>
+                                <td>
+                                  {trans.type == 1 ? "Deposit" : "Withdraw"}
+                                </td>
+                                <td>{trans.amount.toFixed(2)} USDT</td>
+                                <td>Completed</td>
+                                <td>0.01 BNB</td>
+                              </tr>
+                            );
                           })}
                         </tbody>
                       </table>

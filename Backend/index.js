@@ -13,6 +13,6 @@ app.use(cors({ credentials: true, origin: [SERVER_URL, SERVER_URL1] }));
 app.use(cookieParser());
 app.use(express.json());
 app.use(router);
-app.use('/admin', adminRouter);
+app.use("/admin", adminRouter);
 
 app.listen(5000, () => console.log("Server running at port 5000"));

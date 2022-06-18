@@ -12,13 +12,18 @@ import { useCookies } from "react-cookie";
 import { useHistory } from "react-router-dom";
 
 function AccountWithdraw() {
-  const [cookies, setCookie, removeCookie] = useCookies(["refreshToken", "field_2fa", "withdrawWallet", "withdrawAmount"]);
+  const [cookies, setCookie, removeCookie] = useCookies([
+    "refreshToken",
+    "field_2fa",
+    "withdrawWallet",
+    "withdrawAmount",
+  ]);
   const history = useHistory();
   const [withdrawWallet, setWithdrawWallet] = useState("");
   const [withdrawAmount, setWithdrawAmount] = useState(0);
   const [msg, setMsg] = useState("");
   const [smsg, setSMsg] = useState("");
-  const [withdrawLabel, setWithdrawLabel] = useState("Withdraw Now")
+  const [withdrawLabel, setWithdrawLabel] = useState("Withdraw Now");
 
   async function init() {
     try {
@@ -27,10 +32,10 @@ function AccountWithdraw() {
 
       await axios.post(SERVER_URL + "/login-status");
 
-      if (cookies.field_2fa == 'withdraw') {
-        setWithdrawLabel('Withdrawing ...')
-        setWithdrawWallet(cookies.withdrawWallet)
-        setWithdrawAmount(cookies.withdrawAmount)
+      if (cookies.field_2fa == "withdraw") {
+        setWithdrawLabel("Withdrawing ...");
+        setWithdrawWallet(cookies.withdrawWallet);
+        setWithdrawAmount(cookies.withdrawAmount);
 
         await axios.post(SERVER_URL + "/withdraw", {
           withdrawWallet: cookies.withdrawWallet,
@@ -42,9 +47,9 @@ function AccountWithdraw() {
         );
         setMsg("");
 
-        removeCookie('field_2fa')
-        removeCookie('withdrawWallet')
-        removeCookie('withdrawAmount')
+        removeCookie("field_2fa");
+        removeCookie("withdrawWallet");
+        removeCookie("withdrawAmount");
       }
     } catch (error) {
       if (error.response && error.response.data.status == 403) {
@@ -55,15 +60,15 @@ function AccountWithdraw() {
       }
     }
 
-    setWithdrawLabel("Withdraw Now")
+    setWithdrawLabel("Withdraw Now");
   }
 
   async function onWithdraw(e) {
     try {
       await axios.post(SERVER_URL + "/login-status");
 
-      if (cookies.field_2fa == 'withdraw') {
-        setWithdrawLabel('Withdrawing ...')
+      if (cookies.field_2fa == "withdraw") {
+        setWithdrawLabel("Withdrawing ...");
 
         await axios.post(SERVER_URL + "/withdraw", {
           withdrawWallet: withdrawWallet,
@@ -75,19 +80,19 @@ function AccountWithdraw() {
         );
         setMsg("");
 
-        removeCookie('field_2fa')
-        removeCookie('withdrawWallet')
-        removeCookie('withdrawAmount')
+        removeCookie("field_2fa");
+        removeCookie("withdrawWallet");
+        removeCookie("withdrawAmount");
       } else {
-        setCookie("field_2fa", "withdraw")
-        setCookie("withdrawAmount", withdrawAmount)
-        setCookie("withdrawWallet", withdrawWallet)
-        
+        setCookie("field_2fa", "withdraw");
+        setCookie("withdrawAmount", withdrawAmount);
+        setCookie("withdrawWallet", withdrawWallet);
+
         await axios.post(SERVER_URL + "/request-2fa", {
           field: "withdraw",
-        })
+        });
 
-        history.push("/email-verify")
+        history.push("/email-verify");
       }
     } catch (error) {
       if (error.response && error.response.data.status == 403) {
@@ -98,7 +103,7 @@ function AccountWithdraw() {
       }
     }
 
-    setWithdrawLabel("Withdraw Now")
+    setWithdrawLabel("Withdraw Now");
   }
 
   useEffect(() => {
@@ -110,12 +115,11 @@ function AccountWithdraw() {
       // removeCookie('field_2fa')
       // removeCookie('withdrawWallet')
       // removeCookie('withdrawAmount')
-        
       // await axios.post(SERVER_URL + "/request-2fa", {
       //   field: "",
       // })
-    }
-  }, [])
+    };
+  }, []);
 
   return (
     <>
@@ -211,8 +215,8 @@ function AccountWithdraw() {
                             Binance Smart Chain Network Fee (BNB)
                             <br />
                             <small>
-                              Transactions on the BSC network are priorirized
-                              by fees
+                              Transactions on the BSC network are priorirized by
+                              fees
                             </small>
                           </label>
                         </div>
@@ -226,7 +230,7 @@ function AccountWithdraw() {
                           type="button"
                           onClick={onWithdraw}
                           className="btn btn-primary text-white"
-                          disabled={withdrawLabel != 'Withdraw Now'}
+                          disabled={withdrawLabel != "Withdraw Now"}
                         >
                           {withdrawLabel}
                         </button>

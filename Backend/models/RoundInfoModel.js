@@ -6,18 +6,13 @@ const { DataTypes } = Sequelize;
 const RoundInfos = db.define(
   "round_infos",
   {
-    type: {
-      type: DataTypes.TINYINT(20),
-      defaultValue: 0,
-      comment: "1:Predict Round 2:Wait Time Round",
-    },
     start_at: {
       type: "TIMESTAMP",
-      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
     },
     end_at: {
       type: "TIMESTAMP",
-      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
     },
     open: {
       type: DataTypes.DOUBLE,
