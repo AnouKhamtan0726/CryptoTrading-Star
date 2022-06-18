@@ -15316,11 +15316,11 @@ html {
   position: absolute;
   left: 0px !important;
   top: 0px !important;
-  width: 200px;
-  height: 50px;
+  width: 300px;
+  height: 85px;
   z-index: 10;
   border: 1px solid white;
-  background-color: rgba(0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.6);
   color: white;
   border-radius: 20px;
   opacity: 1 !important;
@@ -15332,4 +15332,18 @@ html {
   left: inherit !important;
   top: inherit !important;
   width: fit-content !important;
+}
+
+.highcharts-tooltip-box h3,
+.highcharts-tooltip-box b {
+  font-weight: bold;
+}
+
+.highcharts-tooltip-box span {
+  padding: 6px 10px;
+}
+
+.highcharts-tooltip-box b {
+  width: 100px;
+  display: inline-block;
 }

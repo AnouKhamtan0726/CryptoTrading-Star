@@ -1,4 +1,5 @@
 import Users from "../models/UserModel.js";
+import RoundInfos from "../models/RoundInfoModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
@@ -648,6 +649,54 @@ export const GetWalletTransactions = async (req, res) => {
   }
 
   return res.json({msg: 'Success'})
+}
+
+export const GetRoundInfos = async (req, res) => {
+  const { userId } = req
+
+  var user = await Users.findOne({
+    where: {
+      id: userId
+    }
+  })
+
+  if (user == null) {
+    return res.status(403).json({msg: 'There is not account'})
+  }
+
+  try {
+    var rounds = await RoundInfos.findAll({
+      order: [
+        ['id', 'DESC'],
+      ],
+
+      where: {
+        volume: {
+          [op.not]: '0'
+        }
+      },
+
+      limit: 100
+    })
+
+    var data = []
+
+    for (var i = rounds.length - 1; i >= 0; i --) {
+      data.push([
+        new Date(rounds[i].start_at).getTime(),
+        rounds[i].open,
+        rounds[i].high,
+        rounds[i].low,
+        rounds[i].close,
+        rounds[i].volume,
+      ])
+    }
+
+    return res.json(data)
+  } catch (err) {
+    console.log(err)
+    return res.status(400).json({msg: "Failed"})
+  }
 }
 
 // export const UpdatePhoneNumber = async (req, res) => {

@@ -1,8 +1,15 @@
 import Web3 from "web3";
 import Users from "../models/UserModel.js";
 import Transactions from "../models/WalletTransactionModel.js";
+import RoundInfos from "../models/RoundInfoModel.js";
 import fs from 'fs'
 import { Console } from "console";
+import Binance from 'node-binance-api';
+
+const binance = new Binance().options({
+  APIKEY: '2a3frne0gSRy9VOYzWHxWeMx8OVUgPWXCa0x1nC3jRcnYhq45LLSgSImDdNzvSX1',
+  APISECRET: 'YKC4QzX9jaATmRPIJdl9gtgpf851ysCqEYSrOd78XrlNnygOotPLNnL7XymMJ2wJ'
+});
 
 const RPC_URL = "https://data-seed-prebsc-2-s1.binance.org:8545"
 const USDT_ADDRESS = "0xf118D4F62781F8c7CE024D66e037D9a843aa928d"
@@ -14,11 +21,15 @@ const myLogger = new Console({
 });
 
 const web3 = new Web3(RPC_URL)
-var startBlockNumber = 20214185
+var startBlockNumber = 20214259
 var main_wallets = []
 var trading_wallets = []
 
-function convertTimeToGMT(time) {
+function convertTimeToGMT(time, flag = false) {
+    if (flag) {
+      return new Date(time).toISOString().slice(0, 19).replace("T", " ")  
+    }
+
     return new Date(
       new Date(time).toISOString().slice(0, 19).replace("T", " ")
     ).getTime();
@@ -119,4 +130,94 @@ async function init() {
     setTimeout(init, 2000)
 }
 
-init()
+async function getRoundInfos() {
+    var befVolume = -1
+    var cur = {
+        open: 0,
+        close: 0,
+        round: 0,
+        high: 0,
+        low: 0,
+        start_at: 0,
+        end_at: 0,
+        volume: 0,
+    }
+    var next = {
+        round: 0,
+        start_at: 0,
+        end_at: 0,
+    }
+
+    async function createRound() {
+        var currentTime = new Date()
+        
+        if (currentTime.getSeconds() % 30 == 0) {
+            var start = currentTime.setSeconds(currentTime.getSeconds() + 30)
+            var end = currentTime.setSeconds(currentTime.getSeconds() + 30)
+
+            var tmp = await RoundInfos.create({
+                type: 1,
+                start_at: convertTimeToGMT(start, true),
+                end_at: convertTimeToGMT(end, true),
+            })
+
+            if (next.round != 0) {
+                await RoundInfos.update({
+                    result: cur.open > cur.close ? 2 : 1
+                }, {
+                    where: {
+                        id: cur.round
+                    }
+                })
+
+                cur.round = next.round
+                cur.start_at = next.start_at
+                cur.end_at = next.end_at
+                cur.volume = 0
+                cur.open = cur.low = cur.high = cur.close
+
+                await RoundInfos.update({
+                    open: cur.open
+                }, {
+                    where: {
+                        id: cur.round
+                    }
+                })
+            }
+
+            next.round = tmp.id
+            next.start_at = start
+            next.end_at = end
+        }
+    }
+
+    binance.futuresMiniTickerStream( 'BTCUSDT', async (res) => {
+        cur.close = res.close
+
+        if (cur.round != 0)  {
+            if (cur.close < cur.low) cur.low = cur.close
+            if (cur.close > cur.high) cur.high = cur.close
+
+            if (befVolume != -1 && res.quoteVolume > befVolume) {
+                cur.volume += res.quoteVolume - befVolume
+            }
+
+            befVolume = res.quoteVolume
+
+            await RoundInfos.update({
+                close: cur.close,
+                high: cur.high,
+                low: cur.low,
+                volume: cur.volume
+            }, {
+                where: {
+                    id: cur.round
+                }
+            })
+        }
+    } );
+
+    setInterval(createRound, 1000)
+}
+
+getRoundInfos()
