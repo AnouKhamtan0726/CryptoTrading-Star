@@ -15371,3 +15371,18 @@ html {
 .account-select > div {
   min-width: 150px;
 }
+
+#toast-container {
+  position: fixed;
+  z-index: 3000;
+}
+
+#toast-container .toast {
+  min-height: inherit !important;
+  width: 300px !important;
+  padding: 15px 15px 15px 50px;
+}
+
+#toast-container .toast-message {
+  line-height: 1rem;
+}

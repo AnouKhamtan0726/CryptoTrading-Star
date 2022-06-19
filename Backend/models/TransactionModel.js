@@ -31,6 +31,11 @@ const Transactions = db.define(
       defaultValue: 0,
       comment: "1:Earn 2:Lost 3:Failed",
     },
+    is_claimed: {
+      type: DataTypes.TINYINT(20),
+      defaultValue: 0,
+      comment: "0:Not Claimed 1:Claimed",
+    },
     bet_at: {
       type: "TIMESTAMP",
       defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),

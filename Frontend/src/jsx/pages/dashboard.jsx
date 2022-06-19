@@ -15,6 +15,26 @@ import axios from "axios";
 import { SERVER_URL } from "../../server";
 import { useHistory } from "react-router";
 import { useCookies } from "react-cookie";
+import toastr from 'toastr'
+import "../../../node_modules/toastr/build/toastr.min.css"
+
+toastr.options = {
+  closeButton: false,
+  debug: false,
+  newestOnTop: false,
+  progressBar: false,
+  positionClass: "toast-top-right",
+  preventDuplicates: false,
+  onclick: null,
+  showDuration: "300",
+  hideDuration: "1000",
+  timeOut: "5000",
+  extendedTimeOut: "1000",
+  showEasing: "swing",
+  hideEasing: "linear",
+  showMethod: "fadeIn",
+  hideMethod: "fadeOut"
+};
 
 const PriceChart = React.memo((props) => {
   const history = useHistory();
@@ -281,7 +301,9 @@ function Dashboard() {
   let [count, setCount] = useState(5);
   const [activeTab, setActiveTab] = useState("indicators");
   const [timeLeft, setTimeLeft] = useState(30);
-  const [roundInfo, setRoundInfo] = useState(null);
+  const [roundInfo, setRoundInfo] = useState({
+    id: 1
+  });
 
   function incrementCount() {
     count = count + 5;
@@ -372,15 +394,21 @@ function Dashboard() {
 
   async function onPredict(betTo) {
     try {
-      await axios.post(SERVER_URL + "/predict-round", {
+      toastr.info("Your prediction is sent. Please wait.")
+      
+      var res = await axios.post(SERVER_URL + "/predict-round", {
         roundId: roundInfo.id + 1,
         betTo: betTo,
         betAmount: count,
         isLive: cookies.isLive == "true",
       });
+
+      toastr.success(res.data.msg)
     } catch (error) {
       if (error.response && error.response.data.status == 403) {
         history.push("/signin");
+      } else {
+        toastr.error(error.response.data.msg)
       }
     }
   }

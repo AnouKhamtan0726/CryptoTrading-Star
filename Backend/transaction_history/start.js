@@ -22,7 +22,7 @@ const myLogger = new Console({
 });
 
 const web3 = new Web3(RPC_URL);
-var startBlockNumber = 20214259;
+var startBlockNumber = 20339207;
 var main_wallets = [];
 var trading_wallets = [];
 
@@ -219,7 +219,7 @@ async function getRoundInfos() {
             where: {
               round_id: tmpRound,
               bet_to: tmpOpen > tmpClose ? 2 : 1,
-              is_live: 0,
+              bet_result: 0,
             },
           }
         );
@@ -232,7 +232,7 @@ async function getRoundInfos() {
             where: {
               round_id: tmpRound,
               bet_to: tmpOpen > tmpClose ? 1 : 2,
-              is_live: 0,
+              bet_result: 0,
             },
           }
         );

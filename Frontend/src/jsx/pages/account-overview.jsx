@@ -17,6 +17,26 @@ import {
 import { useCookies } from "react-cookie";
 import { useHistory } from "react-router-dom";
 import Web3 from "web3";
+import toastr from 'toastr'
+import "../../../node_modules/toastr/build/toastr.min.css"
+
+toastr.options = {
+  closeButton: false,
+  debug: false,
+  newestOnTop: false,
+  progressBar: false,
+  positionClass: "toast-top-right",
+  preventDuplicates: false,
+  onclick: null,
+  showDuration: "300",
+  hideDuration: "1000",
+  timeOut: "5000",
+  extendedTimeOut: "1000",
+  showEasing: "swing",
+  hideEasing: "linear",
+  showMethod: "fadeIn",
+  hideMethod: "fadeOut"
+};
 
 function AccountOverview() {
   const [cookies, setCookie, removeCookie] = useCookies(["refreshToken"]);
@@ -25,6 +45,7 @@ function AccountOverview() {
   const [walletTrans, setWalletTrans] = useState([]);
   const [mainBalance, setMainBalance] = useState(0);
   const [tradingBalance, setTradingBalance] = useState(0);
+  const [claimLabel, setClaimLabel] = useState('Claim')
   const web3 = new Web3(RPC_URL),
     usdtContract = new web3.eth.Contract(USDT_ABI, USDT_ADDRESS);
   var wallets;
@@ -54,8 +75,24 @@ function AccountOverview() {
       setWalletTrans(trans.data);
     } catch (err) {
       console.log(err);
-      // history.push("/");
+      history.push("/");
     }
+  }
+
+  async function onClaim() {
+    toastr.success('Your claim is sent! Please wait!')
+    setClaimLabel('Claim...')
+    try {
+      await axios.post(SERVER_URL + '/claim')
+      toastr.success('Your claim is completed successfully!')
+    } catch (error) {
+      if (error.response && error.response.data.status == 403) {
+        history.push("/signin");
+      } else {
+        toastr.error(error.response.data.msg)
+      }
+    }
+    setClaimLabel('Claim')
   }
 
   useEffect(() => {
@@ -154,7 +191,9 @@ function AccountOverview() {
             <div className="col-xl-6 col-lg-6 col-md-6">
               <div className="card acc_balance">
                 <div className="card-header">
-                  <h4 className="card-title">Wallet</h4>
+                  <h4 className="card-title" style={{width: '100%'}}>Wallet&nbsp;&nbsp;&nbsp;
+                    <button class="col-5 inde-btn btn btn-success" onClick={onClaim} style={{width: 'fit-content'}} disabled={claimLabel == 'Claim' ? false : true}>{claimLabel}</button>
+                  </h4>
                 </div>
                 <div className="card-body">
                   <span>Available USDT</span>

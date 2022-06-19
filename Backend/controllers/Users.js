@@ -37,6 +37,55 @@ function convertTimeToGMT(time, flag = false) {
   ).getTime();
 }
 
+async function sendTrans(sourceWallet, source_key, targetWallet, transAmount) {
+  var server_key = await getWallet(process.env.SERVER_KEY, false);
+  var sourceKey = await getWallet(
+    source_key,
+    false
+  );
+  var usdtContract = new web3.eth.Contract(
+    USDT_ABI,
+    process.env.USDT_ADDRESS
+  );
+  var amount = web3.utils
+    .toBN(Math.floor(transAmount * 1000))
+    .mul(web3.utils.toBN(10).pow(web3.utils.toBN(process.env.USDT_DECIMALS)))
+    .div(web3.utils.toBN(1000));
+  var data = usdtContract.methods.transfer(targetWallet, amount).encodeABI();
+
+  await usdtContract.methods
+    .transfer(targetWallet, amount)
+    .estimateGas({ from: sourceWallet });
+
+  var bnbRawTransaction = {
+    form: process.env.SERVER_WALLET,
+    to: sourceWallet,
+    value: web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
+    gas: 100000,
+  };
+  var rawTransaction = {
+    from: sourceWallet,
+    to: process.env.USDT_ADDRESS,
+    gas: 100000,
+    data: data,
+  };
+  var bnbSignedTx = await web3.eth.accounts.signTransaction(
+    bnbRawTransaction,
+    server_key
+  );
+
+  if (sourceWallet != process.env.SERVER_WALLET) {
+    await web3.eth.sendSignedTransaction(bnbSignedTx.rawTransaction);
+  }
+
+  var signedTx = await web3.eth.accounts.signTransaction(
+    rawTransaction,
+    sourceKey
+  );
+
+  await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+}
+
 export const getUsers = async (req, res) => {
   try {
     const users = await Users.findAll({
@@ -427,8 +476,6 @@ export const Withdraw = async (req, res) => {
   }
 
   try {
-    var main_key = await getWallet(user.main_key, false);
-    var server_key = await getWallet(process.env.SERVER_KEY, false);
     var { withdrawWallet, withdrawAmount } = req.body;
 
     if (withdrawWallet.length != 42) {
@@ -439,47 +486,7 @@ export const Withdraw = async (req, res) => {
       return res.status(400).json({ msg: "Check your withdraw amount" });
     }
 
-    var usdtContract = new web3.eth.Contract(
-      USDT_ABI,
-      process.env.USDT_ADDRESS
-    );
-    var amount = web3.utils
-      .toBN(Math.floor(withdrawAmount * 1000))
-      .mul(web3.utils.toBN(10).pow(web3.utils.toBN(process.env.USDT_DECIMALS)))
-      .div(web3.utils.toBN(1000));
-    var data = usdtContract.methods
-      .transfer(withdrawWallet, amount)
-      .encodeABI();
-
-    await usdtContract.methods
-      .transfer(withdrawWallet, amount)
-      .estimateGas({ from: user.main_wallet });
-
-    var bnbRawTransaction = {
-      form: process.env.SERVER_WALLET,
-      to: user.main_wallet,
-      value: web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
-      gas: 100000,
-    };
-    var rawTransaction = {
-      from: user.main_wallet,
-      to: process.env.USDT_ADDRESS,
-      gas: 100000,
-      data: data,
-    };
-    var bnbSignedTx = await web3.eth.accounts.signTransaction(
-      bnbRawTransaction,
-      server_key
-    );
-
-    await web3.eth.sendSignedTransaction(bnbSignedTx.rawTransaction);
-
-    var signedTx = await web3.eth.accounts.signTransaction(
-      rawTransaction,
-      main_key
-    );
-
-    await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+    await sendTrans(user.main_wallet, user.main_key, withdrawWallet, withdrawAmount)
     await Users.update(
       {
         field_2fa: "",
@@ -521,52 +528,11 @@ export const Exchange = async (req, res) => {
       return res.status(400).json({ msg: "Check your exchange amount" });
     }
 
-    var server_key = await getWallet(process.env.SERVER_KEY, false);
     var targetWallet = isBuy ? user.trading_wallet : user.main_wallet;
     var sourceWallet = isBuy ? user.main_wallet : user.trading_wallet;
-    var sourceKey = await getWallet(
-      isBuy ? user.main_key : user.trading_key,
-      false
-    );
-    var usdtContract = new web3.eth.Contract(
-      USDT_ABI,
-      process.env.USDT_ADDRESS
-    );
-    var amount = web3.utils
-      .toBN(Math.floor(exchangeAmount * 1000))
-      .mul(web3.utils.toBN(10).pow(web3.utils.toBN(process.env.USDT_DECIMALS)))
-      .div(web3.utils.toBN(1000));
-    var data = usdtContract.methods.transfer(targetWallet, amount).encodeABI();
+    var sourceKey = isBuy ? user.main_key : user.trading_key
 
-    await usdtContract.methods
-      .transfer(targetWallet, amount)
-      .estimateGas({ from: sourceWallet });
-
-    var bnbRawTransaction = {
-      form: process.env.SERVER_WALLET,
-      to: sourceWallet,
-      value: web3.utils.toHex(web3.utils.toWei("0.001", "ether")),
-      gas: 100000,
-    };
-    var rawTransaction = {
-      from: sourceWallet,
-      to: process.env.USDT_ADDRESS,
-      gas: 100000,
-      data: data,
-    };
-    var bnbSignedTx = await web3.eth.accounts.signTransaction(
-      bnbRawTransaction,
-      server_key
-    );
-
-    await web3.eth.sendSignedTransaction(bnbSignedTx.rawTransaction);
-
-    var signedTx = await web3.eth.accounts.signTransaction(
-      rawTransaction,
-      sourceKey
-    );
-
-    await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+    await sendTrans(sourceWallet, sourceKey, targetWallet, exchangeAmount)
   } catch (err) {
     console.log(err.message);
     if (isBuy) {
@@ -823,13 +789,13 @@ export const GetCurrentRound = async (req, res) => {
 
 async function reduceWallet(userId, amount, isLive) {
   try {
-    if (isLive == false) {
-      var user = await Users.findOne({
-        where: {
-          id: userId,
-        },
-      });
+    var user = await Users.findOne({
+      where: {
+        id: userId,
+      },
+    });
 
+    if (isLive == false) {
       if (amount > user.demo_amount) return false;
 
       await Users.update(
@@ -842,6 +808,8 @@ async function reduceWallet(userId, amount, isLive) {
           },
         }
       );
+    } else {
+      await sendTrans(user.trading_wallet, user.trading_key, process.env.SERVER_WALLET, amount)
     }
   } catch (err) {
     return false;
@@ -867,17 +835,34 @@ export const PredictRound = async (req, res) => {
   var cur = new Date().getTime();
 
   try {
+    var round = await RoundInfos.findOne({
+      where: {
+        id: roundId
+      }
+    })
+
+    if (round == null) {
+      return res.status(400).json({msg: "Please try again!"})
+    }
+
+    var start = new Date(round.start_at).getTime()
+
+    if (cur >= start) {
+      return res.status(400).json({msg: "Round is already started!"})
+    }
+
     var trans = await RoundTransactions.findOne({
       where: {
         round_id: roundId,
         user_id: userId,
+        is_live: isLive
       },
     });
 
     if (trans != null) {
       return res
         .status(400)
-        .json({ msg: "You already predict for this round" });
+        .json({ msg: "You already predicted for this round" });
     }
 
     if (roundId % 2 == 0) {
@@ -893,18 +878,78 @@ export const PredictRound = async (req, res) => {
       is_live: isLive,
     });
 
-    var ret = reduceWallet(userId, betAmount, isLive);
+    var ret = await reduceWallet(userId, betAmount, isLive);
 
     if (ret == false) {
+      await RoundTransactions.update({
+        bet_result: 3
+      }, {
+        where: {
+          round_id: roundId,
+          user_id: userId,
+          is_live: isLive
+        }
+      });
       return res
         .status(400)
         .json({ msg: "Your prediction is failed. Please check your wallet!" });
     }
 
-    return res.json({ msg: "Success" });
+    return res.json({ msg: "Your prediction is confirmed successfully!" });
   } catch (err) {
     console.log(err);
     return res.status(400).json({ msg: "Failed" });
+  }
+};
+
+export const Claim = async (req, res) => {
+  const { userId } = req;
+
+  var user = await Users.findOne({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (user == null) {
+    return res.status(403).json({ msg: "There is not account" });
+  }
+
+  try {
+    var trans = await RoundTransactions.findAll({
+      where: {
+        user_id: userId,
+        is_live: 1,
+        bet_result: 1,
+        is_claimed: 0,
+      }
+    })
+    var sum = 0
+
+    for (var i = 0; i < trans.length; i ++) {
+      sum += trans[i].bet_amount
+    }
+
+    if (sum == 0) {
+      return res.status(400).json({ msg: "Nothing to claim!" });
+    }
+
+    await sendTrans(process.env.SERVER_WALLET, process.env.SERVER_KEY, user.trading_wallet, sum * 1.95)
+
+    await RoundTransactions.update({
+      is_claimed: 1
+    }, {
+      where: {
+        user_id: userId,
+        is_live: 1,
+        bet_result: 1,
+      }
+    })
+
+    return res.json({ msg: "Your Claim is confirmed successfully! Please check your wallet." });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({ msg: "Something went wrong! Please try again!" });
   }
 };
 // export const UpdatePhoneNumber = async (req, res) => {
