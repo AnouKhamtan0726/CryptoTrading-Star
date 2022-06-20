@@ -22,7 +22,7 @@ const myLogger = new Console({
 });
 
 const web3 = new Web3(RPC_URL);
-var startBlockNumber = 20339207;
+var startBlockNumber = 20367264;
 var main_wallets = [];
 var trading_wallets = [];
 
@@ -320,5 +320,5 @@ async function init() {
   setTimeout(init, 2000);
 }
 
-// init();
+init();
 getRoundInfos();
