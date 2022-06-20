@@ -254,7 +254,7 @@ function Exchange() {
                                 </td>
 
                                 <td>
-                                  <span className="badge badge-danger p-2">
+                                  <span className="badge badge-info p-2">
                                     {trans.type == 3
                                       ? "Send to trading wallet"
                                       : "Send to main wallet"}
