@@ -16,6 +16,7 @@ import {
   GetCurrentRound,
   PredictRound,
   Claim,
+  GetUserTransactions,
   // UpdatePhoneNumber,
 } from "../controllers/Users.js";
 import { verifyToken } from "../middleware/VerifyToken.js";
@@ -40,6 +41,7 @@ router.post("/get-rounds-info", verifyToken, GetRoundInfos);
 router.post("/get-current-round", verifyToken, GetCurrentRound);
 router.post("/predict-round", verifyToken, PredictRound);
 router.post("/claim", verifyToken, Claim);
+router.post("/get-user-transactions", verifyToken, GetUserTransactions);
 // router.post("/phone-number", verifyToken, UpdatePhoneNumber);
 
 export default router;

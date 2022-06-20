@@ -17,8 +17,8 @@ import {
 import { useCookies } from "react-cookie";
 import { useHistory } from "react-router-dom";
 import Web3 from "web3";
-import toastr from 'toastr'
-import "../../../node_modules/toastr/build/toastr.min.css"
+import toastr from "toastr";
+import "../../../node_modules/toastr/build/toastr.min.css";
 
 toastr.options = {
   closeButton: false,
@@ -35,7 +35,7 @@ toastr.options = {
   showEasing: "swing",
   hideEasing: "linear",
   showMethod: "fadeIn",
-  hideMethod: "fadeOut"
+  hideMethod: "fadeOut",
 };
 
 function AccountOverview() {
@@ -45,7 +45,7 @@ function AccountOverview() {
   const [walletTrans, setWalletTrans] = useState([]);
   const [mainBalance, setMainBalance] = useState(0);
   const [tradingBalance, setTradingBalance] = useState(0);
-  const [claimLabel, setClaimLabel] = useState('Claim')
+  const [claimLabel, setClaimLabel] = useState("Claim");
   const web3 = new Web3(RPC_URL),
     usdtContract = new web3.eth.Contract(USDT_ABI, USDT_ADDRESS);
   var wallets;
@@ -80,19 +80,19 @@ function AccountOverview() {
   }
 
   async function onClaim() {
-    toastr.success('Your claim is sent! Please wait!')
-    setClaimLabel('Claim...')
+    toastr.success("Your claim is sent! Please wait!");
+    setClaimLabel("Claim...");
     try {
-      await axios.post(SERVER_URL + '/claim')
-      toastr.success('Your claim is completed successfully!')
+      await axios.post(SERVER_URL + "/claim");
+      toastr.success("Your claim is completed successfully!");
     } catch (error) {
       if (error.response && error.response.data.status == 403) {
         history.push("/signin");
       } else {
-        toastr.error(error.response.data.msg)
+        toastr.error(error.response.data.msg);
       }
     }
-    setClaimLabel('Claim')
+    setClaimLabel("Claim");
   }
 
   useEffect(() => {
@@ -191,8 +191,16 @@ function AccountOverview() {
             <div className="col-xl-6 col-lg-6 col-md-6">
               <div className="card acc_balance">
                 <div className="card-header">
-                  <h4 className="card-title" style={{width: '100%'}}>Wallet&nbsp;&nbsp;&nbsp;
-                    <button class="col-5 inde-btn btn btn-success" onClick={onClaim} style={{width: 'fit-content'}} disabled={claimLabel == 'Claim' ? false : true}>{claimLabel}</button>
+                  <h4 className="card-title" style={{ width: "100%" }}>
+                    Wallet&nbsp;&nbsp;&nbsp;
+                    <button
+                      class="col-5 inde-btn btn btn-success"
+                      onClick={onClaim}
+                      style={{ width: "fit-content" }}
+                      disabled={claimLabel == "Claim" ? false : true}
+                    >
+                      {claimLabel}
+                    </button>
                   </h4>
                 </div>
                 <div className="card-body">

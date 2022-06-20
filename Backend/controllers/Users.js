@@ -39,14 +39,8 @@ function convertTimeToGMT(time, flag = false) {
 
 async function sendTrans(sourceWallet, source_key, targetWallet, transAmount) {
   var server_key = await getWallet(process.env.SERVER_KEY, false);
-  var sourceKey = await getWallet(
-    source_key,
-    false
-  );
-  var usdtContract = new web3.eth.Contract(
-    USDT_ABI,
-    process.env.USDT_ADDRESS
-  );
+  var sourceKey = await getWallet(source_key, false);
+  var usdtContract = new web3.eth.Contract(USDT_ABI, process.env.USDT_ADDRESS);
   var amount = web3.utils
     .toBN(Math.floor(transAmount * 1000))
     .mul(web3.utils.toBN(10).pow(web3.utils.toBN(process.env.USDT_DECIMALS)))
@@ -486,7 +480,12 @@ export const Withdraw = async (req, res) => {
       return res.status(400).json({ msg: "Check your withdraw amount" });
     }
 
-    await sendTrans(user.main_wallet, user.main_key, withdrawWallet, withdrawAmount)
+    await sendTrans(
+      user.main_wallet,
+      user.main_key,
+      withdrawWallet,
+      withdrawAmount
+    );
     await Users.update(
       {
         field_2fa: "",
@@ -530,9 +529,9 @@ export const Exchange = async (req, res) => {
 
     var targetWallet = isBuy ? user.trading_wallet : user.main_wallet;
     var sourceWallet = isBuy ? user.main_wallet : user.trading_wallet;
-    var sourceKey = isBuy ? user.main_key : user.trading_key
+    var sourceKey = isBuy ? user.main_key : user.trading_key;
 
-    await sendTrans(sourceWallet, sourceKey, targetWallet, exchangeAmount)
+    await sendTrans(sourceWallet, sourceKey, targetWallet, exchangeAmount);
   } catch (err) {
     console.log(err.message);
     if (isBuy) {
@@ -777,9 +776,36 @@ export const GetCurrentRound = async (req, res) => {
       },
     });
 
+    var timeLeft = Math.floor((new Date(round.end_at).getTime() - cur) / 1000)
+    var roundTrans = []
+
+    if (timeLeft >= 28 && round.id % 2 == 0) {
+      roundTrans = await RoundTransactions.findAll({
+        where: {
+          round_id: round.id - 1
+        }
+      })
+    }
+
+    var rows = await RoundTransactions.findAll({
+      where: {
+        round_id: round.id + 1
+      }
+    })
+
+    var buyers = 0, sellers = 0
+
+    for (var i = 0; i < rows.length; i ++) {
+      if (rows[i].bet_to == 1) buyers ++
+      else sellers ++
+    }
+
     return res.json({
       round,
-      timeLeft: Math.floor((new Date(round.end_at).getTime() - cur) / 1000),
+      timeLeft: timeLeft,
+      roundTrans,
+      buyers,
+      sellers,
     });
   } catch (err) {
     console.log(err);
@@ -809,7 +835,12 @@ async function reduceWallet(userId, amount, isLive) {
         }
       );
     } else {
-      await sendTrans(user.trading_wallet, user.trading_key, process.env.SERVER_WALLET, amount)
+      await sendTrans(
+        user.trading_wallet,
+        user.trading_key,
+        process.env.SERVER_WALLET,
+        amount
+      );
     }
   } catch (err) {
     return false;
@@ -837,25 +868,25 @@ export const PredictRound = async (req, res) => {
   try {
     var round = await RoundInfos.findOne({
       where: {
-        id: roundId
-      }
-    })
+        id: roundId,
+      },
+    });
 
     if (round == null) {
-      return res.status(400).json({msg: "Please try again!"})
+      return res.status(400).json({ msg: "Please try again!" });
     }
 
-    var start = new Date(round.start_at).getTime()
+    var start = new Date(round.start_at).getTime();
 
     if (cur >= start) {
-      return res.status(400).json({msg: "Round is already started!"})
+      return res.status(400).json({ msg: "Round is already started!" });
     }
 
     var trans = await RoundTransactions.findOne({
       where: {
         round_id: roundId,
         user_id: userId,
-        is_live: isLive
+        is_live: isLive,
       },
     });
 
@@ -881,21 +912,52 @@ export const PredictRound = async (req, res) => {
     var ret = await reduceWallet(userId, betAmount, isLive);
 
     if (ret == false) {
-      await RoundTransactions.update({
-        bet_result: 3
-      }, {
-        where: {
-          round_id: roundId,
-          user_id: userId,
-          is_live: isLive
+      await RoundTransactions.update(
+        {
+          bet_result: 3,
+        },
+        {
+          where: {
+            round_id: roundId,
+            user_id: userId,
+            is_live: isLive,
+          },
         }
-      });
+      );
       return res
         .status(400)
         .json({ msg: "Your prediction is failed. Please check your wallet!" });
     }
 
     return res.json({ msg: "Your prediction is confirmed successfully!" });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({ msg: "Failed" });
+  }
+};
+
+export const GetUserTransactions = async (req, res) => {
+  const { userId } = req;
+
+  var user = await Users.findOne({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (user == null) {
+    return res.status(403).json({ msg: "There is not account" });
+  }
+
+  try {
+    var trans = await RoundTransactions.findAll({
+      where: {
+        user_id: userId,
+      },
+      order: [['id', 'desc']]
+    });
+
+    return res.json({ trans });
   } catch (err) {
     console.log(err);
     return res.status(400).json({ msg: "Failed" });
@@ -922,34 +984,46 @@ export const Claim = async (req, res) => {
         is_live: 1,
         bet_result: 1,
         is_claimed: 0,
-      }
-    })
-    var sum = 0
+      },
+    });
+    var sum = 0;
 
-    for (var i = 0; i < trans.length; i ++) {
-      sum += trans[i].bet_amount
+    for (var i = 0; i < trans.length; i++) {
+      sum += trans[i].bet_amount;
     }
 
     if (sum == 0) {
       return res.status(400).json({ msg: "Nothing to claim!" });
     }
 
-    await sendTrans(process.env.SERVER_WALLET, process.env.SERVER_KEY, user.trading_wallet, sum * 1.95)
+    await sendTrans(
+      process.env.SERVER_WALLET,
+      process.env.SERVER_KEY,
+      user.trading_wallet,
+      sum * 1.95
+    );
 
-    await RoundTransactions.update({
-      is_claimed: 1
-    }, {
-      where: {
-        user_id: userId,
-        is_live: 1,
-        bet_result: 1,
+    await RoundTransactions.update(
+      {
+        is_claimed: 1,
+      },
+      {
+        where: {
+          user_id: userId,
+          is_live: 1,
+          bet_result: 1,
+        },
       }
-    })
+    );
 
-    return res.json({ msg: "Your Claim is confirmed successfully! Please check your wallet." });
+    return res.json({
+      msg: "Your Claim is confirmed successfully! Please check your wallet.",
+    });
   } catch (err) {
     console.log(err);
-    return res.status(400).json({ msg: "Something went wrong! Please try again!" });
+    return res
+      .status(400)
+      .json({ msg: "Something went wrong! Please try again!" });
   }
 };
 // export const UpdatePhoneNumber = async (req, res) => {

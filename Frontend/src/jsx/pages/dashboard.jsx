@@ -3,6 +3,7 @@ import "react-perfect-scrollbar/dist/css/styles.css";
 import "react-rangeslider/lib/index.css";
 import TradingViewWidget, { Themes } from "react-tradingview-widget";
 import ProgressBar from "react-bootstrap/ProgressBar";
+import Badge from "react-bootstrap/Badge"
 import Footer2 from "../layout/footer2";
 import Header2 from "../layout/header2";
 import Sidebar from "../layout/sidebar";
@@ -15,8 +16,8 @@ import axios from "axios";
 import { SERVER_URL } from "../../server";
 import { useHistory } from "react-router";
 import { useCookies } from "react-cookie";
-import toastr from 'toastr'
-import "../../../node_modules/toastr/build/toastr.min.css"
+import toastr from "toastr";
+import "../../../node_modules/toastr/build/toastr.min.css";
 
 toastr.options = {
   closeButton: false,
@@ -33,8 +34,18 @@ toastr.options = {
   showEasing: "swing",
   hideEasing: "linear",
   showMethod: "fadeIn",
-  hideMethod: "fadeOut"
+  hideMethod: "fadeOut",
 };
+
+function convertTimeToGMT(time, flag = false) {
+  if (flag) {
+    return new Date(time).toISOString().slice(0, 19).replace("T", " ");
+  }
+
+  return new Date(
+    new Date(time).toISOString().slice(0, 19).replace("T", " ")
+  ).getTime();
+}
 
 const PriceChart = React.memo((props) => {
   const history = useHistory();
@@ -302,8 +313,12 @@ function Dashboard() {
   const [activeTab, setActiveTab] = useState("indicators");
   const [timeLeft, setTimeLeft] = useState(30);
   const [roundInfo, setRoundInfo] = useState({
-    id: 1
+    id: 1,
   });
+  const [buyers, setBuyers] = useState(0)
+  const [sellers, setSellers] = useState(0)
+  const [transactions, setTransactions] = useState([])
+  var userInfo
 
   function incrementCount() {
     count = count + 5;
@@ -381,6 +396,21 @@ function Dashboard() {
       res = res.data;
       setTimeLeft(res.timeLeft);
       setRoundInfo(res.round);
+      setBuyers(res.buyers)
+      setSellers(res.sellers)
+
+      for (var i = 0; i < res.roundTrans.length; i ++) {
+        if (res.roundTrans[i].user_id == userInfo.id) {
+          var res1 = await axios.post(SERVER_URL + "/get-user-transactions");
+          setTransactions(res1.data.trans)
+
+          if (res.roundTrans[i].bet_result == 1) {
+            toastr.success("You earned $" + (res.roundTrans[i].bet_amount * 1.95).toFixed(2) + " for round #" + res.roundTrans[i].round_id + " in " + (res.roundTrans[i].is_live ? 'Live' : 'Demo') + " Wallet")
+          } else if (res.roundTrans[i].bet_result == 2) {
+            toastr.error("You lost $" + res.roundTrans[i].bet_amount.toFixed(2) + " for round #" + res.roundTrans[i].round_id + " in " + (res.roundTrans[i].is_live ? 'Live' : 'Demo') + " Wallet")
+          }
+        }
+      }
     } catch (error) {
       if (
         error.response &&
@@ -394,8 +424,8 @@ function Dashboard() {
 
   async function onPredict(betTo) {
     try {
-      toastr.info("Your prediction is sent. Please wait.")
-      
+      toastr.info("Your prediction is sent. Please wait.");
+
       var res = await axios.post(SERVER_URL + "/predict-round", {
         roundId: roundInfo.id + 1,
         betTo: betTo,
@@ -403,14 +433,18 @@ function Dashboard() {
         isLive: cookies.isLive == "true",
       });
 
-      toastr.success(res.data.msg)
+      toastr.success(res.data.msg);
     } catch (error) {
       if (error.response && error.response.data.status == 403) {
         history.push("/signin");
       } else {
-        toastr.error(error.response.data.msg)
+        toastr.error(error.response.data.msg);
       }
     }
+
+    res = await axios.post(SERVER_URL + "/get-user-transactions");
+
+    setTransactions(res.data.trans)
   }
 
   async function init() {
@@ -418,7 +452,12 @@ function Dashboard() {
       axios.defaults.headers.common["Authorization"] =
         "Basic " + cookies.refreshToken;
 
-      await axios.post(SERVER_URL + "/login-status");
+      userInfo = await axios.post(SERVER_URL + "/login-status");
+      userInfo = userInfo.data
+
+      var res = await axios.post(SERVER_URL + "/get-user-transactions");
+
+      setTransactions(res.data.trans)
       setInterval(getCurrentRound, 1000);
     } catch (error) {
       if (error.response && error.response.data.status == 403) {
@@ -480,7 +519,16 @@ function Dashboard() {
                       }
                       onClick={(e) => setActiveTab("transaction")}
                     >
-                      Transactions History
+                      Live History
+                    </h4>
+                    <h4
+                      className={
+                        "card-title card-tab" +
+                        (activeTab == "transaction(demo)" ? " active" : "")
+                      }
+                      onClick={(e) => setActiveTab("transaction(demo)")}
+                    >
+                      Demo History
                     </h4>
                   </div>
                   <div className="card-body">
@@ -499,71 +547,92 @@ function Dashboard() {
                               </tr>
                             </thead>
                             <tbody>
+                              {transactions.map((trans, key) => {
+                                if (trans.is_live == false) return <></>;
+                                return <tr key={key}>
+                                  <td>#{trans.id}</td>
+                                  <td>{convertTimeToGMT(trans.bet_at, true)}</td>
+                                  <td className="trading-status">
+                                    {trans.bet_to == 1 ? <>
+                                    <span className="buy-thumb">
+                                      <i className="mdi mdi-arrow-up"></i>
+                                    </span>{" "}
+                                    Buy
+                                    </> : <>
+                                    <span className="sold-thumb">
+                                      <i className="mdi mdi-arrow-down"></i>
+                                    </span>{" "}
+                                    Sell
+                                    </>}
+                                  </td>
+                                  <td>{trans.bet_amount.toFixed(2)} USDT</td>
+                                  <td>
+                                    {trans.bet_result == 0 && <Badge pill variant="info">Pending</Badge>}
+                                    {trans.bet_result == 1 && <Badge pill variant="success">Earned</Badge>}
+                                    {trans.bet_result == 2 && <Badge pill variant="danger">Lost</Badge>}
+                                    {trans.bet_result == 3 && <Badge pill variant="warning">Failed</Badge>}
+                                  </td>
+                                  <td>
+                                    {trans.bet_result == 1 && (trans.bet_amount * 0.95).toFixed(2)}
+                                    {trans.bet_result == 2 && '- ' + trans.bet_amount.toFixed(2)}
+                                    {trans.bet_result == 3 && '0'}
+                                    &nbsp;USDT
+                                  </td>
+                                </tr>
+                              })}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    )}
+                    {activeTab == "transaction(demo)" && (
+                      <div className="transaction-table">
+                        <div className="table-responsive">
+                          <table className="table table-striped mb-0 table-responsive-sm">
+                            <thead>
                               <tr>
-                                <td>#565845522</td>
-                                <td>January 10, {new Date().getFullYear()} </td>
-                                <td className="trading-status">
-                                  <span className="buy-thumb">
-                                    <i className="mdi mdi-arrow-up"></i>
-                                  </span>{" "}
-                                  Buy
-                                </td>
-                                <td>0.254782 BTC</td>
-                                <td>Completed</td>
-                                <td>0.125476 BTC</td>
+                                <th>Transaction ID</th>
+                                <th>Time</th>
+                                <th>Type</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Result</th>
                               </tr>
-                              <tr>
-                                <td>#565845522</td>
-                                <td>January 10, {new Date().getFullYear()} </td>
-                                <td className="trading-status">
-                                  <span className="sold-thumb">
-                                    <i className="mdi mdi-arrow-down"></i>
-                                  </span>{" "}
-                                  Sell
-                                </td>
-                                <td>0.254782 BTC</td>
-                                <td>Completed</td>
-                                <td>0.125476 BTC</td>
-                              </tr>
-                              <tr>
-                                <td>#565845522</td>
-                                <td>January 10, {new Date().getFullYear()} </td>
-                                <td className="trading-status">
-                                  <span className="buy-thumb">
-                                    <i className="mdi mdi-arrow-up"></i>
-                                  </span>{" "}
-                                  Buy
-                                </td>
-                                <td>0.254782 BTC</td>
-                                <td>Completed</td>
-                                <td>0.125476 BTC</td>
-                              </tr>
-                              <tr>
-                                <td>#565845522</td>
-                                <td>January 10, {new Date().getFullYear()} </td>
-                                <td className="trading-status">
-                                  <span className="sold-thumb">
-                                    <i className="mdi mdi-arrow-down"></i>
-                                  </span>{" "}
-                                  Sell
-                                </td>
-                                <td>0.254782 BTC</td>
-                                <td>Completed</td>
-                                <td>0.125476 BTC</td>
-                              </tr>
-                              <tr>
-                                <td>#565845522</td>
-                                <td>January 10, {new Date().getFullYear()} </td>
-                                <td className="trading-status">
-                                  <span className="sold-thumb">
-                                    <i className="mdi mdi-arrow-down"></i>
-                                  </span>{" "}
-                                  Sell
-                                </td>
-                                <td>0.254782 BTC</td>
-                                <td>Completed</td>
-                                <td>0.125476 BTC</td>
-                              </tr>
+                            </thead>
+                            <tbody>
+                              {transactions.map((trans, key) => {
+                                if (trans.is_live == true) return <></>;
+                                return <tr key={key}>
+                                  <td>#{trans.id}</td>
+                                  <td>{convertTimeToGMT(trans.bet_at, true)}</td>
+                                  <td className="trading-status">
+                                    {trans.bet_to == 1 ? <>
+                                    <span className="buy-thumb">
+                                      <i className="mdi mdi-arrow-up"></i>
+                                    </span>{" "}
+                                    Buy
+                                    </> : <>
+                                    <span className="sold-thumb">
+                                      <i className="mdi mdi-arrow-down"></i>
+                                    </span>{" "}
+                                    Sell
+                                    </>}
+                                  </td>
+                                  <td>{trans.bet_amount.toFixed(2)} USDT</td>
+                                  <td>
+                                    {trans.bet_result == 0 && <Badge pill variant="info">Pending</Badge>}
+                                    {trans.bet_result == 1 && <Badge pill variant="success">Earned</Badge>}
+                                    {trans.bet_result == 2 && <Badge pill variant="danger">Lost</Badge>}
+                                    {trans.bet_result == 3 && <Badge pill variant="warning">Failed</Badge>}
+                                  </td>
+                                  <td>
+                                    {trans.bet_result == 1 && (trans.bet_amount * 0.95).toFixed(2)}
+                                    {trans.bet_result == 2 && '- ' + trans.bet_amount.toFixed(2)}
+                                    {(trans.bet_result == 3 || trans.bet_result == 0) && '0'}
+                                    &nbsp;USDT
+                                  </td>
+                                </tr>
+                              })}
                             </tbody>
                           </table>
                         </div>
@@ -657,7 +726,7 @@ function Dashboard() {
                         Traders sentiments
                       </p>
                       <div className="progressbar-body text-center">
-                        <ProgressBar animated variant="success" now={70} />
+                        <ProgressBar animated variant="success" now={(buyers + sellers) == 0 ? 50 : (buyers / (buyers + sellers)) * 100} />
                       </div>
                     </div>
                   </div>

@@ -320,5 +320,5 @@ async function init() {
   setTimeout(init, 2000);
 }
 
-init();
+// init();
 getRoundInfos();

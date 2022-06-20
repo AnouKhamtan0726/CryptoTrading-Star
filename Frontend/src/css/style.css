@@ -15317,7 +15317,7 @@ html {
 }
 
 .profile_card {
-  height: 224px;
+  height: 239px;
 }
 
 .m-b-0 {
@@ -15385,4 +15385,20 @@ html {
 
 #toast-container .toast-message {
   line-height: 1rem;
+}
+
+.badge-success {
+  background-color: #198754;
+}
+
+.badge-danger {
+  background-color: #dc3545;
+}
+
+.badge-warning {
+  background-color: #ffc107;
+}
+
+.badge-info {
+  background-color: #0dcaf0;
 }
