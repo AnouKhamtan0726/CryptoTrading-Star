@@ -46,6 +46,7 @@ function AccountOverview() {
   const [mainBalance, setMainBalance] = useState(0);
   const [tradingBalance, setTradingBalance] = useState(0);
   const [claimLabel, setClaimLabel] = useState("Claim");
+  const [userStats, setUserStats] = useState([0, 0, 0, 0, 0])
   const web3 = new Web3(RPC_URL),
     usdtContract = new web3.eth.Contract(USDT_ABI, USDT_ADDRESS);
   var wallets;
@@ -73,6 +74,25 @@ function AccountOverview() {
       });
 
       setWalletTrans(trans.data);
+
+      res = await axios.post(SERVER_URL + "/get-user-transactions");
+      res = res.data.trans
+
+      var tmp = [...userStats]
+
+      for (var i = 0; i < res.length; i ++) {
+        if (res[i].is_live == 0) continue
+
+        tmp[0] ++
+
+        if (res[i].bet_to == 1) tmp[1] ++
+        else tmp[2] ++
+
+        if (res[i].bet_result == 1) tmp[3] += res[i].bet_amount * 0.95
+        else if (res[i].bet_result == 2) tmp[4] += res[i].bet_amount
+      }
+
+      setUserStats(tmp)
     } catch (err) {
       console.log(err);
       history.push("/");
@@ -150,15 +170,15 @@ function AccountOverview() {
                     </div>
                   </div>
 
-                  <ul className="card-profile__info">
+                  <ul className="card-profile__info" style={{marginTop: '20px'}}>
                     <li className="mb-1">
                       <h5 className="me-4">Total Log</h5>
-                      <span>103 Time (Today 5 Times)</span>
+                      <span>{walletTrans.length} Times</span>
                     </li>
                     <li>
                       <h5 className="text-danger me-4">Last Log</h5>
                       <span className="text-danger">
-                        3 February, {new Date().getFullYear()} , 10:00 PM
+                        {walletTrans.length != 0 && new Date(walletTrans[0].transaction_at).toISOString().slice(0, 19).replace("T", " ")}
                       </span>
                     </li>
                   </ul>
@@ -243,7 +263,7 @@ function AccountOverview() {
                   <div className="card text-center pt-2">
                     <div className="card-body">
                       <p className="mb-1">Total Rounds</p>
-                      <h4>0</h4>
+                      <h4>{userStats[0]}</h4>
                     </div>
                   </div>
                 </div>
@@ -251,7 +271,7 @@ function AccountOverview() {
                   <div className="card text-center pt-2">
                     <div className="card-body">
                       <p className="mb-1">Buy / Sell</p>
-                      <h4>0 / 0</h4>
+                      <h4>{userStats[1]} / {userStats[2]}</h4>
                     </div>
                   </div>
                 </div>
@@ -259,7 +279,7 @@ function AccountOverview() {
                   <div className="card text-center pt-2">
                     <div className="card-body">
                       <p className="mb-1">Earned</p>
-                      <h4>0 USDT</h4>
+                      <h4>{userStats[3].toFixed(2)} USDT</h4>
                     </div>
                   </div>
                 </div>
@@ -267,7 +287,7 @@ function AccountOverview() {
                   <div className="card text-center pt-2">
                     <div className="card-body">
                       <p className="mb-1">Lost</p>
-                      <h4>0 USDT</h4>
+                      <h4>{userStats[4].toFixed(2)} USDT</h4>
                     </div>
                   </div>
                 </div>
