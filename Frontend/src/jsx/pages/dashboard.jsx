@@ -292,7 +292,7 @@ const Indicators = React.memo((props) => {
       var tmpNeutrals = [...neutrals]
 
       var oscDelta = Math.round((ohlcData[99][4] - ohlcData[79][4]) / 10)
-      var oscA = Math.round(Math.random() * 10)
+      var oscA = Math.round(Math.random() * 9) + 1
       var oscB = oscA + Math.abs(oscDelta)
       
       var avg1 = 0
@@ -307,7 +307,7 @@ const Indicators = React.memo((props) => {
       avg2 /= 50
 
       var mvDelta = Math.round((avg2 - avg1) / 10)
-      var mvA = Math.round(Math.random() * 10)
+      var mvA = Math.round(Math.random() * 9) + 1
       var mvB = mvA + Math.abs(mvDelta)
 
       tmpBuys[0] = oscDelta > 0 ? oscB : oscA
