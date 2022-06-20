@@ -3,8 +3,8 @@ import GaugeChart from "react-gauge-chart";
 
 function Indicator(props) {
   var { width, id, title, buy, sell, neutral } = props;
-  const [status, setStatus] = useState("NEUTRAL");
-  const [angle, setAngle] = useState(0.5);
+  var status = "NEUTRAL";
+  var angle = 0.5;
   var height,
     left,
     top,
@@ -25,12 +25,10 @@ function Indicator(props) {
     });
   }
 
-  useEffect(() => {
-    if (buy * sell != 0) {
-      setAngle(buy / (buy + sell));
-      setStatus(labels[Math.floor((buy / (buy + sell)) * 5)]);
-    }
-  }, []);
+  if (buy * sell != 0) {
+    angle = buy / (buy + sell)
+    status = labels[Math.floor((buy / (buy + sell)) * 5)]
+  }
 
   return (
     <div className="jindicator" style={{ width: width, height: height }}>

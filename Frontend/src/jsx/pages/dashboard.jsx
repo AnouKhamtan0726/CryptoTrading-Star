@@ -37,6 +37,14 @@ toastr.options = {
   hideMethod: "fadeOut",
 };
 
+var ohlcData = []
+
+var gcd = function(a, b) {
+  if (!b) return a;
+
+  return gcd(b, a % b);
+};
+
 function convertTimeToGMT(time, flag = false) {
   if (flag) {
     return new Date(time).toISOString().slice(0, 19).replace("T", " ");
@@ -209,6 +217,8 @@ const PriceChart = React.memo((props) => {
         volumeColors.push(data[i][1] < data[i][4] ? "#31BAA0" : "#FC5F5F");
       }
 
+      ohlcData = ohlc
+
       if (chartRef.current && chartRef.current.chart.series.length == 0) {
         chartRef.current.chart.addSeries({
           type: "candlestick",
@@ -271,31 +281,81 @@ const PriceChart = React.memo((props) => {
 });
 
 const Indicators = React.memo((props) => {
+  const [buys, setBuys] = useState([0, 0])
+  const [sells, setSells] = useState([0, 0])
+  const [neutrals, setNeutrals] = useState([0, 0])
+
+  function updateIndicators() {
+    if (ohlcData.length) {
+      var tmpBuys = [...buys]
+      var tmpSells = [...sells]
+      var tmpNeutrals = [...neutrals]
+
+      var oscDelta = Math.round((ohlcData[99][4] - ohlcData[79][4]) / 10)
+      var oscA = Math.round(Math.random() * 10)
+      var oscB = oscA + Math.abs(oscDelta)
+      
+      var avg1 = 0
+      var avg2 = 0
+
+      for (var i = 0; i < 100; i ++) {
+        if (i < 50) avg1 += ohlcData[i][4]
+        else avg2 += ohlcData[i][4]
+      }
+
+      avg1 /= 50
+      avg2 /= 50
+
+      var mvDelta = Math.round((avg2 - avg1) / 10)
+      var mvA = Math.round(Math.random() * 10)
+      var mvB = mvA + Math.abs(mvDelta)
+
+      tmpBuys[0] = oscDelta > 0 ? oscB : oscA
+      tmpSells[0] = oscDelta > 0 ? oscA : oscB      
+      tmpBuys[1] = mvDelta > 0 ? mvB : mvA
+      tmpSells[1] = mvDelta > 0 ? mvA : mvB
+
+      tmpNeutrals[0] = Math.floor(Math.random() * 3)
+      tmpNeutrals[1] = Math.floor(Math.random() * 3)
+
+      setNeutrals(tmpNeutrals)
+      setBuys(tmpBuys)
+      setSells(tmpSells)
+      setTimeout(updateIndicators, 30000)
+    } else {
+      setTimeout(updateIndicators, 1000)
+    }
+  }
+
+  useEffect(() => {
+    updateIndicators()
+  }, [])
+
   return (
     <div className="indicators-container">
       <Indicator
         id="indicator-1"
         width="200px"
         title="Oscillators"
-        buy={2}
-        sell={2}
-        neutral={1}
+        buy={buys[0]}
+        sell={sells[0]}
+        neutral={neutrals[0]}
       />
       <Indicator
         id="indicator-2"
         width="300px"
         title="Summary"
-        buy={13}
-        sell={5}
-        neutral={1}
+        buy={buys[0] + buys[1]}
+        sell={sells[0] + sells[1]}
+        neutral={neutrals[0] + neutrals[1]}
       />
       <Indicator
         id="indicator-3"
         width="200px"
         title="Moving Averages"
-        buy={11}
-        sell={1}
-        neutral={0}
+        buy={buys[1]}
+        sell={sells[1]}
+        neutral={neutrals[1]}
       />
     </div>
   );
