@@ -79,9 +79,9 @@ function Exchange() {
 
   async function onExchange(isBuy) {
     if (isBuy) {
-      setBuyLabel("Buying ...");
+      setBuyLabel("Sending to Trading Wallet ...");
     } else {
-      setSellLabel("Selling ...");
+      setSellLabel("Sending to Main Wallet ...");
     }
 
     try {
@@ -296,9 +296,9 @@ function Exchange() {
                           })}
                           {showLimit > 0 && (
                             <tr>
-                              <td colspan="6" align="center">
+                              <td colSpan="6" align="center">
                                 <button
-                                  class="mt-2 col-12 inde-btn btn btn-info btn-block time-button"
+                                  className="mt-2 col-12 inde-btn btn btn-info btn-block time-button"
                                   onClick={showMore}
                                 >
                                   Show More

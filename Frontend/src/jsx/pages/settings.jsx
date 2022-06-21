@@ -61,6 +61,19 @@ function Settings() {
     }
   }
 
+  async function onVerify() {
+    try {
+      await axios.post(SERVER_URL + "/request-2fa", {
+        field: 'email_verify',
+      });
+      history.push('/email-verify')
+    } catch (error) {
+      if (error.response && error.response.data.status == 403) {
+        history.push("/signin");
+      }
+    }
+  }
+
   return (
     <>
       <Header2 />
@@ -118,6 +131,7 @@ function Settings() {
                               <button
                                 type="button"
                                 className="btn btn-info text-white"
+                                onClick={onVerify}
                               >
                                 Verify
                               </button>

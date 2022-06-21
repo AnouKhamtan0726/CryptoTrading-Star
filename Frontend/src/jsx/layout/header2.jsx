@@ -134,6 +134,7 @@ function Header2() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [liveAmount, setLiveAmount] = useState(0);
+  const [totalAmount, setTotalAmount] = useState(0);
   const [demoAmount, setDemoAmount] = useState(0);
   const [isLive, setIsLive] = useState(false);
   const current = new Date();
@@ -153,14 +154,18 @@ function Header2() {
 
   async function getWalletAmounts() {
     try {
-      var res = await usdtContract.methods
+      var res = await Promise.all([usdtContract.methods
         .balanceOf(wallets.trading_wallet)
-        .call();
+        .call(), 
+        usdtContract.methods
+        .balanceOf(wallets.main_wallet)
+        .call()])
       var res1 = await axios.post(SERVER_URL + "/login-status");
 
-      setCookie("liveAmount", res / 10 ** USDT_DECIMALS);
+      setCookie("liveAmount", res[0] / 10 ** USDT_DECIMALS);
       setCookie("demoAmount", res1.data.demo_amount);
-      setLiveAmount(res / 10 ** USDT_DECIMALS);
+      setLiveAmount(res[0] / 10 ** USDT_DECIMALS);
+      setTotalAmount(res[1] / 10 ** USDT_DECIMALS);
       setDemoAmount(parseFloat(res1.data.demo_amount));
     } catch (error) {
       if (error.response && error.response.data.status == 403) {
@@ -451,11 +456,11 @@ function Header2() {
                         <div className="user-balance">
                           <div className="available">
                             <p>Available</p>
-                            <span>0.00 USD</span>
+                            <span>{liveAmount.toFixed(2)} USDT</span>
                           </div>
                           <div className="total">
                             <p>Total</p>
-                            <span>0.00 USD</span>
+                            <span>{(totalAmount + liveAmount).toFixed(2)} USDT</span>
                           </div>
                         </div>
                         <div className="quick-deposit dropdown-item responsive-dropdown-item">
