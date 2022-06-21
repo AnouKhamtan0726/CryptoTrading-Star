@@ -41,7 +41,7 @@ function Sidebar() {
                 </OverlayTrigger>
               </Link>
             </li>
-            <li>
+            {/* <li>
               <Link to={"./data-tbi"} activeclassname="active">
                 <OverlayTrigger placement="right" overlay={data}>
                   <span>
@@ -49,7 +49,7 @@ function Sidebar() {
                   </span>
                 </OverlayTrigger>
               </Link>
-            </li>
+            </li> */}
             <li>
               <Link to={"./settings"} activeclassname="active">
                 <OverlayTrigger placement="right" overlay={settings}>

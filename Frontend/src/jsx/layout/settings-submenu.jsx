@@ -11,7 +11,7 @@ function SettingsSubmenu() {
             <span>Edit Profile</span>
           </Link>
         </li>
-        <li className="nav-item">
+        {/* <li className="nav-item">
           <Link to={"./settings-preferences"} className="nav-link">
             <i className="mdi mdi-settings"></i>
             <span>Preferences</span>
@@ -28,7 +28,7 @@ function SettingsSubmenu() {
             <i className="mdi mdi-bank"></i>
             <span>Linked Account</span>
           </Link>
-        </li>
+        </li> */}
       </ul>
     </>
   );

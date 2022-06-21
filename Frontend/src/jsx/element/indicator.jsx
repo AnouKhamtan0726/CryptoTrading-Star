@@ -26,8 +26,8 @@ function Indicator(props) {
   }
 
   if (buy * sell != 0) {
-    angle = buy / (buy + sell)
-    status = labels[Math.floor((buy / (buy + sell)) * 5)]
+    angle = buy / (buy + sell);
+    status = labels[Math.floor((buy / (buy + sell)) * 5)];
   }
 
   return (

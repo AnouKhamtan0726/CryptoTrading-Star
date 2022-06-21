@@ -110,17 +110,6 @@ function AccountWithdraw() {
     init();
   }, []);
 
-  useEffect(() => {
-    return async () => {
-      // removeCookie('field_2fa')
-      // removeCookie('withdrawWallet')
-      // removeCookie('withdrawAmount')
-      // await axios.post(SERVER_URL + "/request-2fa", {
-      //   field: "",
-      // })
-    };
-  }, []);
-
   return (
     <>
       <Header2 />

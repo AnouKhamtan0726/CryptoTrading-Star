@@ -12,6 +12,26 @@ import {
 import { useHistory } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import Web3 from "web3";
+import toastr from "toastr";
+import "../../../node_modules/toastr/build/toastr.min.css";
+
+toastr.options = {
+  closeButton: false,
+  debug: false,
+  newestOnTop: false,
+  progressBar: false,
+  positionClass: "toast-top-right",
+  preventDuplicates: false,
+  onclick: null,
+  showDuration: "300",
+  hideDuration: "1000",
+  timeOut: "5000",
+  extendedTimeOut: "1000",
+  showEasing: "swing",
+  hideEasing: "linear",
+  showMethod: "fadeIn",
+  hideMethod: "fadeOut",
+};
 
 const ProfileToggle = React.forwardRef(({ children, onClick }, ref) => (
   <div
@@ -129,6 +149,7 @@ function Header2() {
   var wallets;
   const web3 = new Web3(RPC_URL),
     usdtContract = new web3.eth.Contract(USDT_ABI, USDT_ADDRESS);
+  var intervalID = 0;
 
   async function getWalletAmounts() {
     try {
@@ -178,7 +199,13 @@ function Header2() {
 
   useEffect(() => {
     init();
-    setInterval(getWalletAmounts, 5000);
+    intervalID = setInterval(getWalletAmounts, 5000);
+  }, []);
+
+  useEffect(() => {
+    return async () => {
+      clearInterval(intervalID);
+    };
   }, []);
 
   const Logout = async () => {
@@ -188,6 +215,20 @@ function Header2() {
       history.push("/");
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const onRecharge = async () => {
+    try {
+      var res = await axios.post(SERVER_URL + "/restore-demo-account");
+
+      toastr.success(res.data.msg);
+    } catch (error) {
+      if (error.response && error.response.data.status == 403) {
+        history.push("/signin");
+      } else if (error.response && error.response.data.status == 400) {
+        toastr.error(error.response.data.msg);
+      }
     }
   };
 
@@ -205,7 +246,7 @@ function Header2() {
                   />
                 </Link>
                 <div className="header-right d-flex my-2 align-items-center">
-                  <div className="prize-pool mx-3">
+                  {/* <div className="prize-pool mx-3">
                     <Link to={"./prize-pool"}>
                       <img
                         className="prize-icon"
@@ -217,8 +258,11 @@ function Header2() {
                         <span className="text-white">$100K</span>
                       </div>
                     </Link>
-                  </div>
-                  <div className="account-change">
+                  </div> */}
+                  <div
+                    className="account-change"
+                    style={{ marginRight: "10px" }}
+                  >
                     <Dropdown className="account-select">
                       <Dropdown.Toggle
                         as={AccountToggle}
@@ -237,7 +281,7 @@ function Header2() {
                             <p className="mb-0">Live Account</p>
                             <span>${liveAmount.toFixed(2)}</span>
                           </div>
-                          <div className="live-modal">
+                          {/* <div className="live-modal">
                             <svg
                               data-v-b495ff56=""
                               xmlns="http://www.w3.org/2000/svg"
@@ -305,7 +349,7 @@ function Header2() {
                                 </g>
                               </g>
                             </svg>
-                          </div>
+                          </div> */}
                         </div>
                         <div
                           className="demo-account d-flex align-items-center justify-content-between py-1 px-3"
@@ -318,7 +362,7 @@ function Header2() {
                             <p className="mb-0">Demo Account</p>
                             <span>${demoAmount.toFixed(2)}</span>
                           </div>
-                          <div className="demo-recharge">
+                          <div className="demo-recharge" onClick={onRecharge}>
                             <svg
                               data-v-b495ff56=""
                               xmlns="http://www.w3.org/2000/svg"
@@ -346,7 +390,7 @@ function Header2() {
                       </Dropdown.Menu>
                     </Dropdown>
                   </div>
-                  <div className="quick-deposit mx-3">
+                  {/* <div className="quick-deposit mx-3">
                     <Dropdown className="deposit-btn">
                       <Dropdown.Toggle as={QuickDeposit} />
                       <Dropdown.Menu size="sm" title="">
@@ -388,7 +432,7 @@ function Header2() {
                         </form>
                       </Dropdown.Menu>
                     </Dropdown>
-                  </div>
+                  </div> */}
                   <div className="dashboard_log">
                     <Dropdown className="profile_log">
                       <Dropdown.Toggle as={ProfileToggle} />
@@ -416,7 +460,7 @@ function Header2() {
                         </div>
                         <div className="quick-deposit dropdown-item responsive-dropdown-item">
                           <Dropdown className="deposit-btn">
-                            <Dropdown.Toggle as={QuickDeposit} />
+                            {/* <Dropdown.Toggle as={QuickDeposit} /> */}
                             <Dropdown.Menu size="sm" title="">
                               <form className="p-3">
                                 <p className="text-white mb-1 small-text">
@@ -457,7 +501,7 @@ function Header2() {
                             </Dropdown.Menu>
                           </Dropdown>
                         </div>
-                        <div className="language dropdown-item">
+                        {/* <div className="language dropdown-item">
                           <Dropdown>
                             <Dropdown.Toggle as={LanguageToggle} />
                             <Dropdown.Menu size="sm" title="">
@@ -508,7 +552,7 @@ function Header2() {
                               </Link>
                             </Dropdown.Menu>
                           </Dropdown>
-                        </div>
+                        </div> */}
                         <Link
                           to={"./dashboard"}
                           className="dropdown-item responsive-dropdown-item"
@@ -530,9 +574,9 @@ function Header2() {
                         <Link to={"./settings"} className="dropdown-item">
                           <i className="mdi mdi-settings"></i> Setting
                         </Link>
-                        <Link to={"./lock"} className="dropdown-item">
+                        {/* <Link to={"./lock"} className="dropdown-item">
                           <i className="mdi mdi-lock"></i> Lock
-                        </Link>
+                        </Link> */}
                         <button
                           onClick={Logout}
                           className="dropdown-item logout"
@@ -542,7 +586,7 @@ function Header2() {
                       </Dropdown.Menu>
                     </Dropdown>
                   </div>
-                  <div className="alert-panel">
+                  {/* <div className="alert-panel">
                     <Dropdown className="alert-btn">
                       <Dropdown.Toggle as={AlertToggle} />
                       <Dropdown.Menu size="sm" title="">
@@ -677,7 +721,7 @@ function Header2() {
                         </div>
                       </Dropdown.Menu>
                     </Dropdown>
-                  </div>
+                  </div> */}
                 </div>
               </nav>
             </div>

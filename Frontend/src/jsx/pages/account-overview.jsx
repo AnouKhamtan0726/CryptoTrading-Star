@@ -44,9 +44,11 @@ function AccountOverview() {
   const [userInfo, setUserInfo] = useState({});
   const [walletTrans, setWalletTrans] = useState([]);
   const [mainBalance, setMainBalance] = useState(0);
+  const [showLimit, setShowLimit] = useState(10);
   const [tradingBalance, setTradingBalance] = useState(0);
   const [claimLabel, setClaimLabel] = useState("Claim");
-  const [userStats, setUserStats] = useState([0, 0, 0, 0, 0])
+  const [userStats, setUserStats] = useState([0, 0, 0, 0, 0, 0]);
+  const [totalTrans, setTotalTrans] = useState(0);
   const web3 = new Web3(RPC_URL),
     usdtContract = new web3.eth.Contract(USDT_ABI, USDT_ADDRESS);
   var wallets;
@@ -69,30 +71,21 @@ function AccountOverview() {
       setMainBalance(res[0] / 10 ** USDT_DECIMALS);
       setTradingBalance(res[1] / 10 ** USDT_DECIMALS);
 
-      var trans = await axios.post(SERVER_URL + "/get-wallet-transactions", {
-        type: "withdraw",
+      var trans = (
+        await axios.post(SERVER_URL + "/get-wallet-transactions", {
+          type: "withdraw",
+          limit: showLimit,
+        })
+      ).data;
+
+      setWalletTrans(trans.trans);
+      setTotalTrans(trans.total);
+
+      res = await axios.post(SERVER_URL + "/get-user-transactions", {
+        isInfo: true,
       });
 
-      setWalletTrans(trans.data);
-
-      res = await axios.post(SERVER_URL + "/get-user-transactions");
-      res = res.data.trans
-
-      var tmp = [...userStats]
-
-      for (var i = 0; i < res.length; i ++) {
-        if (res[i].is_live == 0) continue
-
-        tmp[0] ++
-
-        if (res[i].bet_to == 1) tmp[1] ++
-        else tmp[2] ++
-
-        if (res[i].bet_result == 1) tmp[3] += res[i].bet_amount * 0.95
-        else if (res[i].bet_result == 2) tmp[4] += res[i].bet_amount
-      }
-
-      setUserStats(tmp)
+      setUserStats(res.data);
     } catch (err) {
       console.log(err);
       history.push("/");
@@ -112,7 +105,25 @@ function AccountOverview() {
         toastr.error(error.response.data.msg);
       }
     }
+
+    await init();
     setClaimLabel("Claim");
+  }
+
+  async function showMore() {
+    setShowLimit(showLimit + 10);
+
+    var trans = (
+      await axios.post(SERVER_URL + "/get-wallet-transactions", {
+        type: "withdraw",
+        limit: showLimit + 10,
+      })
+    ).data;
+
+    if (showLimit + 10 >= trans.total) setShowLimit(0);
+
+    setWalletTrans(trans.trans);
+    setTotalTrans(trans.total);
   }
 
   useEffect(() => {
@@ -170,15 +181,23 @@ function AccountOverview() {
                     </div>
                   </div>
 
-                  <ul className="card-profile__info" style={{marginTop: '20px'}}>
+                  <ul
+                    className="card-profile__info"
+                    style={{ marginTop: "20px" }}
+                  >
                     <li className="mb-1">
                       <h5 className="me-4">Total Log</h5>
-                      <span>{walletTrans.length} Times</span>
+                      <span>{totalTrans} Times</span>
                     </li>
                     <li>
                       <h5 className="text-danger me-4">Last Log</h5>
                       <span className="text-danger">
-                        {walletTrans.length != 0 && new Date(walletTrans[0].transaction_at).toISOString().slice(0, 19).replace("T", " ")}
+                        &nbsp;&nbsp;
+                        {walletTrans.length != 0 &&
+                          new Date(walletTrans[0].transaction_at)
+                            .toISOString()
+                            .slice(0, 19)
+                            .replace("T", " ")}
                       </span>
                     </li>
                   </ul>
@@ -214,12 +233,12 @@ function AccountOverview() {
                   <h4 className="card-title" style={{ width: "100%" }}>
                     Wallet&nbsp;&nbsp;&nbsp;
                     <button
-                      class="col-5 inde-btn btn btn-success"
+                      className="col-5 inde-btn btn btn-success"
                       onClick={onClaim}
                       style={{ width: "fit-content" }}
                       disabled={claimLabel == "Claim" ? false : true}
                     >
-                      {claimLabel}
+                      {claimLabel}({userStats[5].toFixed(2)} USDT)
                     </button>
                   </h4>
                 </div>
@@ -271,7 +290,9 @@ function AccountOverview() {
                   <div className="card text-center pt-2">
                     <div className="card-body">
                       <p className="mb-1">Buy / Sell</p>
-                      <h4>{userStats[1]} / {userStats[2]}</h4>
+                      <h4>
+                        {userStats[1]} / {userStats[2]}
+                      </h4>
                     </div>
                   </div>
                 </div>
@@ -333,6 +354,18 @@ function AccountOverview() {
                               </tr>
                             );
                           })}
+                          {showLimit > 0 && (
+                            <tr>
+                              <td colSpan="6" align="center">
+                                <button
+                                  className="mt-2 col-12 inde-btn btn btn-info btn-block time-button"
+                                  onClick={showMore}
+                                >
+                                  Show More
+                                </button>
+                              </td>
+                            </tr>
+                          )}
                         </tbody>
                       </table>
                     </div>

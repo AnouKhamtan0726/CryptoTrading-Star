@@ -640,7 +640,7 @@ export const Request2FA = async (req, res) => {
 
 export const GetWalletTransactions = async (req, res) => {
   const { userId } = req;
-  const { type } = req.body;
+  const { type, limit } = req.body;
 
   var user = await Users.findOne({
     where: {
@@ -689,12 +689,21 @@ export const GetWalletTransactions = async (req, res) => {
       };
     }
 
-    var trans = await Transactions.findAll({
+    var params = {
       where: condition,
-      order: [["id", "DESC"]],
-    });
+    };
 
-    return res.json(trans);
+    var total = await Transactions.findAll(params);
+
+    params.order = [["id", "DESC"]];
+
+    if (limit > 0) {
+      params.limit = limit;
+    }
+
+    var trans = await Transactions.findAll(params);
+
+    return res.json({ trans: trans, total: total.length });
   } catch (err) {
     console.log(err);
     return res.status(400).json({ msg: "Failed" });
@@ -776,28 +785,29 @@ export const GetCurrentRound = async (req, res) => {
       },
     });
 
-    var timeLeft = Math.floor((new Date(round.end_at).getTime() - cur) / 1000)
-    var roundTrans = []
+    var timeLeft = Math.floor((new Date(round.end_at).getTime() - cur) / 1000);
+    var roundTrans = [];
 
-    if (timeLeft >= 28 && round.id % 2 == 0) {
+    if (timeLeft < 28 && timeLeft >= 25 && round.id % 2 == 0) {
       roundTrans = await RoundTransactions.findAll({
         where: {
-          round_id: round.id - 1
-        }
-      })
+          round_id: round.id - 1,
+        },
+      });
     }
 
     var rows = await RoundTransactions.findAll({
       where: {
-        round_id: round.id + 1
-      }
-    })
+        round_id: round.id + 1,
+      },
+    });
 
-    var buyers = 0, sellers = 0
+    var buyers = 0,
+      sellers = 0;
 
-    for (var i = 0; i < rows.length; i ++) {
-      if (rows[i].bet_to == 1) buyers ++
-      else sellers ++
+    for (var i = 0; i < rows.length; i++) {
+      if (rows[i].bet_to == 1) buyers++;
+      else sellers++;
     }
 
     return res.json({
@@ -938,6 +948,7 @@ export const PredictRound = async (req, res) => {
 
 export const GetUserTransactions = async (req, res) => {
   const { userId } = req;
+  const { isInfo, limit, demoLimit } = req.body;
 
   var user = await Users.findOne({
     where: {
@@ -954,10 +965,52 @@ export const GetUserTransactions = async (req, res) => {
       where: {
         user_id: userId,
       },
-      order: [['id', 'desc']]
+      order: [["id", "desc"]],
     });
 
-    return res.json({ trans });
+    if (isInfo) {
+      var tmp = [0, 0, 0, 0, 0, 0];
+
+      for (var i = 0; i < trans.length; i++) {
+        if (trans[i].is_live == 0) continue;
+
+        tmp[0]++;
+
+        if (trans[i].bet_to == 1) tmp[1]++;
+        else tmp[2]++;
+
+        if (trans[i].bet_result == 1) tmp[3] += trans[i].bet_amount * 0.95;
+        else if (trans[i].bet_result == 2) tmp[4] += trans[i].bet_amount;
+
+        if (trans[i].is_claimed == 0 && trans[i].bet_result == 1) {
+          tmp[5] += trans[i].bet_amount * 1.95;
+        }
+      }
+
+      return res.json(tmp);
+    }
+
+    var data = [];
+    var cnt = 0,
+      demoCnt = 0,
+      tot = 0,
+      totDemo = 0;
+
+    for (var i = 0; i < trans.length; i++) {
+      if (trans[i].is_live) {
+        tot++;
+        if (limit > 0 && cnt > limit) continue;
+        data.push(trans[i]);
+        cnt++;
+      } else {
+        totDemo++;
+        if (demoLimit > 0 && demoCnt > demoLimit) continue;
+        data.push(trans[i]);
+        demoCnt++;
+      }
+    }
+
+    return res.json({ data, tot, totDemo });
   } catch (err) {
     console.log(err);
     return res.status(400).json({ msg: "Failed" });
@@ -1018,6 +1071,42 @@ export const Claim = async (req, res) => {
 
     return res.json({
       msg: "Your Claim is confirmed successfully! Please check your wallet.",
+    });
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(400)
+      .json({ msg: "Something went wrong! Please try again!" });
+  }
+};
+
+export const RestoreDemoAccount = async (req, res) => {
+  const { userId } = req;
+
+  var user = await Users.findOne({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (user == null) {
+    return res.status(403).json({ msg: "There is not account" });
+  }
+
+  try {
+    await Users.update(
+      {
+        demo_amount: 1000,
+      },
+      {
+        where: {
+          id: userId,
+        },
+      }
+    );
+
+    return res.json({
+      msg: "Your Demo Wallet is restored succesfully",
     });
   } catch (err) {
     console.log(err);

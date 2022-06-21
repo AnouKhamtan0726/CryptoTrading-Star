@@ -29,12 +29,12 @@ function AccountSubmenu() {
                         <span>API</span>
                     </Link>
                 </li> */}
-        <li className="nav-item">
+        {/* <li className="nav-item">
           <Link to={"./account-affiliate"} className="nav-link">
             <i className="mdi mdi-diamond"></i>
             <span>Affiliate</span>
           </Link>
-        </li>
+        </li> */}
       </ul>
     </>
   );

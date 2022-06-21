@@ -32,6 +32,7 @@ function Exchange() {
     usdtContract = new web3.eth.Contract(USDT_ABI, USDT_ADDRESS);
   var wallets;
   const [walletTrans, setWalletTrans] = useState([]);
+  const [showLimit, setShowLimit] = useState(10);
 
   async function init() {
     try {
@@ -48,14 +49,32 @@ function Exchange() {
       setMainBalance(res[0] / 10 ** USDT_DECIMALS);
       setTradingBalance(res[1] / 10 ** USDT_DECIMALS);
 
-      var trans = await axios.post(SERVER_URL + "/get-wallet-transactions", {
-        type: "exchange",
-      });
+      var trans = (
+        await axios.post(SERVER_URL + "/get-wallet-transactions", {
+          type: "exchange",
+          limit: showLimit,
+        })
+      ).data;
 
-      setWalletTrans(trans.data);
+      setWalletTrans(trans.trans);
     } catch (err) {
       history.push("/");
     }
+  }
+
+  async function showMore() {
+    setShowLimit(showLimit + 10);
+
+    var trans = (
+      await axios.post(SERVER_URL + "/get-wallet-transactions", {
+        type: "exchange",
+        limit: showLimit + 10,
+      })
+    ).data;
+
+    if (showLimit + 10 >= trans.total) setShowLimit(0);
+
+    setWalletTrans(trans.trans);
   }
 
   async function onExchange(isBuy) {
@@ -275,6 +294,18 @@ function Exchange() {
                               </tr>
                             );
                           })}
+                          {showLimit > 0 && (
+                            <tr>
+                              <td colspan="6" align="center">
+                                <button
+                                  class="mt-2 col-12 inde-btn btn btn-info btn-block time-button"
+                                  onClick={showMore}
+                                >
+                                  Show More
+                                </button>
+                              </td>
+                            </tr>
+                          )}
                         </tbody>
                       </table>
                     </div>

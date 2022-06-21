@@ -3,7 +3,7 @@ import "react-perfect-scrollbar/dist/css/styles.css";
 import "react-rangeslider/lib/index.css";
 import TradingViewWidget, { Themes } from "react-tradingview-widget";
 import ProgressBar from "react-bootstrap/ProgressBar";
-import Badge from "react-bootstrap/Badge"
+import Badge from "react-bootstrap/Badge";
 import Footer2 from "../layout/footer2";
 import Header2 from "../layout/header2";
 import Sidebar from "../layout/sidebar";
@@ -37,9 +37,9 @@ toastr.options = {
   hideMethod: "fadeOut",
 };
 
-var ohlcData = []
+var ohlcData = [];
 
-var gcd = function(a, b) {
+var gcd = function (a, b) {
   if (!b) return a;
 
   return gcd(b, a % b);
@@ -217,7 +217,7 @@ const PriceChart = React.memo((props) => {
         volumeColors.push(data[i][1] < data[i][4] ? "#31BAA0" : "#FC5F5F");
       }
 
-      ohlcData = ohlc
+      ohlcData = ohlc;
 
       if (chartRef.current && chartRef.current.chart.series.length == 0) {
         chartRef.current.chart.addSeries({
@@ -281,55 +281,55 @@ const PriceChart = React.memo((props) => {
 });
 
 const Indicators = React.memo((props) => {
-  const [buys, setBuys] = useState([0, 0])
-  const [sells, setSells] = useState([0, 0])
-  const [neutrals, setNeutrals] = useState([0, 0])
+  const [buys, setBuys] = useState([0, 0]);
+  const [sells, setSells] = useState([0, 0]);
+  const [neutrals, setNeutrals] = useState([0, 0]);
 
   function updateIndicators() {
     if (ohlcData.length) {
-      var tmpBuys = [...buys]
-      var tmpSells = [...sells]
-      var tmpNeutrals = [...neutrals]
+      var tmpBuys = [...buys];
+      var tmpSells = [...sells];
+      var tmpNeutrals = [...neutrals];
 
-      var oscDelta = Math.round((ohlcData[99][4] - ohlcData[79][4]) / 10)
-      var oscA = Math.round(Math.random() * 9) + 1
-      var oscB = oscA + Math.abs(oscDelta)
-      
-      var avg1 = 0
-      var avg2 = 0
+      var oscDelta = Math.round((ohlcData[99][4] - ohlcData[79][4]) / 10);
+      var oscA = Math.round(Math.random() * 9) + 1;
+      var oscB = oscA + Math.abs(oscDelta);
 
-      for (var i = 0; i < 100; i ++) {
-        if (i < 50) avg1 += ohlcData[i][4]
-        else avg2 += ohlcData[i][4]
+      var avg1 = 0;
+      var avg2 = 0;
+
+      for (var i = 0; i < 100; i++) {
+        if (i < 50) avg1 += ohlcData[i][4];
+        else avg2 += ohlcData[i][4];
       }
 
-      avg1 /= 50
-      avg2 /= 50
+      avg1 /= 50;
+      avg2 /= 50;
 
-      var mvDelta = Math.round((avg2 - avg1) / 10)
-      var mvA = Math.round(Math.random() * 9) + 1
-      var mvB = mvA + Math.abs(mvDelta)
+      var mvDelta = Math.round((avg2 - avg1) / 10);
+      var mvA = Math.round(Math.random() * 9) + 1;
+      var mvB = mvA + Math.abs(mvDelta);
 
-      tmpBuys[0] = oscDelta > 0 ? oscB : oscA
-      tmpSells[0] = oscDelta > 0 ? oscA : oscB      
-      tmpBuys[1] = mvDelta > 0 ? mvB : mvA
-      tmpSells[1] = mvDelta > 0 ? mvA : mvB
+      tmpBuys[0] = oscDelta > 0 ? oscB : oscA;
+      tmpSells[0] = oscDelta > 0 ? oscA : oscB;
+      tmpBuys[1] = mvDelta > 0 ? mvB : mvA;
+      tmpSells[1] = mvDelta > 0 ? mvA : mvB;
 
-      tmpNeutrals[0] = Math.floor(Math.random() * 3)
-      tmpNeutrals[1] = Math.floor(Math.random() * 3)
+      tmpNeutrals[0] = Math.floor(Math.random() * 3);
+      tmpNeutrals[1] = Math.floor(Math.random() * 3);
 
-      setNeutrals(tmpNeutrals)
-      setBuys(tmpBuys)
-      setSells(tmpSells)
-      setTimeout(updateIndicators, 30000)
+      setNeutrals(tmpNeutrals);
+      setBuys(tmpBuys);
+      setSells(tmpSells);
+      setTimeout(updateIndicators, 30000);
     } else {
-      setTimeout(updateIndicators, 1000)
+      setTimeout(updateIndicators, 1000);
     }
   }
 
   useEffect(() => {
-    updateIndicators()
-  }, [])
+    updateIndicators();
+  }, []);
 
   return (
     <div className="indicators-container">
@@ -375,10 +375,44 @@ function Dashboard() {
   const [roundInfo, setRoundInfo] = useState({
     id: 1,
   });
-  const [buyers, setBuyers] = useState(0)
-  const [sellers, setSellers] = useState(0)
-  const [transactions, setTransactions] = useState([])
-  var userInfo
+  const [buyers, setBuyers] = useState(0);
+  const [sellers, setSellers] = useState(0);
+  const [transactions, setTransactions] = useState([]);
+  const [showLimit, setShowLimit] = useState(10);
+  const [showDemoLimit, setShowDemoLimit] = useState(10);
+  var userInfo;
+  var lastResult = 0;
+  var intervalID = 0;
+
+  async function showMore() {
+    setShowLimit(showLimit + 10);
+
+    var trans = (
+      await axios.post(SERVER_URL + "/get-user-transactions", {
+        limit: showLimit + 10,
+        demoLimit: showDemoLimit,
+      })
+    ).data;
+
+    if (showLimit + 10 >= trans.tot) setShowLimit(0);
+
+    setTransactions(trans.data);
+  }
+
+  async function showDemoMore() {
+    setShowDemoLimit(showDemoLimit + 10);
+
+    var trans = (
+      await axios.post(SERVER_URL + "/get-user-transactions", {
+        limit: showLimit,
+        demoLimit: showDemoLimit + 10,
+      })
+    ).data;
+
+    if (showDemoLimit + 10 >= trans.totDemo) setShowDemoLimit(0);
+
+    setTransactions(trans.data);
+  }
 
   function incrementCount() {
     count = count + 5;
@@ -456,18 +490,43 @@ function Dashboard() {
       res = res.data;
       setTimeLeft(res.timeLeft);
       setRoundInfo(res.round);
-      setBuyers(res.buyers)
-      setSellers(res.sellers)
+      setBuyers(res.buyers);
+      setSellers(res.sellers);
 
-      for (var i = 0; i < res.roundTrans.length; i ++) {
+      for (var i = 0; i < res.roundTrans.length; i++) {
         if (res.roundTrans[i].user_id == userInfo.id) {
-          var res1 = await axios.post(SERVER_URL + "/get-user-transactions");
-          setTransactions(res1.data.trans)
+          if (res.roundTrans[i].round_id == lastResult) {
+            return;
+          }
+
+          lastResult = res.roundTrans[i].round_id;
+
+          var res1 = await axios.post(SERVER_URL + "/get-user-transactions", {
+            limit: showLimit,
+            demoLimit: showDemoLimit,
+          });
+          setTransactions(res1.data.data);
 
           if (res.roundTrans[i].bet_result == 1) {
-            toastr.success("You earned $" + (res.roundTrans[i].bet_amount * 1.95).toFixed(2) + " for round #" + res.roundTrans[i].round_id + " in " + (res.roundTrans[i].is_live ? 'Live' : 'Demo') + " Wallet")
+            toastr.success(
+              "You earned $" +
+                (res.roundTrans[i].bet_amount * 0.95).toFixed(2) +
+                " for round #" +
+                res.roundTrans[i].round_id +
+                " in " +
+                (res.roundTrans[i].is_live ? "Live" : "Demo") +
+                " Wallet"
+            );
           } else if (res.roundTrans[i].bet_result == 2) {
-            toastr.error("You lost $" + res.roundTrans[i].bet_amount.toFixed(2) + " for round #" + res.roundTrans[i].round_id + " in " + (res.roundTrans[i].is_live ? 'Live' : 'Demo') + " Wallet")
+            toastr.error(
+              "You lost $" +
+                res.roundTrans[i].bet_amount.toFixed(2) +
+                " for round #" +
+                res.roundTrans[i].round_id +
+                " in " +
+                (res.roundTrans[i].is_live ? "Live" : "Demo") +
+                " Wallet"
+            );
           }
         }
       }
@@ -502,9 +561,12 @@ function Dashboard() {
       }
     }
 
-    res = await axios.post(SERVER_URL + "/get-user-transactions");
+    res = await axios.post(SERVER_URL + "/get-user-transactions", {
+      limit: showLimit,
+      demoLimit: showDemoLimit,
+    });
 
-    setTransactions(res.data.trans)
+    setTransactions(res.data.data);
   }
 
   async function init() {
@@ -513,12 +575,15 @@ function Dashboard() {
         "Basic " + cookies.refreshToken;
 
       userInfo = await axios.post(SERVER_URL + "/login-status");
-      userInfo = userInfo.data
+      userInfo = userInfo.data;
 
-      var res = await axios.post(SERVER_URL + "/get-user-transactions");
+      var res = await axios.post(SERVER_URL + "/get-user-transactions", {
+        limit: showLimit,
+        demoLimit: showDemoLimit,
+      });
 
-      setTransactions(res.data.trans)
-      setInterval(getCurrentRound, 1000);
+      setTransactions(res.data.data);
+      intervalID = setInterval(getCurrentRound, 1000);
     } catch (error) {
       if (error.response && error.response.data.status == 403) {
         history.push("/signin");
@@ -528,6 +593,12 @@ function Dashboard() {
 
   useEffect(() => {
     init();
+  }, []);
+
+  useEffect(() => {
+    return async () => {
+      clearInterval(intervalID);
+    };
   }, []);
 
   return (
@@ -609,37 +680,75 @@ function Dashboard() {
                             <tbody>
                               {transactions.map((trans, key) => {
                                 if (trans.is_live == false) return <></>;
-                                return <tr key={key}>
-                                  <td>#{trans.id}</td>
-                                  <td>{convertTimeToGMT(trans.bet_at, true)}</td>
-                                  <td className="trading-status">
-                                    {trans.bet_to == 1 ? <>
-                                    <span className="buy-thumb">
-                                      <i className="mdi mdi-arrow-up"></i>
-                                    </span>{" "}
-                                    Buy
-                                    </> : <>
-                                    <span className="sold-thumb">
-                                      <i className="mdi mdi-arrow-down"></i>
-                                    </span>{" "}
-                                    Sell
-                                    </>}
-                                  </td>
-                                  <td>{trans.bet_amount.toFixed(2)} USDT</td>
-                                  <td>
-                                    {trans.bet_result == 0 && <Badge pill variant="info">Pending</Badge>}
-                                    {trans.bet_result == 1 && <Badge pill variant="success">Earned</Badge>}
-                                    {trans.bet_result == 2 && <Badge pill variant="danger">Lost</Badge>}
-                                    {trans.bet_result == 3 && <Badge pill variant="warning">Failed</Badge>}
-                                  </td>
-                                  <td>
-                                    {trans.bet_result == 1 && (trans.bet_amount * 0.95).toFixed(2)}
-                                    {trans.bet_result == 2 && '- ' + trans.bet_amount.toFixed(2)}
-                                    {trans.bet_result == 3 && '0'}
-                                    &nbsp;USDT
+                                return (
+                                  <tr key={key}>
+                                    <td>#{trans.id}</td>
+                                    <td>
+                                      {convertTimeToGMT(trans.bet_at, true)}
+                                    </td>
+                                    <td className="trading-status">
+                                      {trans.bet_to == 1 ? (
+                                        <>
+                                          <span className="buy-thumb">
+                                            <i className="mdi mdi-arrow-up"></i>
+                                          </span>{" "}
+                                          Buy
+                                        </>
+                                      ) : (
+                                        <>
+                                          <span className="sold-thumb">
+                                            <i className="mdi mdi-arrow-down"></i>
+                                          </span>{" "}
+                                          Sell
+                                        </>
+                                      )}
+                                    </td>
+                                    <td>{trans.bet_amount.toFixed(2)} USDT</td>
+                                    <td>
+                                      {trans.bet_result == 0 && (
+                                        <Badge pill variant="info">
+                                          Pending
+                                        </Badge>
+                                      )}
+                                      {trans.bet_result == 1 && (
+                                        <Badge pill variant="success">
+                                          Earned
+                                        </Badge>
+                                      )}
+                                      {trans.bet_result == 2 && (
+                                        <Badge pill variant="danger">
+                                          Lost
+                                        </Badge>
+                                      )}
+                                      {trans.bet_result == 3 && (
+                                        <Badge pill variant="warning">
+                                          Failed
+                                        </Badge>
+                                      )}
+                                    </td>
+                                    <td>
+                                      {trans.bet_result == 1 &&
+                                        (trans.bet_amount * 0.95).toFixed(2)}
+                                      {trans.bet_result == 2 &&
+                                        "- " + trans.bet_amount.toFixed(2)}
+                                      {trans.bet_result == 3 && "0"}
+                                      &nbsp;USDT
+                                    </td>
+                                  </tr>
+                                );
+                              })}
+                              {showLimit > 0 && (
+                                <tr>
+                                  <td colSpan="6" align="center">
+                                    <button
+                                      className="mt-2 col-12 inde-btn btn btn-info btn-block time-button"
+                                      onClick={showMore}
+                                    >
+                                      Show More
+                                    </button>
                                   </td>
                                 </tr>
-                              })}
+                              )}
                             </tbody>
                           </table>
                         </div>
@@ -662,37 +771,77 @@ function Dashboard() {
                             <tbody>
                               {transactions.map((trans, key) => {
                                 if (trans.is_live == true) return <></>;
-                                return <tr key={key}>
-                                  <td>#{trans.id}</td>
-                                  <td>{convertTimeToGMT(trans.bet_at, true)}</td>
-                                  <td className="trading-status">
-                                    {trans.bet_to == 1 ? <>
-                                    <span className="buy-thumb">
-                                      <i className="mdi mdi-arrow-up"></i>
-                                    </span>{" "}
-                                    Buy
-                                    </> : <>
-                                    <span className="sold-thumb">
-                                      <i className="mdi mdi-arrow-down"></i>
-                                    </span>{" "}
-                                    Sell
-                                    </>}
-                                  </td>
-                                  <td>{trans.bet_amount.toFixed(2)} USDT</td>
-                                  <td>
-                                    {trans.bet_result == 0 && <Badge pill variant="info">Pending</Badge>}
-                                    {trans.bet_result == 1 && <Badge pill variant="success">Earned</Badge>}
-                                    {trans.bet_result == 2 && <Badge pill variant="danger">Lost</Badge>}
-                                    {trans.bet_result == 3 && <Badge pill variant="warning">Failed</Badge>}
-                                  </td>
-                                  <td>
-                                    {trans.bet_result == 1 && (trans.bet_amount * 0.95).toFixed(2)}
-                                    {trans.bet_result == 2 && '- ' + trans.bet_amount.toFixed(2)}
-                                    {(trans.bet_result == 3 || trans.bet_result == 0) && '0'}
-                                    &nbsp;USDT
+                                return (
+                                  <tr key={key}>
+                                    <td>#{trans.id}</td>
+                                    <td>
+                                      {convertTimeToGMT(trans.bet_at, true)}
+                                    </td>
+                                    <td className="trading-status">
+                                      {trans.bet_to == 1 ? (
+                                        <>
+                                          <span className="buy-thumb">
+                                            <i className="mdi mdi-arrow-up"></i>
+                                          </span>{" "}
+                                          Buy
+                                        </>
+                                      ) : (
+                                        <>
+                                          <span className="sold-thumb">
+                                            <i className="mdi mdi-arrow-down"></i>
+                                          </span>{" "}
+                                          Sell
+                                        </>
+                                      )}
+                                    </td>
+                                    <td>{trans.bet_amount.toFixed(2)} USDT</td>
+                                    <td>
+                                      {trans.bet_result == 0 && (
+                                        <Badge pill variant="info">
+                                          Pending
+                                        </Badge>
+                                      )}
+                                      {trans.bet_result == 1 && (
+                                        <Badge pill variant="success">
+                                          Earned
+                                        </Badge>
+                                      )}
+                                      {trans.bet_result == 2 && (
+                                        <Badge pill variant="danger">
+                                          Lost
+                                        </Badge>
+                                      )}
+                                      {trans.bet_result == 3 && (
+                                        <Badge pill variant="warning">
+                                          Failed
+                                        </Badge>
+                                      )}
+                                    </td>
+                                    <td>
+                                      {trans.bet_result == 1 &&
+                                        (trans.bet_amount * 0.95).toFixed(2)}
+                                      {trans.bet_result == 2 &&
+                                        "- " + trans.bet_amount.toFixed(2)}
+                                      {(trans.bet_result == 3 ||
+                                        trans.bet_result == 0) &&
+                                        "0"}
+                                      &nbsp;USDT
+                                    </td>
+                                  </tr>
+                                );
+                              })}
+                              {showDemoLimit > 0 && (
+                                <tr>
+                                  <td colSpan="6" align="center">
+                                    <button
+                                      className="mt-2 col-12 inde-btn btn btn-info btn-block time-button"
+                                      onClick={showDemoMore}
+                                    >
+                                      Show More
+                                    </button>
                                   </td>
                                 </tr>
-                              })}
+                              )}
                             </tbody>
                           </table>
                         </div>
@@ -786,7 +935,15 @@ function Dashboard() {
                         Traders sentiments
                       </p>
                       <div className="progressbar-body text-center">
-                        <ProgressBar animated variant="success" now={(buyers + sellers) == 0 ? 50 : (buyers / (buyers + sellers)) * 100} />
+                        <ProgressBar
+                          animated
+                          variant="success"
+                          now={
+                            buyers + sellers == 0
+                              ? 50
+                              : (buyers / (buyers + sellers)) * 100
+                          }
+                        />
                       </div>
                     </div>
                   </div>

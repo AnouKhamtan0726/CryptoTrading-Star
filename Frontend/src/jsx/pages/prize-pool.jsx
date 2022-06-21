@@ -50,7 +50,7 @@ function PrizePool() {
                   alt=""
                   className="img-fluid prizebox2-img position-absolute"
                 />
-                <span class="prize-pool-mega-fund">$474.07</span>
+                <span className="prize-pool-mega-fund">$474.07</span>
               </div>
             </div>
             <div className="text-center mt-5">
@@ -82,7 +82,7 @@ function PrizePool() {
                   alt=""
                   className="img-fluid prizebox2-img position-absolute"
                 />
-                <span class="prize-pool-mega-fund">$420.62</span>
+                <span className="prize-pool-mega-fund">$420.62</span>
               </div>
             </div>
             <div className="text-center my-5 statistic-table">
@@ -232,7 +232,7 @@ function PrizePool() {
                       width="79.343"
                       height="84.019"
                       viewBox="0 0 79.343 84.019"
-                      class="swiper-slide-icon"
+                      className="swiper-slide-icon"
                     >
                       <g
                         id="Group_21270"
@@ -388,7 +388,7 @@ function PrizePool() {
                       width="79.343"
                       height="84.019"
                       viewBox="0 0 79.343 84.019"
-                      class="swiper-slide-icon"
+                      className="swiper-slide-icon"
                     >
                       <g
                         id="Group_21270"
@@ -546,7 +546,7 @@ function PrizePool() {
                       width="80.96"
                       height="85.92"
                       viewBox="0 0 80.96 85.92"
-                      class="swiper-slide-icon"
+                      className="swiper-slide-icon"
                     >
                       <g
                         id="Group_21272"

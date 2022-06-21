@@ -4,11 +4,11 @@ import React from "react";
 function Chatbot() {
   return (
     <>
-      <img
+      {/* <img
         src={require("../../images/main_assets/chatbot.png")}
         alt=""
         className="chatbot pulsate-fwd"
-      />
+      /> */}
     </>
   );
 }
