@@ -1,4 +1,4 @@
-const DEV_MODE = true;
+const DEV_MODE = false;
 export const SERVER_URL = DEV_MODE
   ? "http://localhost:3000"
   : "http://206.189.147.229:3000";
