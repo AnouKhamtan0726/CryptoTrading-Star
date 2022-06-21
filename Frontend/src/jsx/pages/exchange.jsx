@@ -95,7 +95,7 @@ function Exchange() {
       );
       setMsg("");
     } catch (error) {
-      if (error.response && error.response.data.status == 403) {
+      if (error.response && error.response.status == 403) {
         history.push("/signin");
       } else if (error.response && error.response.data) {
         setMsg(error.response.data.msg);

@@ -168,7 +168,7 @@ function Header2() {
       setTotalAmount(res[1] / 10 ** USDT_DECIMALS);
       setDemoAmount(parseFloat(res1.data.demo_amount));
     } catch (error) {
-      if (error.response && error.response.data.status == 403) {
+      if (error.response && error.response.status == 403) {
         history.push("/signin");
       }
     }
@@ -196,7 +196,7 @@ function Header2() {
       setLiveAmount(parseFloat(cookies.liveAmount));
       setDemoAmount(parseFloat(cookies.demoAmount));
     } catch (error) {
-      if (error.response && error.response.data.status == 403) {
+      if (error.response && error.response.status == 403) {
         history.push("/signin");
       }
     }
@@ -229,9 +229,9 @@ function Header2() {
 
       toastr.success(res.data.msg);
     } catch (error) {
-      if (error.response && error.response.data.status == 403) {
+      if (error.response && error.response.status == 403) {
         history.push("/signin");
-      } else if (error.response && error.response.data.status == 400) {
+      } else if (error.response && error.response.status == 400) {
         toastr.error(error.response.data.msg);
       }
     }

@@ -99,7 +99,7 @@ function AccountOverview() {
       await axios.post(SERVER_URL + "/claim");
       toastr.success("Your claim is completed successfully!");
     } catch (error) {
-      if (error.response && error.response.data.status == 403) {
+      if (error.response && error.response.status == 403) {
         history.push("/signin");
       } else {
         toastr.error(error.response.data.msg);

@@ -266,7 +266,7 @@ const PriceChart = React.memo((props) => {
       if (
         error.response &&
         error.response.data &&
-        error.response.data.status == 403
+        error.response.status == 403
       ) {
         history.push("/signin");
       }
@@ -538,7 +538,7 @@ function Dashboard() {
       if (
         error.response &&
         error.response.data &&
-        error.response.data.status == 403
+        error.response.status == 403
       ) {
         history.push("/signin");
       }
@@ -558,7 +558,7 @@ function Dashboard() {
 
       toastr.success(res.data.msg);
     } catch (error) {
-      if (error.response && error.response.data.status == 403) {
+      if (error.response && error.response.status == 403) {
         history.push("/signin");
       } else {
         toastr.error(error.response.data.msg);
@@ -589,7 +589,8 @@ function Dashboard() {
       setTransactions(res.data.data);
       intervalID = setInterval(getCurrentRound, 1000);
     } catch (error) {
-      if (error.response && error.response.data.status == 403) {
+      console.log(error.response)
+      if (error.response && error.response.status == 403) {
         history.push("/signin");
       }
     }
