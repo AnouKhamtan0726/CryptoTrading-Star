@@ -290,16 +290,20 @@ const Indicators = React.memo((props) => {
       var tmpBuys = [...buys];
       var tmpSells = [...sells];
       var tmpNeutrals = [...neutrals];
+      var tmpLen = ohlcData.length - 1
+      var tmpLen1 = tmpLen - 20
 
-      var oscDelta = Math.round((ohlcData[99][4] - ohlcData[79][4]) / 10);
+      if (tmpLen1 < 0) tmpLen1 = 0
+
+      var oscDelta = Math.round((ohlcData[tmpLen][4] - ohlcData[tmpLen1][4]) / 10);
       var oscA = Math.round(Math.random() * 9) + 1;
       var oscB = oscA + Math.abs(oscDelta);
 
       var avg1 = 0;
       var avg2 = 0;
 
-      for (var i = 0; i < 100; i++) {
-        if (i < 50) avg1 += ohlcData[i][4];
+      for (var i = 0; i <= tmpLen; i++) {
+        if (i < tmpLen / 2) avg1 += ohlcData[i][4];
         else avg2 += ohlcData[i][4];
       }
 
