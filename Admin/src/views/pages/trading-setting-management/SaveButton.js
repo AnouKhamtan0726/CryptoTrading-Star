@@ -12,10 +12,13 @@ const SaveButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-export default function CustomizedButtons() {
+export default function CustomizedButtons(props) {
   return (
     <Stack spacing={2} direction="row">
-      <SaveButton variant="contained"> Save </SaveButton>
+      <SaveButton variant="contained" onClick={props.onSave}>
+        {" "}
+        Save{" "}
+      </SaveButton>
     </Stack>
   );
 }

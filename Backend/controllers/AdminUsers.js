@@ -1,10 +1,15 @@
 import AdminUsers from "../models/AdminUserModel.js";
+import Users from "../models/UserModel.js";
+import AdminSettings from "../models/AdminSettingModel.js";
+import RoundInfos from "../models/RoundInfoModel.js";
+import RoundTransactions from "../models/TransactionModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import SibApiV3Sdk from "sib-api-v3-sdk";
 import validator from "validator";
 import twilio from "twilio";
+import { Sequelize } from "sequelize";
 
 dotenv.config();
 
@@ -17,7 +22,13 @@ var apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 // const authToken = process.env.TWILLO_TOKEN;
 // const client = twilio(accountSid, authToken);
 
-function convertTimeToGMT(time) {
+const op = Sequelize.Op;
+
+function convertTimeToGMT(time, flag = false) {
+  if (flag) {
+    return new Date(time).toISOString().slice(0, 19).replace("T", " ");
+  }
+
   return new Date(
     new Date(time).toISOString().slice(0, 19).replace("T", " ")
   ).getTime();
@@ -261,4 +272,227 @@ export const VerifyEmail = async (req, res) => {
         .json({ msg: "Verify code has expired! Plesae try again!" });
     }
   );
+};
+
+export const GetRoundInfos = async (req, res) => {
+  const { userId } = req;
+
+  var user = await AdminUsers.findOne({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (user == null) {
+    return res.status(403).json({ msg: "There is not account" });
+  }
+
+  try {
+    var rounds = await RoundInfos.findAll({
+      order: [["id", "DESC"]],
+
+      where: {
+        volume: {
+          [op.not]: "0",
+        },
+      },
+
+      limit: 100,
+    });
+
+    var data = [];
+
+    for (var i = rounds.length - 1; i >= 0; i--) {
+      data.push([
+        new Date(rounds[i].start_at).getTime(),
+        rounds[i].open,
+        rounds[i].high,
+        rounds[i].low,
+        rounds[i].close,
+        rounds[i].volume,
+        rounds[i].real,
+      ]);
+    }
+
+    return res.json(data);
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({ msg: "Failed" });
+  }
+};
+
+export const GetAdminSettings = async (req, res) => {
+  const { userId } = req;
+
+  var user = await AdminUsers.findOne({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (user == null) {
+    return res.status(403).json({ msg: "There is not account" });
+  }
+
+  try {
+    var settings = await AdminSettings.findAll();
+
+    return res.json(settings[0]);
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({ msg: "Failed" });
+  }
+};
+
+export const SaveAdminSettings = async (req, res) => {
+  const { userId } = req;
+  const { sqlInfo } = req.body;
+
+  var user = await AdminUsers.findOne({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (user == null) {
+    return res.status(403).json({ msg: "There is not account" });
+  }
+
+  try {
+    if (
+      sqlInfo.trading_profit &&
+      (sqlInfo.trading_profit <= 0 || sqlInfo.trading_profit > 1)
+    ) {
+      return res
+        .status(400)
+        .json({ msg: "Trading Profit must be between 0 and 1." });
+    }
+
+    if (sqlInfo.round_time && sqlInfo.round_time < 30) {
+      return res
+        .status(400)
+        .json({ msg: "Round Time must be greater than 30" });
+    }
+
+    if (sqlInfo.round_time && sqlInfo.round_time % 30 != 0) {
+      return res
+        .status(400)
+        .json({ msg: "Round Time must be 30, 60, 90, 120 ..." });
+    }
+
+    await AdminSettings.update(sqlInfo, {
+      where: {
+        id: 1,
+      },
+    });
+
+    return res.send("");
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(400)
+      .json({ msg: "Please check your input. Round time must be integer." });
+  }
+};
+
+export const GetCurrentRound = async (req, res) => {
+  const { userId } = req;
+
+  var user = await Users.findOne({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (user == null) {
+    return res.status(403).json({ msg: "There is not account" });
+  }
+
+  var cur = new Date().getTime();
+
+  try {
+    var round = await RoundInfos.findOne({
+      where: {
+        start_at: {
+          [op.lte]: convertTimeToGMT(cur, true),
+        },
+        end_at: {
+          [op.gt]: convertTimeToGMT(cur, true),
+        },
+      },
+    });
+
+    var timeLeft = Math.floor((new Date(round.end_at).getTime() - cur) / 1000);
+
+    var rows = await RoundTransactions.findAll({
+      where: {
+        round_id: round.id,
+      },
+    });
+
+    var buyers = 0,
+      totalBuy = 0,
+      totalSell = 0,
+      sellers = 0;
+
+    for (var i = 0; i < rows.length; i++) {
+      if (rows[i].is_live == 0) continue;
+      if (rows[i].bet_to == 1) {
+        buyers++;
+        totalBuy += rows[i].bet_amount;
+      } else {
+        sellers++;
+        totalSell += rows[i].bet_amount;
+      }
+    }
+
+    return res.json({
+      round,
+      timeLeft: timeLeft,
+      buyers,
+      sellers,
+      totalBuy,
+      totalSell,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({ msg: "Failed" });
+  }
+};
+
+export const GetUserStats = async (req, res) => {
+  const { userId } = req;
+
+  var user = await Users.findOne({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (user == null) {
+    return res.status(403).json({ msg: "There is not account" });
+  }
+
+  var cur = new Date().getTime();
+
+  try {
+    var users = await Users.findAll();
+    var total = users.length,
+      online = 0,
+      trading = 0;
+
+    for (var i = 0; i < users.length; i++) {
+      if (cur - new Date(users[i].last_online).getTime() < 10000) online++;
+      if (cur - new Date(users[i].last_trading).getTime() < 10000) trading++;
+    }
+
+    return res.json({
+      total,
+      online,
+      trading,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({ msg: "Failed" });
+  }
 };

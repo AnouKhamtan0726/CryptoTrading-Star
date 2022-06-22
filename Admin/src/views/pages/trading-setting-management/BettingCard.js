@@ -45,8 +45,7 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 }));
 
 // ===========================|| DASHBOARD DEFAULT - EARNING CARD ||=========================== //
-
-const EarningCard = ({ isLoading }) => {
+const EarningCard = ({ isLoading, roundInfo, numberWithCommas }) => {
   const theme = useTheme();
 
   return (
@@ -71,7 +70,8 @@ const EarningCard = ({ isLoading }) => {
                               color: "#111936",
                             }}
                           >
-                            Buy:2000 / Sell:3,000
+                            Buy:{numberWithCommas(roundInfo.buyers)} / Sell:
+                            {numberWithCommas(roundInfo.sellers)}
                           </Typography>
                         </Grid>
                       </Grid>
@@ -87,7 +87,8 @@ const EarningCard = ({ isLoading }) => {
                             mb: 1.75,
                           }}
                         >
-                          $170,00 / $30,00
+                          ${numberWithCommas(Math.floor(roundInfo.totalBuy))} /
+                          ${numberWithCommas(Math.floor(roundInfo.totalSell))}
                         </Typography>
                       </Grid>
                     </Grid>
@@ -103,7 +104,7 @@ const EarningCard = ({ isLoading }) => {
                     color: theme.palette.primary[200],
                   }}
                 >
-                  Current Round - 00314
+                  Current Round - #{roundInfo.round.id}({roundInfo.timeLeft}sec)
                 </Typography>
               </Grid>
             </Grid>

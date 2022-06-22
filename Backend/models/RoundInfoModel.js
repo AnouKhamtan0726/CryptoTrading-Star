@@ -34,11 +34,7 @@ const RoundInfos = db.define(
       type: DataTypes.DOUBLE,
       defaultValue: "0",
     },
-    buy_amount: {
-      type: DataTypes.DOUBLE,
-      defaultValue: "0",
-    },
-    sell_amount: {
+    real: {
       type: DataTypes.DOUBLE,
       defaultValue: "0",
     },

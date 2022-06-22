@@ -39,12 +39,6 @@ toastr.options = {
 
 var ohlcData = [];
 
-var gcd = function (a, b) {
-  if (!b) return a;
-
-  return gcd(b, a % b);
-};
-
 function convertTimeToGMT(time, flag = false) {
   if (flag) {
     return new Date(time).toISOString().slice(0, 19).replace("T", " ");
@@ -290,12 +284,14 @@ const Indicators = React.memo((props) => {
       var tmpBuys = [...buys];
       var tmpSells = [...sells];
       var tmpNeutrals = [...neutrals];
-      var tmpLen = ohlcData.length - 1
-      var tmpLen1 = tmpLen - 20
+      var tmpLen = ohlcData.length - 1;
+      var tmpLen1 = tmpLen - 20;
 
-      if (tmpLen1 < 0) tmpLen1 = 0
+      if (tmpLen1 < 0) tmpLen1 = 0;
 
-      var oscDelta = Math.round((ohlcData[tmpLen][4] - ohlcData[tmpLen1][4]) / 10);
+      var oscDelta = Math.round(
+        (ohlcData[tmpLen][4] - ohlcData[tmpLen1][4]) / 10
+      );
       var oscA = Math.round(Math.random() * 9) + 1;
       var oscB = oscA + Math.abs(oscDelta);
 
@@ -372,6 +368,7 @@ function Dashboard() {
     "liveAmount",
     "demoAmount",
     "isLive",
+    "tradingProfit",
   ]);
   let [count, setCount] = useState(5);
   const [activeTab, setActiveTab] = useState("indicators");
@@ -514,7 +511,7 @@ function Dashboard() {
           if (res.roundTrans[i].bet_result == 1) {
             toastr.success(
               "You earned $" +
-                (res.roundTrans[i].bet_amount * 0.95).toFixed(2) +
+                res.roundTrans[i].benefit.toFixed(2) +
                 " for round #" +
                 res.roundTrans[i].round_id +
                 " in " +
@@ -589,7 +586,6 @@ function Dashboard() {
       setTransactions(res.data.data);
       intervalID = setInterval(getCurrentRound, 1000);
     } catch (error) {
-      console.log(error.response)
       if (error.response && error.response.status == 403) {
         history.push("/signin");
       }
@@ -733,10 +729,12 @@ function Dashboard() {
                                     </td>
                                     <td>
                                       {trans.bet_result == 1 &&
-                                        (trans.bet_amount * 0.95).toFixed(2)}
+                                        trans.benefit.toFixed(2)}
                                       {trans.bet_result == 2 &&
                                         "- " + trans.bet_amount.toFixed(2)}
-                                      {trans.bet_result == 3 && "0"}
+                                      {(trans.bet_result == 3 ||
+                                        trans.bet_result == 0) &&
+                                        "0"}
                                       &nbsp;USDT
                                     </td>
                                   </tr>
@@ -824,7 +822,7 @@ function Dashboard() {
                                     </td>
                                     <td>
                                       {trans.bet_result == 1 &&
-                                        (trans.bet_amount * 0.95).toFixed(2)}
+                                        trans.benefit.toFixed(2)}
                                       {trans.bet_result == 2 &&
                                         "- " + trans.bet_amount.toFixed(2)}
                                       {(trans.bet_result == 3 ||
@@ -929,11 +927,13 @@ function Dashboard() {
                 <div className="card amount-card">
                   <div className="card-header">
                     <span>Profit</span>
-                    <h3 className="profit-amount">95%</h3>
+                    <h3 className="profit-amount">
+                      {Math.floor(cookies.tradingProfit * 100)}%
+                    </h3>
                   </div>
                   <div className="card-body">
                     <h2 className="trading-amount text-center">
-                      +$ {(count * 0.95).toFixed(2)}
+                      +$ {(count * cookies.tradingProfit).toFixed(2)}
                     </h2>
                     <div className="trading-progressbar text-center">
                       <p className="progressbar-title text-center">

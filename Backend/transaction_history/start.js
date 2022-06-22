@@ -3,9 +3,11 @@ import Users from "../models/UserModel.js";
 import Transactions from "../models/WalletTransactionModel.js";
 import RoundInfos from "../models/RoundInfoModel.js";
 import RoundTransactions from "../models/TransactionModel.js";
+import AdminSettings from "../models/AdminSettingModel.js";
 import fs from "fs";
 import { Console } from "console";
 import Binance from "node-binance-api";
+import { Sequelize } from "sequelize";
 
 const binance = new Binance().options({
   APIKEY: "2a3frne0gSRy9VOYzWHxWeMx8OVUgPWXCa0x1nC3jRcnYhq45LLSgSImDdNzvSX1",
@@ -22,7 +24,7 @@ const myLogger = new Console({
 });
 
 const web3 = new Web3(RPC_URL);
-var startBlockNumber = 20384105;
+var startBlockNumber = 20424787;
 var main_wallets = [];
 var trading_wallets = [];
 
@@ -170,19 +172,38 @@ async function getRoundInfos() {
     start_at: 0,
     end_at: 0,
     volume: 0,
+    real: 0,
   };
   var next = {
     round: 0,
     start_at: 0,
     end_at: 0,
   };
+  var settings = (await AdminSettings.findAll())[0];
 
   async function createRound() {
     var currentTime = new Date();
+    settings = (await AdminSettings.findAll())[0];
 
-    if (currentTime.getSeconds() % 30 == 0) {
-      var start = currentTime.setSeconds(currentTime.getSeconds() + 30);
-      var end = currentTime.setSeconds(currentTime.getSeconds() + 30);
+    if (
+      currentTime.getSeconds() % 30 == 0 &&
+      (next.round == 0 ||
+        Math.floor(currentTime.getTime() / 1000) >=
+          Math.floor(new Date(next.start_at).getTime() / 1000))
+    ) {
+      var start, end;
+
+      if (next.round == 0) {
+        start = currentTime.setSeconds(currentTime.getSeconds() + 30);
+        end = currentTime.setSeconds(
+          currentTime.getSeconds() + settings.round_time
+        );
+      } else {
+        start = new Date(next.end_at).getTime();
+        end = new Date(start).setSeconds(
+          new Date(start).getSeconds() + settings.round_time
+        );
+      }
 
       var tmp = await RoundInfos.create({
         start_at: convertTimeToGMT(start, true),
@@ -214,6 +235,9 @@ async function getRoundInfos() {
         await RoundTransactions.update(
           {
             bet_result: 1,
+            benefit: Sequelize.literal(
+              "bet_amount * " + settings.trading_profit
+            ),
           },
           {
             where: {
@@ -253,7 +277,10 @@ async function getRoundInfos() {
 
           await Users.update(
             {
-              demo_amount: user.demo_amount + rows[i].bet_amount * 1.95,
+              demo_amount:
+                user.demo_amount +
+                rows[i].bet_amount +
+                rows[i].bet_amount * settings.trading_profit,
             },
             {
               where: {
@@ -265,7 +292,7 @@ async function getRoundInfos() {
 
         await RoundInfos.update(
           {
-            open: cur.open,
+            open: cur.open.toFixed(2),
           },
           {
             where: {
@@ -282,7 +309,20 @@ async function getRoundInfos() {
   }
 
   binance.futuresMiniTickerStream("BTCUSDT", async (res) => {
-    cur.close = res.close;
+    res.close = parseFloat(res.close);
+    res.quoteVolume = parseFloat(res.quoteVolume);
+
+    if (settings.manage_started == 0) {
+      cur.close = res.close;
+    } else {
+      if (settings.graph_move == 1) {
+        cur.close = parseFloat(cur.close) + (0.2 + Math.random() * 10);
+      } else if (settings.graph_move == 2) {
+        cur.close = cur.close - (0.2 + Math.random() * 10);
+      }
+    }
+
+    cur.real = res.close;
 
     if (cur.round != 0) {
       if (cur.close < cur.low) cur.low = cur.close;
@@ -296,10 +336,11 @@ async function getRoundInfos() {
 
       await RoundInfos.update(
         {
-          close: cur.close,
-          high: cur.high,
-          low: cur.low,
-          volume: cur.volume,
+          close: cur.close.toFixed(2),
+          high: cur.high.toFixed(2),
+          low: cur.low.toFixed(2),
+          volume: cur.volume.toFixed(2),
+          real: cur.real.toFixed(2),
         },
         {
           where: {
@@ -319,6 +360,18 @@ async function init() {
 
   setTimeout(init, 2000);
 }
+
+AdminSettings.update(
+  {
+    manage_started: 0,
+    graph_move: 0,
+  },
+  {
+    where: {
+      id: 1,
+    },
+  }
+).then((res) => {});
 
 init();
 getRoundInfos();

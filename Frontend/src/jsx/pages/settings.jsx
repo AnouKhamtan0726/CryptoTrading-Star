@@ -64,9 +64,9 @@ function Settings() {
   async function onVerify() {
     try {
       await axios.post(SERVER_URL + "/request-2fa", {
-        field: 'email_verify',
+        field: "email_verify",
       });
-      history.push('/email-verify')
+      history.push("/email-verify");
     } catch (error) {
       if (error.response && error.response.status == 403) {
         history.push("/signin");

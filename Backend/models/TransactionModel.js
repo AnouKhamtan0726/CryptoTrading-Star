@@ -31,6 +31,10 @@ const Transactions = db.define(
       defaultValue: 0,
       comment: "1:Earn 2:Lost 3:Failed",
     },
+    benefit: {
+      type: DataTypes.DOUBLE,
+      defaultValue: "0",
+    },
     is_claimed: {
       type: DataTypes.TINYINT(20),
       defaultValue: 0,

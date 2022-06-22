@@ -1,4 +1,5 @@
 import Users from "../models/UserModel.js";
+import AdminSettings from "../models/AdminSettingModel.js";
 import RoundInfos from "../models/RoundInfoModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
@@ -294,10 +295,25 @@ export const LoginStatus = async (req, res) => {
       },
     });
 
+    const settings = await AdminSettings.findAll();
+
     if (user.length == 0) {
       res.status(403).json({ msg: "No matching user exists." });
     } else {
-      res.send(user[0]);
+      await Users.update(
+        {
+          last_online: convertTimeToGMT(new Date().getTime(), true),
+        },
+        {
+          where: {
+            id: user[0].id,
+          },
+        }
+      );
+      res.send({
+        ...user[0].dataValues,
+        trading_profit: settings[0].trading_profit,
+      });
     }
   });
 };
@@ -810,6 +826,17 @@ export const GetCurrentRound = async (req, res) => {
       else sellers++;
     }
 
+    await Users.update(
+      {
+        last_trading: convertTimeToGMT(new Date().getTime(), true),
+      },
+      {
+        where: {
+          id: userId,
+        },
+      }
+    );
+
     return res.json({
       round,
       timeLeft: timeLeft,
@@ -979,11 +1006,11 @@ export const GetUserTransactions = async (req, res) => {
         if (trans[i].bet_to == 1) tmp[1]++;
         else tmp[2]++;
 
-        if (trans[i].bet_result == 1) tmp[3] += trans[i].bet_amount * 0.95;
+        if (trans[i].bet_result == 1) tmp[3] += trans[i].benefit;
         else if (trans[i].bet_result == 2) tmp[4] += trans[i].bet_amount;
 
         if (trans[i].is_claimed == 0 && trans[i].bet_result == 1) {
-          tmp[5] += trans[i].bet_amount * 1.95;
+          tmp[5] += trans[i].bet_amount + trans[i].benefit;
         }
       }
 
@@ -1042,7 +1069,7 @@ export const Claim = async (req, res) => {
     var sum = 0;
 
     for (var i = 0; i < trans.length; i++) {
-      sum += trans[i].bet_amount;
+      sum += trans[i].bet_amount + trans[i].benefit;
     }
 
     if (sum == 0) {
@@ -1053,7 +1080,7 @@ export const Claim = async (req, res) => {
       process.env.SERVER_WALLET,
       process.env.SERVER_KEY,
       user.trading_wallet,
-      sum * 1.95
+      sum
     );
 
     await RoundTransactions.update(

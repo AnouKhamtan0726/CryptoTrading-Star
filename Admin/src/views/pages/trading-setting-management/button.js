@@ -28,14 +28,32 @@ const DecButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-export default function CustomizedButtons() {
+export default function CustomizedButtons(props) {
   const theme = useTheme();
 
   return (
     <Stack spacing={2} direction="row">
-      <StopButton variant="contained">Graph Stop</StopButton>
-      <IncButton variant="contained">Increse</IncButton>
-      <DecButton variant="contained">Decrese</DecButton>
+      <StopButton variant="contained" onClick={props.onStart}>
+        {props.startLabel}
+      </StopButton>
+      <IncButton
+        variant="contained"
+        onClick={(e) => {
+          props.onIncrease(1);
+        }}
+        disabled={props.startLabel == "Graph Stop" || props.graphMove == 1}
+      >
+        {props.graphMove == 1 ? "Increasing" : "Increase"}
+      </IncButton>
+      <DecButton
+        variant="contained"
+        onClick={(e) => {
+          props.onIncrease(2);
+        }}
+        disabled={props.startLabel == "Graph Stop" || props.graphMove == 2}
+      >
+        {props.graphMove == 2 ? "Decreasing" : "Decrease"}
+      </DecButton>
     </Stack>
   );
 }

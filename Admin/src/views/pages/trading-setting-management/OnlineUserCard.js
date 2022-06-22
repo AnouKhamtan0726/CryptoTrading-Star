@@ -49,7 +49,7 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 
 // ===========================|| DASHBOARD DEFAULT - EARNING CARD ||=========================== //
 
-const EarningCard = ({ isLoading }) => {
+const EarningCard = ({ isLoading, numberWithCommas, userStats }) => {
   const theme = useTheme();
 
   return (
@@ -90,7 +90,7 @@ const EarningCard = ({ isLoading }) => {
                             mb: 1.75,
                           }}
                         >
-                          20,000
+                          {numberWithCommas(userStats.online)}
                         </Typography>
                       </Grid>
                       <Grid item>
@@ -121,7 +121,7 @@ const EarningCard = ({ isLoading }) => {
                     color: theme.palette.secondary[200],
                   }}
                 >
-                  Total Users : 100,000
+                  Total Users : {numberWithCommas(userStats.total)}
                 </Typography>
               </Grid>
             </Grid>

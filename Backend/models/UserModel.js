@@ -92,6 +92,14 @@ const Users = db.define(
       comment:
         "1:Live 2:Blocked(bad-user) 3:Blocked(bad-country) 4:Pedding(unverified)",
     },
+    last_online: {
+      type: "TIMESTAMP",
+      defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+    },
+    last_trading: {
+      type: "TIMESTAMP",
+      defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+    },
     is_deleted: {
       type: DataTypes.BOOLEAN,
       defaultValue: "0",
