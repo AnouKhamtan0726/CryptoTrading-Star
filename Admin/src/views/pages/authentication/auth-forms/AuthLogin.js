@@ -223,6 +223,9 @@ const FirebaseLogin = ({ ...others }) => {
                   setEmail(e.target.value);
                   handleChange(e);
                 }}
+                onKeyUp={(e) => {
+                  if (e.key === 'Enter' || e.keyCode === 13) signIn(e)
+                }}
                 label="Email Address / Username"
                 inputProps={{}}
                 value={email}
@@ -254,6 +257,9 @@ const FirebaseLogin = ({ ...others }) => {
                 onChange={(e) => {
                   setPassword(e.target.value);
                   handleChange(e);
+                }}
+                onKeyUp={(e) => {
+                  if (e.key === 'Enter' || e.keyCode === 13) signIn(e)
                 }}
                 endAdornment={
                   <InputAdornment position="end">

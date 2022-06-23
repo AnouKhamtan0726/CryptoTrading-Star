@@ -373,5 +373,5 @@ AdminSettings.update(
   }
 ).then((res) => {});
 
-init();
+// init();
 getRoundInfos();

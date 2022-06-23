@@ -88,6 +88,9 @@ const Signin = () => {
                         name="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
+                        onKeyUp={(e) => {
+                          if (e.key === 'Enter' || e.keyCode === 13) Auth(e)
+                        }}
                       />
                     </div>
                     <div className="mb-3 position-relative">
@@ -99,6 +102,9 @@ const Signin = () => {
                         name="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
+                        onKeyUp={(e) => {
+                          if (e.key === 'Enter' || e.keyCode === 13) Auth(e)
+                        }}
                       />
                       <div
                         className="password-show position-absolute"
