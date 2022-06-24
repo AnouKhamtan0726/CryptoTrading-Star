@@ -11,7 +11,7 @@ import validator from "validator";
 import twilio from "twilio";
 import { Sequelize } from "sequelize";
 
-const sequelize = new Sequelize('didi_db', 'root', '', {
+const sequelize = new Sequelize('didi_db', 'root', 'surprising99726', {
   host: 'localhost',
   dialect: 'mysql'
 });
