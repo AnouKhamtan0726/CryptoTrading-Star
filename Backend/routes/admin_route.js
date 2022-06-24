@@ -10,6 +10,7 @@ import {
   SaveAdminSettings,
   GetCurrentRound,
   GetUserStats,
+  GetUsersList,
   // UpdatePhoneNumber,
 } from "../controllers/AdminUsers.js";
 import { adminVerifyToken } from "../middleware/VerifyToken.js";
@@ -26,6 +27,7 @@ router.post("/get-admin-settings", adminVerifyToken, GetAdminSettings);
 router.post("/save-admin-settings", adminVerifyToken, SaveAdminSettings);
 router.post("/get-current-round", adminVerifyToken, GetCurrentRound);
 router.post("/get-user-stats", adminVerifyToken, GetUserStats);
+router.post("/get-users-list", adminVerifyToken, GetUsersList);
 // router.post("/phone-number", verifyToken, UpdatePhoneNumber);
 
 export default router;

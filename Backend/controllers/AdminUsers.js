@@ -11,6 +11,11 @@ import validator from "validator";
 import twilio from "twilio";
 import { Sequelize } from "sequelize";
 
+const sequelize = new Sequelize('didi_db', 'root', '', {
+  host: 'localhost',
+  dialect: 'mysql'
+});
+
 dotenv.config();
 
 var defaultClient = SibApiV3Sdk.ApiClient.instance;
@@ -496,3 +501,44 @@ export const GetUserStats = async (req, res) => {
     return res.status(400).json({ msg: "Failed" });
   }
 };
+
+export const GetUsersList = async (req, res) => {
+  const { userId } = req;
+
+  var user = await Users.findOne({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (user == null) {
+    return res.status(403).json({ msg: "There is not account" });
+  }
+
+  try {
+    var users = await Users.findAll();
+    var benefits = [], losts = []
+    var [rows, metadata] = await sequelize.query('select user_id, sum(benefit) as benefit from transactions where bet_result=1 group by user_id')
+    
+    for (var i = 0; i < rows.length; i ++) {
+      benefits[rows[i].user_id] = rows[i].benefit
+    }
+
+    [rows, metadata] = await sequelize.query('select user_id, sum(bet_amount) as lost from transactions where bet_result=2 group by user_id')
+
+    for (var i = 0; i < rows.length; i ++) {
+      losts[rows[i].user_id] = rows[i].lost
+    }
+
+    for (var i = 0; i < users.length; i ++) {
+      users[i].dataValues.earned = benefits[users[i].id]
+      users[i].dataValues.lost = losts[users[i].id]
+    }
+
+    return res.json(users);
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({ msg: "Failed" });
+  }
+};
+

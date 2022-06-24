@@ -12,6 +12,7 @@ const Signin = () => {
   const [msg, setMsg] = useState("");
   const [passwordShown, setPasswordShown] = useState(false);
   const history = useHistory();
+  const [loginMethod, setLoginMethod] = useState('email')
 
   const togglePassword = () => {
     setPasswordShown(!passwordShown);
@@ -28,6 +29,10 @@ const Signin = () => {
   //     return true;
   // }
 
+  function onLoginMethod(val) {
+    setLoginMethod(val)
+  }
+
   const Auth = async (e) => {
     e.preventDefault();
     // let ret = validateEmail();
@@ -40,13 +45,16 @@ const Signin = () => {
         {
           email: email,
           password: password,
+          loginMethod: loginMethod,
         },
         { withCredentials: true, credentials: "include" }
       );
 
-      if (res.data.email_verify_status == false) {
+      console.log(res)
+
+      if (res.data.loginMethod == 'email') {
         history.push("/email-verify");
-      } else if (res.data.phone_verify_status == false) {
+      } else if (res.data.loginMethod == 'sms') {
         history.push("/otp-1");
       } else {
         history.push("/dashboard");
@@ -116,7 +124,22 @@ const Signin = () => {
                       </div>
                     </div>
                     <div className="row d-flex justify-content-between mt-4 mb-2">
-                      <div className="mb-3 mb-0">
+                      <div className="mb-3 col-md-6 mb-0">
+                        <label className="toggle">
+                          <input className="toggle-checkbox" type="checkbox" checked={loginMethod == 'email'} onClick={(e) => onLoginMethod('email')} />
+                          <span className="toggle-switch"></span>
+                          <span className="toggle-label">Using Email</span>
+                        </label>
+                      </div>
+                      <div className="mb-3 col-md-6 mb-0">
+                        <label className="toggle">
+                          <input className="toggle-checkbox" type="checkbox" checked={loginMethod == 'sms'} onClick={(e) => onLoginMethod('sms')} />
+                          <span className="toggle-switch"></span>
+                          <span className="toggle-label">Using SMS</span>
+                        </label>
+                      </div>
+
+                      <div className="mb-3 mb-0 col-md-12">
                         <label className="toggle">
                           <input className="toggle-checkbox" type="checkbox" />
                           <span className="toggle-switch"></span>

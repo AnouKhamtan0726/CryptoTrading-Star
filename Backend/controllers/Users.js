@@ -185,6 +185,8 @@ export const Login = async (req, res) => {
     await Users.update(
       {
         refresh_token: refreshToken,
+        email_verify_status: 0,
+        phone_verify_status: 0,
       },
       {
         where: {
@@ -193,7 +195,7 @@ export const Login = async (req, res) => {
       }
     );
 
-    if (user[0].email_verify_status == false) {
+    if (req.body.loginMethod == 'email') {
       var code = 100000 + Math.floor(Math.random() * 899999);
 
       await Users.update(
@@ -238,15 +240,15 @@ export const Login = async (req, res) => {
           console.error(error);
         }
       );
-    }
-
-    if (user[0].phone_verify_status == false) {
+    } else if (req.body.loginMethod == 'sms') {
     }
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: false,
       maxAge: 24 * 60 * 60 * 1000,
     });
+
+    user[0].dataValues.loginMethod = req.body.loginMethod
 
     res.send(user[0]);
   } catch (error) {
@@ -267,7 +269,7 @@ export const Logout = async (req, res) => {
   if (!user[0]) return res.sendStatus(204);
   const userId = user[0].id;
   await Users.update(
-    { refresh_token: null },
+    { refresh_token: null, phone_verify_status: 0, email_verify_status: 0 },
     {
       where: {
         id: userId,

@@ -24,7 +24,7 @@ function EmailVerification() {
       await axios.post(SERVER_URL + "/verify-email", {
         code: verifyCode,
       });
-      history.push("/otp-1");
+      history.push("/dashboard");
     } catch (error) {
       if (error.response && error.response.status == 403) {
         history.push("/signin");
