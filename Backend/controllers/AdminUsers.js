@@ -532,11 +532,9 @@ export const GetUsersList = async (req, res) => {
     }
 
     for (var i = 0; i < users.length; i ++) {
-      users[i].dataValues.earned = benefits[users[i].id]
-      users[i].dataValues.lost = losts[users[i].id]
+      users[i].dataValues.earned = benefits[users[i].id] ? benefits[users[i].id] : 0
+      users[i].dataValues.lost = losts[users[i].id] ? losts[users[i].id] : 0
     }
-
-    console.log(users)
 
     return res.json(users);
   } catch (err) {
