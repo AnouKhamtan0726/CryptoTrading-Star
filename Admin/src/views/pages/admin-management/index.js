@@ -348,7 +348,11 @@ export default function EnhancedTable() {
   function updateRowsInfo(index, field, res) {
     var tmp = [...rows]
 
-    tmp[index][field] = res
+    for (var i = 0; i < tmp.length; i ++) {
+      if (tmp[i].id == index) break
+    }
+
+    tmp[i][field] = res
     setRows(tmp)
   }
 
@@ -483,7 +487,7 @@ export default function EnhancedTable() {
                             value={row.name}
                             onClick={(e) => e.stopPropagation()}
                             onBlur={(e) => saveAdminInfo(row.id, 'name', e.target.value)}
-                            onChange={(e) => updateRowsInfo(index, 'name', e.target.value)}
+                            onChange={(e) => updateRowsInfo(row.id, 'name', e.target.value)}
                           />}
                         </TableCell>
                         <TableCell>
@@ -496,7 +500,7 @@ export default function EnhancedTable() {
                               value={row.email}
                               onClick={(e) => e.stopPropagation()}
                               onBlur={(e) => saveAdminInfo(row.id, 'email', e.target.value)}
-                              onChange={(e) => updateRowsInfo(index, 'email', e.target.value)}
+                              onChange={(e) => updateRowsInfo(row.id, 'email', e.target.value)}
                             />}
                         </TableCell>
                         <TableCell>
@@ -509,16 +513,16 @@ export default function EnhancedTable() {
                               value={row.phone}
                               onClick={(e) => e.stopPropagation()}
                               onBlur={(e) => saveAdminInfo(row.id, 'phone', e.target.value)}
-                              onChange={(e) => updateRowsInfo(index, 'phone', e.target.value)}
+                              onChange={(e) => updateRowsInfo(row.id, 'phone', e.target.value)}
                             />}
                         </TableCell>
                         <TableCell>
                           {disabled ? (row.access_setting == '' ? 'No permissions' : row.access_setting) : 
-                          <AccessSettings val={row.access_setting == '' ? [] : row.access_setting.split(',')} updateRowsInfo={updateRowsInfo} id={row.id} index={index} disabled={false} />}
+                          <AccessSettings val={row.access_setting == '' ? [] : row.access_setting.split(',')} updateRowsInfo={updateRowsInfo} id={row.id} index={row.id} disabled={false} />}
                         </TableCell>
                         <TableCell>
                           {disabled ? (row.role == '' ? 'No roles' : row.role) : 
-                          <Roles val={row.role == '' ? [] : row.role.split(',')} id={row.id} disabled={false} updateRowsInfo={updateRowsInfo} index={index} />}
+                          <Roles val={row.role == '' ? [] : row.role.split(',')} id={row.id} disabled={false} updateRowsInfo={updateRowsInfo} index={row.id} />}
                         </TableCell>
                       </TableRow>
                     );
