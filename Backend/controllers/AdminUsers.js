@@ -536,6 +536,8 @@ export const GetUsersList = async (req, res) => {
       users[i].dataValues.lost = losts[users[i].id]
     }
 
+    console.log(users)
+
     return res.json(users);
   } catch (err) {
     console.log(err);
