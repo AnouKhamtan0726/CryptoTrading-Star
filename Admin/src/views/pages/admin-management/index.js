@@ -481,7 +481,7 @@ export default function EnhancedTable() {
                           {disabled ? row.name : 
                           <TextField
                             id="round-prediction"
-                            label="Email"
+                            label="Name"
                             variant="outlined"
                             fullWidth
                             value={row.name}
@@ -507,7 +507,7 @@ export default function EnhancedTable() {
                           {disabled ? row.phone : 
                             <TextField
                               id="round-prediction"
-                              label="Email"
+                              label="Phone"
                               variant="outlined"
                               fullWidth
                               value={row.phone}
