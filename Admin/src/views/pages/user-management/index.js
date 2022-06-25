@@ -8,6 +8,10 @@ import Table from "@mui/material/Table";
 import Grid from "@mui/material/Grid";
 import TableBody from "@mui/material/TableBody";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
@@ -19,11 +23,36 @@ import { useNavigate } from "react-router-dom";
 import axios from 'axios'
 import { useCookies } from "react-cookie";
 import config from "../../../config.js";
+import Web3 from 'web3'
+import toastr from "toastr";
+import "../../../../node_modules/toastr/build/toastr.min.css";
 
 import TotalUserCard from "./TotalUserCard";
 import UserStatisticCard from "./UserStatisticCard";
 
+toastr.options = {
+  closeButton: false,
+  debug: false,
+  newestOnTop: false,
+  progressBar: false,
+  positionClass: "toast-top-right",
+  preventDuplicates: false,
+  onclick: null,
+  showDuration: "300",
+  hideDuration: "1000",
+  timeOut: "5000",
+  extendedTimeOut: "1000",
+  showEasing: "swing",
+  hideEasing: "linear",
+  showMethod: "fadeIn",
+  hideMethod: "fadeOut",
+};
+
 const SERVER_URL = config.SERVER_URL;
+const RPC_URL = config.RPC_URL
+const USDT_ADDRESS = config.USDT_ADDRESS
+const USDT_ABI = config.USDT_ABI
+const USDT_DECIMALS = config.USDT_DECIMALS
 
 function convertTimeToGMT(time, flag = false) {
   if (flag) {
@@ -56,8 +85,20 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 function Row(props) {
-  const { row } = props;
+  const [ row, setRow ] = useState(null);
   const [open, setOpen] = React.useState(false);
+  const statusArr = ['Current', 'Current', 'Blocked(bad-user)', 'Blocked(bad-country)', 'Pendding(unverified)', 'Deleted']
+  const [mainAmount, setMainAmount] = useState(0)
+  const [tradingAmount, setTradingAmount] = useState(0)
+  const navigate = useNavigate()
+  const web3 = new Web3(RPC_URL),
+    usdtContract = new web3.eth.Contract(USDT_ABI, USDT_ADDRESS);
+
+  useEffect(() => {
+    setRow(props.row)
+  }, [])
+
+  if (row == null) return <></>
 
   return (
     <>
@@ -66,7 +107,19 @@ function Row(props) {
           <IconButton
             aria-label="expand row"
             size="small"
-            onClick={() => setOpen(!open)}
+            onClick={async() => {
+              setOpen(!open)
+
+              if (open == false) {
+                var res = await Promise.all([
+                  usdtContract.methods.balanceOf(row.trading_wallet).call(),
+                  usdtContract.methods.balanceOf(row.main_wallet).call(),
+                ]);
+  
+                setMainAmount(res[1] / 10 ** USDT_DECIMALS);
+                setTradingAmount(res[0] / 10 ** USDT_DECIMALS);
+              }
+            }}
           >
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
@@ -80,7 +133,7 @@ function Row(props) {
         <TableCell>{row.email}</TableCell>
         <TableCell>{row.phone}</TableCell>
         <TableCell>${row.earned.toFixed(2)} / ${row.lost.toFixed(2)}</TableCell>
-        <TableCell>{row.current_status}</TableCell>
+        <TableCell>{statusArr[row.current_status]}</TableCell>
       </StyledTableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -107,7 +160,7 @@ function Row(props) {
                     <TableCell sx={{ background: "#5e35b1", color: "white" }}>
                       Left Date
                     </TableCell>
-                    <TableCell sx={{ background: "#5e35b1", color: "white" }}>
+                    <TableCell sx={{ background: "#5e35b1", color: "white" }} width="250">
                       Block/Unblock
                     </TableCell>
                   </TableRow>
@@ -122,10 +175,10 @@ function Row(props) {
                       {row.first_name + ' ' + row.last_name}
                     </TableCell>
                     <TableCell sx={{ color: "black" }}>
-                      {row.mainWalletAmount}
+                      {mainAmount}
                     </TableCell>
                     <TableCell sx={{ color: "black" }}>
-                      {row.tradingWalletAmount}
+                      {tradingAmount}
                     </TableCell>
                     <TableCell sx={{ color: "black" }}>
                       {convertTimeToGMT(row.createdAt, true)}
@@ -134,7 +187,38 @@ function Row(props) {
                       {convertTimeToGMT(row.last_online, true)}
                     </TableCell>
                     <TableCell sx={{ color: "black" }}>
-                      {row.round}
+                      <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">Status</InputLabel>
+                        <Select
+                          labelId="demo-simple-select-label"
+                          id="demo-simple-select"
+                          value={(row.current_status < 2 || row.current_status == 4) ? 1 : row.current_status}
+                          label="Status"
+                          onChange={async (e) => {
+                            var tmp = {...row}
+
+                            try {
+                              await axios.post(SERVER_URL + '/update-user-block-status', {
+                                user_id: row.id,
+                                current_status: e.target.value
+                              })
+
+                              tmp.current_status = e.target.value
+                              setRow(tmp)
+                              toastr.success('Updating user status is completed successfully')
+                            } catch (error) {
+                              if (error.response && error.response.status == 403) {
+                                navigate("/login");
+                              }
+                            }
+                          }}
+                        >
+                          <MenuItem value={1}>Unblock</MenuItem>
+                          <MenuItem value={2}>Block(bad-user)</MenuItem>
+                          <MenuItem value={3}>Block(bad-country)</MenuItem>
+                          <MenuItem value={5}>Delete</MenuItem>
+                        </Select>
+                      </FormControl>
                     </TableCell>
                   </StyledTableRow>
                 </TableBody>
@@ -154,34 +238,13 @@ export default function CollapsibleTable() {
   const [cookies, removeCookie] = useCookies(["refreshToken"]);
   const navigate = useNavigate()
 
-  function createData(id, name, email, phone, statistic, status, price) {
-    return {
-      id,
-      name,
-      email,
-      phone,
-      statistic,
-      status,
-      price,
-      detail: [
-        {
-          fullname: "Big Star",
-          mainWalletAmount: "$3000",
-          tradingWalletAmount: "$3000",
-          round: "100 : (30/70)",
-        },
-      ],
-    };
-  }
-
   async function init() {
     try {
       axios.defaults.headers.common["Authorization"] =
         "Basic " + cookies.refreshToken;
 
       var res = (await axios.post(SERVER_URL + "/get-users-list")).data
-
-      console.log(res)
+      
       setRows(res)
     } catch (error) {
       if (error.response && error.response.status == 403) {
@@ -227,7 +290,7 @@ export default function CollapsibleTable() {
                 <StyledTableCell>Email</StyledTableCell>
                 <StyledTableCell>Phone</StyledTableCell>
                 <StyledTableCell>Earned/Lost</StyledTableCell>
-                <StyledTableCell sx={{ borderTopRightRadius: "10px" }}>
+                <StyledTableCell sx={{ borderTopRightRadius: "10px" }} width="200">
                   Status
                 </StyledTableCell>
               </TableRow>

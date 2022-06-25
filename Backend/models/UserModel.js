@@ -90,7 +90,7 @@ const Users = db.define(
       type: DataTypes.TINYINT(20),
       defaultValue: 0,
       comment:
-        "1:Live 2:Blocked(bad-user) 3:Blocked(bad-country) 4:Pedding(unverified)",
+        "1:Live 2:Blocked(bad-user) 3:Blocked(bad-country) 4:Pedding(unverified) 5:Deleted",
     },
     last_online: {
       type: "TIMESTAMP",

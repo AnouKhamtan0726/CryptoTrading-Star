@@ -19,20 +19,26 @@ const MenuProps = {
 };
 
 const names = [
-  "Oliver Hansen",
-  "Van Henry",
-  "April Tucker",
-  "Ralph Hubbard",
-  "Omar Alexander",
-  "Carlos Abbott",
-  "Miriam Wagner",
-  "Bradley Wilkerson",
-  "Virginia Andrews",
-  "Kelly Snyder",
+  "English",
+  "український",
+  "বাংলা",
+  "한국어",
+  "ប្រទេសកម្ពុជា",
+  "Thai",
+  "Tiếng Việt",
+  "Indonesian",
+  "Lao",
+  "Русский",
+  "Deutsch",
 ];
 
-export default function MultipleSelectCheckmarks() {
+export default function MultipleSelectCheckmarks(props) {
   const [personName, setPersonName] = React.useState([]);
+  const {onChanged, val} = props
+
+  React.useEffect(() => {
+    setPersonName(val)
+  }, [props.val])
 
   const handleChange = (event) => {
     const {
@@ -42,6 +48,7 @@ export default function MultipleSelectCheckmarks() {
       // On autofill we get a stringified value.
       typeof value === "string" ? value.split(",") : value
     );
+    onChanged(typeof value === "string" ? value.split(",") : value)
   };
 
   return (

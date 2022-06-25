@@ -1,4 +1,5 @@
 import AdminUsers from "../models/AdminUserModel.js";
+import Countries from "../models/CountryModel.js";
 import Users from "../models/UserModel.js";
 import AdminSettings from "../models/AdminSettingModel.js";
 import RoundInfos from "../models/RoundInfoModel.js";
@@ -403,7 +404,7 @@ export const SaveAdminSettings = async (req, res) => {
 export const GetCurrentRound = async (req, res) => {
   const { userId } = req;
 
-  var user = await Users.findOne({
+  var user = await AdminUsers.findOne({
     where: {
       id: userId,
     },
@@ -468,7 +469,7 @@ export const GetCurrentRound = async (req, res) => {
 export const GetUserStats = async (req, res) => {
   const { userId } = req;
 
-  var user = await Users.findOne({
+  var user = await AdminUsers.findOne({
     where: {
       id: userId,
     },
@@ -505,7 +506,7 @@ export const GetUserStats = async (req, res) => {
 export const GetUsersList = async (req, res) => {
   const { userId } = req;
 
-  var user = await Users.findOne({
+  var user = await AdminUsers.findOne({
     where: {
       id: userId,
     },
@@ -539,6 +540,113 @@ export const GetUsersList = async (req, res) => {
   } catch (err) {
     console.log(err);
     return res.status(400).json({ msg: "Failed" });
+  }
+};
+
+export const UpdateUserBlockStatus = async (req, res) => {
+  const { userId } = req;
+
+  var user = await AdminUsers.findOne({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (user == null) {
+    return res.status(403).json({ msg: "There is not account" });
+  }
+
+  try {
+    const { user_id, current_status } = req.body
+
+    await Users.update({
+      current_status: current_status
+    }, {
+      where: {
+        id: user_id
+      }
+    })
+
+    return res.json({msg: 'Success'});
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({ msg: "Failed" });
+  }
+};
+
+export const GetAdminsList = async (req, res) => {
+  const { userId } = req;
+
+  var user = await AdminUsers.findOne({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (user == null) {
+    return res.status(403).json({ msg: "There is not account" });
+  }
+
+  try {
+    var users = await AdminUsers.findAll();
+
+    return res.json(users);
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({ msg: "Failed" });
+  }
+};
+
+export const GetCountries = async (req, res) => {
+  const { userId } = req;
+
+  var user = await AdminUsers.findOne({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (user == null) {
+    return res.status(403).json({ msg: "There is not account" });
+  }
+
+  try {
+    var users = await Countries.findAll();
+
+    return res.json(users);
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({ msg: "Failed" });
+  }
+};
+
+export const SaveAdminInfo = async (req, res) => {
+  const { userId } = req;
+  const { sqlInfo, adminId } = req.body;
+
+  var user = await AdminUsers.findOne({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (user == null) {
+    return res.status(403).json({ msg: "There is not account" });
+  }
+
+  try {
+    await AdminUsers.update(sqlInfo, {
+      where: {
+        id: adminId,
+      },
+    });
+
+    return res.send("");
+  } catch (err) {
+    console.log(err);
+    return res
+      .status(400)
+      .json({ msg: "Failed" });
   }
 };
 

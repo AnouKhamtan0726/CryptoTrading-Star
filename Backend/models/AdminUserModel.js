@@ -35,13 +35,13 @@ const AdminUsers = db.define(
       defaultValue: "",
     },
     role: {
-      type: DataTypes.TINYINT(20),
+      type: DataTypes.TEXT,
       defaultValue: 0,
       comment: "1:Main-Admin 2:Account-Admin 3:Trading-Admin",
     },
     access_setting: {
-      type: DataTypes.TINYINT(20),
-      defaultValue: 0,
+      type: DataTypes.TEXT,
+      defaultValue: "",
       comment: "1:Admin 2:Users 3:Referral 4:Trading 5:Billing",
     },
     email_verify_code: {

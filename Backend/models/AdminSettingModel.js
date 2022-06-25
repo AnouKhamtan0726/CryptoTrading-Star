@@ -23,6 +23,14 @@ const AdminSettigns = db.define(
       defaultValue: "0",
       comment: "0:default 1:increase 2:decrease",
     },
+    blocked_countries: {
+      type: DataTypes.TEXT,
+      defaultValue: "",
+    },
+    languages: {
+      type: DataTypes.TEXT,
+      defaultValue: "",
+    },
   },
   {
     freezeTableName: true,

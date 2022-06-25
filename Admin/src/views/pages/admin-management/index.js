@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, {useState, useEffect} from "react";
 import PropTypes from "prop-types";
 import { alpha } from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -18,46 +18,41 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import CloseIcon from "@mui/icons-material/Close";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
-
+import { useNavigate } from "react-router-dom";
+import axios from 'axios'
+import { useCookies } from "react-cookie";
+import config from "../../../config.js";
+import toastr from "toastr";
+import "../../../../node_modules/toastr/build/toastr.min.css";
 import CountryName from "./country-list";
 import LanguageName from "./language-list";
+import AccessSettings from "./access-setting-list";
+import Roles from "./role-list";
 import Button from "./button";
+import TextField from "@mui/material/TextField";
 
-function createData(name, email, phone, access, roles) {
-  return {
-    name,
-    email,
-    phone,
-    access,
-    roles,
-  };
-}
+toastr.options = {
+  closeButton: false,
+  debug: false,
+  newestOnTop: false,
+  progressBar: false,
+  positionClass: "toast-top-right",
+  preventDuplicates: false,
+  onclick: null,
+  showDuration: "300",
+  hideDuration: "1000",
+  timeOut: "5000",
+  extendedTimeOut: "1000",
+  showEasing: "swing",
+  hideEasing: "linear",
+  showMethod: "fadeIn",
+  hideMethod: "fadeOut",
+};
 
-const rows = [
-  createData(
-    "BigStar",
-    "test@gmail.com",
-    "+1 937 579 0206",
-    "Admin",
-    "Main-Admin"
-  ),
-  createData(
-    "Bill",
-    "test@gmail.com",
-    "+1 937 579 0206",
-    "User, Referral",
-    "Account-Admin"
-  ),
-  createData(
-    "Forets sun",
-    "test@gmail.com",
-    "+1 937 579 0206",
-    "Trading, Billing",
-    "Trading-Admin"
-  ),
-];
+const SERVER_URL = config.SERVER_URL;
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -94,26 +89,31 @@ const headCells = [
     id: "name",
     disablePadding: true,
     label: "Full Name",
+    width: "200",
   },
   {
     id: "email",
     disablePadding: false,
     label: "Email",
+    width: "300",
   },
   {
     id: "phone",
     disablePadding: false,
     label: "Phone",
+    width: "300",
   },
   {
     id: "access",
     disablePadding: false,
     label: "Editable Setting",
+    width: "150",
   },
   {
     id: "roles",
     disablePadding: false,
     label: "Role",
+    width: "150",
   },
 ];
 
@@ -150,6 +150,7 @@ function EnhancedTableHead(props) {
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
+            width={headCell.width}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
@@ -180,7 +181,12 @@ EnhancedTableHead.propTypes = {
 };
 
 const EnhancedTableToolbar = (props) => {
-  const { numSelected } = props;
+  const { numSelected, isEditing, setIsEditing, setSelected } = props;
+  const [editing, setEditing] = useState(false)
+
+  useEffect(() => {
+    setEditing(isEditing)
+  }, [isEditing])
 
   return (
     <Toolbar
@@ -219,12 +225,20 @@ const EnhancedTableToolbar = (props) => {
       {numSelected > 0 ? (
         <Grid container justifyContent="end">
           <Tooltip title="Edit">
-            <IconButton>
+          {editing ? 
+            <IconButton onClick={(e) => {
+              setIsEditing(false)
+              setSelected([])
+            }}>
+              <CloseIcon />
+            </IconButton> : <IconButton onClick={(e) => {
+              setIsEditing(true)
+            }}>
               <EditIcon />
-            </IconButton>
+            </IconButton>}
           </Tooltip>
           <Tooltip title="Delete">
-            <IconButton>
+            <IconButton onClick={(e) => setSelected([])}>
               <DeleteIcon />
             </IconButton>
           </Tooltip>
@@ -248,9 +262,40 @@ export default function EnhancedTable() {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("email");
   const [selected, setSelected] = React.useState([]);
+  const [isEditing, setIsEditing] = React.useState(false)
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(1000);
+  const [rows, setRows] = useState([])
+  const [cookies, removeCookie] = useCookies(["refreshToken"]);
+  const navigate = useNavigate()
+  const [countries, setCountries] = useState([])
+  const [blockedCountries, setBlockedCountries] = useState('')
+  const [languages, setLanguages] = useState('')
+
+  async function init() {
+    try {
+      axios.defaults.headers.common["Authorization"] =
+        "Basic " + cookies.refreshToken;
+
+      var res = (await axios.post(SERVER_URL + "/get-admins-list")).data
+      var res1 = (await axios.post(SERVER_URL + "/get-countries")).data
+      var res2 = (await axios.post(SERVER_URL + "/get-admin-settings")).data
+
+      setRows(res)
+      setCountries(res1)
+      setBlockedCountries(res2.blocked_countries)
+      setLanguages(res2.languages ? res2.languages : '')
+    } catch (error) {
+      if (error.response && error.response.status == 403) {
+        navigate("/login");
+      }
+    }
+  }
+
+  useEffect(() => {
+    init()
+  }, [])
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -260,7 +305,7 @@ export default function EnhancedTable() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.name);
+      const newSelecteds = rows.map((n) => n.id);
       setSelected(newSelecteds);
       return;
     }
@@ -287,11 +332,69 @@ export default function EnhancedTable() {
     setSelected(newSelected);
   };
 
+  async function onCountryChanged(val) {
+    try {
+      await axios.post(SERVER_URL + "/save-admin-settings", {
+        sqlInfo: { blocked_countries: val.join(',') }
+      })
+      toastr.success('Blocked countries are saved successfully')
+    } catch (error) {
+      if (error.response && error.response.status == 403) {
+        navigate("/login");
+      }
+    }
+  }
+
+  function updateRowsInfo(index, field, res) {
+    var tmp = [...rows]
+
+    tmp[index][field] = res
+    setRows(tmp)
+  }
+
+  async function onLanguageChanged(val) {
+    try {
+      await axios.post(SERVER_URL + "/save-admin-settings", {
+        sqlInfo: { languages: val.join(',') }
+      })
+      toastr.success('Languages are saved successfully')
+    } catch (error) {
+      if (error.response && error.response.status == 403) {
+        navigate("/login");
+      }
+    }
+  }
+
+  async function onDeleteRows() {
+
+  }
+
+  async function saveAdminInfo(adminId, field, res) {
+    try {
+      var sqlInfo = {}
+
+      sqlInfo[field] = res
+
+      await axios.post(SERVER_URL + "/save-admin-info", {
+        sqlInfo: sqlInfo,
+        adminId: adminId,
+      })
+      toastr.success('Admin information is saved')
+    } catch (error) {
+      if (error.response && error.response.status == 403) {
+        navigate("/login");
+      }
+    }
+  }
+
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+
+  var val = blockedCountries == '' ? [] : blockedCountries.split(',')
+  var valLang = languages == '' ? [] : languages.split(',')
 
   return (
     <Box>
@@ -307,10 +410,10 @@ export default function EnhancedTable() {
           </Typography>
           <Grid container justifyContent="space-around" alignItems="center">
             <Grid item sm={4} xs={12}>
-              <CountryName />
+              <CountryName names={countries} onChanged={onCountryChanged} val={val} />
             </Grid>
             <Grid item sm={4} xs={12}>
-              <LanguageName />
+              <LanguageName onChanged={onLanguageChanged} val={valLang} />
             </Grid>
             <Grid item sm={4} xs={12}>
               <Button />
@@ -321,7 +424,7 @@ export default function EnhancedTable() {
 
       <Box sx={{ width: "100%" }}>
         <Paper sx={{ width: "100%", mb: 2, padding: "20px" }}>
-          <EnhancedTableToolbar numSelected={selected.length} />
+          <EnhancedTableToolbar numSelected={selected.length} isEditing={isEditing} setIsEditing={setIsEditing} setSelected={setSelected} onDeleteRows={onDeleteRows} />
           <TableContainer>
             <Table
               sx={{ minWidth: 750 }}
@@ -342,17 +445,18 @@ export default function EnhancedTable() {
                 {stableSort(rows, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
-                    const isItemSelected = isSelected(row.name);
+                    const isItemSelected = isSelected(row.id);
                     const labelId = `enhanced-table-checkbox-${index}`;
+                    const disabled = !(isItemSelected && isEditing)
 
                     return (
                       <TableRow
                         hover
-                        onClick={(event) => handleClick(event, row.name)}
+                        onClick={(event) => handleClick(event, row.id)}
                         role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
-                        key={row.name}
+                        key={row.id}
                         selected={isItemSelected}
                       >
                         <TableCell padding="checkbox">
@@ -370,12 +474,52 @@ export default function EnhancedTable() {
                           scope="row"
                           padding="none"
                         >
-                          {row.name}
+                          {disabled ? row.name : 
+                          <TextField
+                            id="round-prediction"
+                            label="Email"
+                            variant="outlined"
+                            fullWidth
+                            value={row.name}
+                            onClick={(e) => e.stopPropagation()}
+                            onBlur={(e) => saveAdminInfo(row.id, 'name', e.target.value)}
+                            onChange={(e) => updateRowsInfo(index, 'name', e.target.value)}
+                          />}
                         </TableCell>
-                        <TableCell>{row.email}</TableCell>
-                        <TableCell>{row.phone}</TableCell>
-                        <TableCell>{row.access}</TableCell>
-                        <TableCell>{row.roles}</TableCell>
+                        <TableCell>
+                          {disabled ? row.email : 
+                            <TextField
+                              id="round-prediction"
+                              label="Email"
+                              variant="outlined"
+                              fullWidth
+                              value={row.email}
+                              onClick={(e) => e.stopPropagation()}
+                              onBlur={(e) => saveAdminInfo(row.id, 'email', e.target.value)}
+                              onChange={(e) => updateRowsInfo(index, 'email', e.target.value)}
+                            />}
+                        </TableCell>
+                        <TableCell>
+                          {disabled ? row.phone : 
+                            <TextField
+                              id="round-prediction"
+                              label="Email"
+                              variant="outlined"
+                              fullWidth
+                              value={row.phone}
+                              onClick={(e) => e.stopPropagation()}
+                              onBlur={(e) => saveAdminInfo(row.id, 'phone', e.target.value)}
+                              onChange={(e) => updateRowsInfo(index, 'phone', e.target.value)}
+                            />}
+                        </TableCell>
+                        <TableCell>
+                          {disabled ? (row.access_setting == '' ? 'No permissions' : row.access_setting) : 
+                          <AccessSettings val={row.access_setting == '' ? [] : row.access_setting.split(',')} updateRowsInfo={updateRowsInfo} id={row.id} index={index} disabled={false} />}
+                        </TableCell>
+                        <TableCell>
+                          {disabled ? (row.role == '' ? 'No roles' : row.role) : 
+                          <Roles val={row.role == '' ? [] : row.role.split(',')} id={row.id} disabled={false} updateRowsInfo={updateRowsInfo} index={index} />}
+                        </TableCell>
                       </TableRow>
                     );
                   })}
